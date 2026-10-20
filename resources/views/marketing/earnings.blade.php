@@ -4,8 +4,9 @@
 <x-marketing-layout title="Your earnings">
     <section class="cc-pagehead" data-bg="coral">
         <div class="cc-wrap">
-            <h1 class="cc-title1">Your earnings</h1>
-            <p class="cc-lead">Every drink sells at {{ $fmt(config('drinkwell.unit_price_cents')) }}. Here is exactly how one day adds up, and how fast your deposit comes back.</p>
+            <div><h1 class="cc-title1">Your earnings</h1>
+            <p class="cc-lead">Every drink sells at {{ $fmt(config('drinkwell.unit_price_cents')) }}. Here is exactly how one day adds up, and how fast your deposit comes back.</p></div>
+            <img class="cc-art cc-pagehead-art" src="{{ asset('images/earnings.svg') }}" alt="" loading="lazy">
         </div>
     </section>
 

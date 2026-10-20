@@ -463,15 +463,7 @@
 
     .cc-big-card h3 { max-width: 14ch; font-size: clamp(34px, 3.4vw, 52px); font-weight: 600; line-height: 1.1; letter-spacing: -0.03em; }
 
-    .cc-big-card small {
-        position: absolute;
-        right: 24px;
-        bottom: 24px;
-        font-size: 11px;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        color: rgba(255, 255, 255, 0.7);
-    }
+
 
     /* Two rows of round thumbnails and pale names that go black on hover */
     .cc-rows { display: grid; gap: 24px; margin-top: 48px; overflow: hidden; }
@@ -856,4 +848,39 @@
     }
 
     .cc-loc li span { color: #353535; }
+
+    .cc-art { display: block; width: 100%; height: auto; }
+
+    .cc-big-card .cc-art {
+        position: absolute;
+        right: 24px;
+        bottom: 0;
+        width: min(62%, 300px);
+        transform: translateY(12%);
+    }
+
+    .cc-big-card h3 { position: relative; z-index: 1; }
+
+    .cc-pagehead .cc-wrap {
+        display: grid;
+        gap: 32px;
+        align-items: center;
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .cc-pagehead .cc-pagehead-art { display: none; }
+
+    @media (min-width: 1024px) {
+        .cc-pagehead .cc-wrap { grid-template-columns: minmax(0, 1.4fr) minmax(0, 0.8fr); }
+        .cc-pagehead .cc-pagehead-art { display: block; max-width: 340px; justify-self: end; }
+    }
+
+    .cc-step, .cc-q, .cc-loc, .cc-prose, .cc-scroll { box-shadow: 0 10px 40px rgba(0, 0, 0, 0.06); }
+    .cc-step:nth-child(1) { background: #fff3ea; }
+    .cc-step:nth-child(2) { background: #e9f7f1; }
+    .cc-step:nth-child(3) { background: #fdf1d9; }
+    .cc-step h3 { font-size: clamp(26px, 2.4vw, 34px); }
+    .cc-prose h2 { font-size: clamp(28px, 3vw, 40px); }
+    .cc-loc-title { font-size: clamp(26px, 2.4vw, 34px); }
+    .cc-q summary { font-size: clamp(20px, 2vw, 26px); }
 }

@@ -4,8 +4,9 @@
 <x-marketing-layout title="How it works">
     <section class="cc-pagehead" data-bg="coral">
         <div class="cc-wrap">
-            <h1 class="cc-title1">How it works</h1>
-            <p class="cc-lead">One machine, two co-partners, one price: {{ $fmt(config('drinkwell.unit_price_cents')) }} a drink.</p>
+            <div><h1 class="cc-title1">How it works</h1>
+            <p class="cc-lead">One machine, two co-partners, one price: {{ $fmt(config('drinkwell.unit_price_cents')) }} a drink.</p></div>
+            <img class="cc-art cc-pagehead-art" src="{{ asset('images/machine.svg') }}" alt="" loading="lazy">
         </div>
     </section>
 

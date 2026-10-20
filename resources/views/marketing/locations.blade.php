@@ -1,8 +1,9 @@
 <x-marketing-layout title="Locations">
     <section class="cc-pagehead" data-bg="mint">
         <div class="cc-wrap">
-            <h1 class="cc-title1">Where your machine stands</h1>
-            <p class="cc-lead">{{ $total }} machines in {{ $cities }} cities, placed where people wait: hospitals, train stations and airports.</p>
+            <div><h1 class="cc-title1">Where your machine stands</h1>
+            <p class="cc-lead">{{ $total }} machines in {{ $cities }} cities, placed where people wait: hospitals, train stations and airports.</p></div>
+            <img class="cc-art cc-pagehead-art" src="{{ asset('images/machine.svg') }}" alt="" loading="lazy">
         </div>
     </section>
 

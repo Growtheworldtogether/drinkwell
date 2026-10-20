@@ -4,8 +4,9 @@
 <x-marketing-layout title="About">
     <section class="cc-pagehead" data-bg="cream">
         <div class="cc-wrap">
-            <h1 class="cc-title1">About {{ $brand->name }}</h1>
-            <p class="cc-lead">We pair people aged {{ config('drinkwell.min_age') }} and over as equal co-owners of a vending machine, and show every sale and payout as it happens.</p>
+            <div><h1 class="cc-title1">About {{ $brand->name }}</h1>
+            <p class="cc-lead">We pair people aged {{ config('drinkwell.min_age') }} and over as equal co-owners of a vending machine, and show every sale and payout as it happens.</p></div>
+            <img class="cc-art cc-pagehead-art" src="{{ asset('images/partners.svg') }}" alt="" loading="lazy">
         </div>
     </section>
 

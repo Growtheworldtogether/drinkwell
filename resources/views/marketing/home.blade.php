@@ -46,8 +46,8 @@
         <div class="cc-wrap">
             <h2 class="cc-huge" data-reveal><span>How you</span><span>get</span><span>paid</span></h2>
             <div class="cc-big-cards">
-                <article class="cc-big-card" data-reveal><h3>What makes a co-partnership work</h3><small>Photo slot 4:5</small></article>
-                <article class="cc-big-card" data-reveal><h3>Learn more about the program</h3><small>Photo slot 4:5</small></article>
+                <article class="cc-big-card" data-reveal><h3>What makes a co-partnership work</h3><img class="cc-art" src="{{ asset('images/machine.svg') }}" alt="" loading="lazy"></article>
+                <article class="cc-big-card" data-reveal><h3>Learn more about the program</h3><img class="cc-art" src="{{ asset('images/partners.svg') }}" alt="" loading="lazy"></article>
             </div>
         </div>
     </section>

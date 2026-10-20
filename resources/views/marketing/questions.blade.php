@@ -4,8 +4,9 @@
 <x-marketing-layout title="Questions">
     <section class="cc-pagehead" data-bg="amber">
         <div class="cc-wrap">
-            <h1 class="cc-title1">Questions</h1>
-            <p class="cc-lead">Plain answers to what people ask us most. Select a question to read the answer.</p>
+            <div><h1 class="cc-title1">Questions</h1>
+            <p class="cc-lead">Plain answers to what people ask us most. Select a question to read the answer.</p></div>
+            <img class="cc-art cc-pagehead-art" src="{{ asset('images/partners.svg') }}" alt="" loading="lazy">
         </div>
     </section>
 

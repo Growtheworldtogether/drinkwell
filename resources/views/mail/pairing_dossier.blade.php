@@ -3,7 +3,7 @@
 
 Hello {{ $userName }},
 
-You are paired with a co-partner on one machine. **This is a classroom simulation: the people, bank names and amounts are fictional, and no real money moves.**
+You are paired with a co-partner on one machine. **This is a classroom simulation: the people and amounts are fictional, and no real money moves.**
 
 <x-mail::panel>
 **Machine {{ $machine->serial_no }}**

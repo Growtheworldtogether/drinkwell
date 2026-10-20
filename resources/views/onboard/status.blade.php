@@ -5,7 +5,7 @@
             <p class="pf-notice" role="status">{{ session('status') }}</p>
         @endif
 
-        <p class="dw-demo">Demo: your co-partner, the bank and every amount are fictional. No real money moves.</p>
+        <p class="dw-demo">Demo: your co-partner and every amount are fictional. No real money moves.</p>
 
         <section class="pf-panel" aria-labelledby="st-machine">
             <div class="pf-panel-head"><p class="pf-label" id="st-machine">Your machine</p></div>

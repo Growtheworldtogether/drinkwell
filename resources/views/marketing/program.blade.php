@@ -33,7 +33,7 @@
             <h2 class="mt-8 text-h3">Paying the deposit</h2>
             <p class="mt-2 text-body">There is no card form on this site. After pairing, you get an email with your machine, your co-partner's contact details, a reference and a ready-made message to send. Your share stays "pending settlement" until the deposit is confirmed.</p>
 
-            <p class="dw-demo mt-8">This is a classroom simulation. People, banks and amounts are fictional, and no real money moves.</p>
+            <p class="dw-demo mt-8">This is a classroom simulation. People and amounts are fictional, and no real money moves.</p>
         </div>
     </section>
 </x-marketing-layout>

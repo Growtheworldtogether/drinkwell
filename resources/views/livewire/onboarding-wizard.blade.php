@@ -2,7 +2,7 @@
     <div class="af-wrap af-apply">
         <p class="af-apply-meta"><span class="tabular-nums">Step {{ $step }} of 4</span>: {{ $steps[$step] }}</p>
         <h1 class="af-h1">{{ $steps[$step] }}</h1>
-        <p class="af-lead">Pairing takes a minute. This is a classroom simulation: nothing you enter here is a real bank detail and no money moves.</p>
+        <p class="af-lead">Pairing takes a minute. This is a classroom simulation: no money moves.</p>
 
         <ol class="af-apply-steps mt-6" aria-label="Onboarding steps">
             @foreach ($steps as $number => $label)
@@ -46,8 +46,13 @@
                     </fieldset>
                     @error('tier')<p class="text-af-danger">{{ $message }}</p>@enderror
                 @elseif ($step === 3)
-                    <p>The identity check and the bank account are simulated. When you pair, the platform marks your identity as verified and creates a fictional account called "Demo Bank". <b>Do not type real banking details anywhere on this site.</b></p>
-                    <x-field name="agreeSim" label="I understand this is a simulation and no real money moves." type="checkbox" wire:model="agreeSim" />
+                    <p>Payouts go to this US bank account. Your routing and account numbers are stored encrypted, and only the last four digits are shown back to you.</p>
+                    <x-field name="holderName" label="Account holder name" wire:model="holderName" autocomplete="off" />
+                    <x-field name="bankName" label="Bank name" wire:model="bankName" autocomplete="off" />
+                    <x-field name="routingNumber" label="Routing number" wire:model="routingNumber" autocomplete="off" inputmode="numeric" maxlength="9" class="font-mono" help="Nine digits, as printed on a check." />
+                    <x-field name="accountNumber" label="Account number" wire:model="accountNumber" autocomplete="off" inputmode="numeric" maxlength="17" class="font-mono" />
+                    <x-field name="accountNumberConfirmation" label="Confirm account number" wire:model="accountNumberConfirmation" autocomplete="off" inputmode="numeric" maxlength="17" class="font-mono" />
+                    <x-field name="agreeSim" label="I understand this is a classroom simulation and no money is moved from this account." type="checkbox" wire:model="agreeSim" />
                 @else
                     <dl class="pf-rows">
                         <div><dt>Name</dt><dd>{{ $name }}</dd></div>

@@ -2,11 +2,11 @@
 
 namespace App\Livewire;
 
-use App\Domain\Prng;
 use App\Enums\Tier;
 use App\Exceptions\NoMachineAvailable;
 use App\Models\PartnerProfile;
 use App\Models\PayoutAccount;
+use App\Rules\AbaRoutingNumber;
 use App\Services\PairingService;
 use App\Support\FormGuard;
 use Illuminate\Contracts\View\View;
@@ -35,6 +35,16 @@ class OnboardingWizard extends Component
 
     public string $tier = 'commercial';
 
+    public string $holderName = '';
+
+    public string $bankName = '';
+
+    public string $routingNumber = '';
+
+    public string $accountNumber = '';
+
+    public string $accountNumberConfirmation = '';
+
     public bool $agreeSim = false;
 
     public bool $agreeTerms = false;
@@ -55,6 +65,7 @@ class OnboardingWizard extends Component
 
         $this->guardToken = FormGuard::token();
         $this->name = (string) $user->name;
+        $this->holderName = (string) $user->name;
         $profile = $user->profile;
 
         if ($profile) {
@@ -74,7 +85,7 @@ class OnboardingWizard extends Component
         match ($this->step) {
             1 => $this->validateDetails(),
             2 => $this->validate(['tier' => ['required', 'in:commercial,enterprise']]),
-            3 => $this->validate(['agreeSim' => ['accepted']], ['agreeSim.accepted' => 'Confirm that you understand this is a simulation.']),
+            3 => $this->validateBank(),
             default => null,
         };
 
@@ -96,10 +107,8 @@ class OnboardingWizard extends Component
 
         $this->validateDetails();
         $this->validate(['tier' => ['required', 'in:commercial,enterprise']]);
-        $this->validate(['agreeSim' => ['accepted'], 'agreeTerms' => ['accepted']], [
-            'agreeSim.accepted' => 'Confirm that you understand this is a simulation.',
-            'agreeTerms.accepted' => 'Accept the terms to continue.',
-        ]);
+        $this->validateBank();
+        $this->validate(['agreeTerms' => ['accepted']], ['agreeTerms.accepted' => 'Accept the terms to continue.']);
 
         $user = auth()->user();
         $dob = Carbon::parse($this->dob);
@@ -115,7 +124,7 @@ class OnboardingWizard extends Component
         ]);
 
         $user->forceFill(['name' => trim($this->name), 'phone' => $this->phone])->save();
-        $this->fictionalBank($user->id);
+        $this->saveBank($user->id);
 
         try {
             $pairing->pair($user->fresh(), Tier::from($this->tier));
@@ -145,31 +154,44 @@ class OnboardingWizard extends Component
         ], ['dob' => 'date of birth']);
     }
 
-    /** A made-up account so the payout screens have something to show. Nothing the person typed is stored. */
-    private function fictionalBank(int $userId): void
+    private function validateBank(): void
     {
-        if (PayoutAccount::query()->where('user_id', $userId)->exists()) {
-            return;
-        }
+        $this->validate([
+            'holderName' => ['required', 'string', 'max:120'],
+            'bankName' => ['required', 'string', 'max:120'],
+            'routingNumber' => ['required', 'string', new AbaRoutingNumber],
+            'accountNumber' => ['required', 'string', 'regex:/^\d{4,17}$/'],
+            'accountNumberConfirmation' => ['required', 'same:accountNumber'],
+            'agreeSim' => ['accepted'],
+        ], [
+            'accountNumber.regex' => 'The account number is 4 to 17 digits.',
+            'accountNumberConfirmation.same' => 'The two account numbers do not match.',
+            'agreeSim.accepted' => 'Confirm that you understand this is a simulation.',
+        ], ['holderName' => 'account holder name', 'bankName' => 'bank name', 'routingNumber' => 'routing number', 'accountNumber' => 'account number', 'accountNumberConfirmation' => 'account number confirmation']);
+    }
 
-        $r = new Prng("bank:{$userId}");
-        $account = sprintf('%010d', $r->below(1_000_000_000));
+    /** Stored the same way as the earlier platform: routing and account number encrypted, only the last four readable. */
+    private function saveBank(int $userId): void
+    {
+        $number = trim($this->accountNumber);
 
+        PayoutAccount::query()->where('user_id', $userId)->delete();
         PayoutAccount::create([
             'user_id' => $userId,
-            'holder_name' => auth()->user()->name,
-            'bank_name' => 'Demo Bank (fictional)',
-            'routing_number' => sprintf('%09d', 100_000_000 + $r->below(899_999_999)),
-            'account_number' => $account,
-            'last4' => substr($account, -4),
+            'holder_name' => trim($this->holderName),
+            'bank_name' => trim($this->bankName),
+            'routing_number' => trim($this->routingNumber),
+            'account_number' => $number,
+            'last4' => substr($number, -4),
             'is_default' => true,
         ]);
+        $this->accountNumber = $this->accountNumberConfirmation = $this->routingNumber = '';
     }
 
     public function render(): View
     {
         return view('livewire.onboarding-wizard', [
-            'steps' => [1 => 'About you', 2 => 'Your machine', 3 => 'Identity and bank (simulated)', 4 => 'Review and pair'],
+            'steps' => [1 => 'About you', 2 => 'Your machine', 3 => 'Bank account', 4 => 'Review and pair'],
             'maxBirthDate' => now()->subYears((int) config('drinkwell.min_age'))->toDateString(),
             'tiers' => collect(Tier::cases())->mapWithKeys(fn (Tier $t) => [$t->value => [
                 'label' => $t->label(), 'stake' => $t->stakeCents(), 'capacity' => $t->capacity(),

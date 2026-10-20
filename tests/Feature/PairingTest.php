@@ -125,8 +125,9 @@ it('onboarding accepts a 51 year old on the birthday and pairs them', function (
         ->call('next')->assertHasNoErrors()->assertSet('step', 2)
         ->set('tier', 'commercial')
         ->call('next')->assertSet('step', 3)
-        ->set('agreeSim', true)
-        ->call('next')->assertSet('step', 4)
+        ->set('holderName', 'Pat Senior')->set('bankName', 'Test Bank')->set('routingNumber', '021000021')
+        ->set('accountNumber', '123456789')->set('accountNumberConfirmation', '123456789')->set('agreeSim', true)
+        ->call('next')->assertHasNoErrors()->assertSet('step', 4)
         ->set('agreeTerms', true)
         ->call('submit')
         ->assertRedirect(route('onboard.status'));
@@ -134,7 +135,8 @@ it('onboarding accepts a 51 year old on the birthday and pairs them', function (
     $profile = $user->fresh()->profile;
     expect($profile->age_at_signup)->toBe(51)
         ->and($profile->kyc_status)->toBe('simulated_verified')
-        ->and($user->payoutAccounts()->first()->bank_name)->toContain('fictional')
+        ->and($user->payoutAccounts()->first()->last4)->toBe('6789')
+        ->and(\Illuminate\Support\Facades\DB::table('payout_accounts')->value('account_number'))->not->toContain('123456789')
         ->and($m->fresh()->assignment_status)->toBe(AssignmentStatus::Paired);
 });
 
@@ -156,8 +158,20 @@ it('shows a friendly message when no machine is free', function () {
 
     Livewire::test(OnboardingWizard::class)
         ->set('name', 'Pat Senior')->set('dob', now()->subYears(60)->toDateString())->set('phone', '(555) 010-1234')
-        ->set('tier', 'commercial')->set('agreeSim', true)->set('agreeTerms', true)
+        ->set('tier', 'commercial')->set('holderName', 'Pat Senior')->set('bankName', 'Test Bank')->set('routingNumber', '021000021')->set('accountNumber', '123456789')->set('accountNumberConfirmation', '123456789')->set('agreeSim', true)->set('agreeTerms', true)
         ->call('submit')
         ->assertHasErrors(['form'])
         ->assertNoRedirect();
+});
+
+it('rejects a bad routing number and mismatched account numbers', function () {
+    machine();
+    signedIn();
+
+    Livewire::test(OnboardingWizard::class)
+        ->set('step', 3)
+        ->set('holderName', 'Pat')->set('bankName', 'Bank')->set('routingNumber', '123456789')
+        ->set('accountNumber', '123456789')->set('accountNumberConfirmation', '987654321')->set('agreeSim', true)
+        ->call('next')
+        ->assertHasErrors(['routingNumber', 'accountNumberConfirmation']);
 });

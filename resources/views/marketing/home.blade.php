@@ -92,28 +92,6 @@
         </div>
     </section>
 
-    <section class="cc-section cc-center" data-bg="gray">
-        <h2 class="cc-h2" data-reveal>Dive into the latest from the machines</h2>
-        <div class="cc-carousel">
-            <div class="cc-track" data-drag>
-                @foreach ([
-                    ['Sales', 'Stock', 'Commercial machine sold out at 21:40 yesterday'],
-                    ['Restock', 'Logistics', 'Overnight drivers refilled every machine by 05:30'],
-                    ['Payouts', 'Partners', 'Daily payouts landed inside the band for every partner'],
-                    ['Pairing', 'Partners', 'New co-partners were paired the same minute they finished signing up'],
-                    ['Stock', 'Hospitals', 'Hospital machines peak at the lunch hour'],
-                ] as [$tag, $tag2, $headline])
-                    <article class="cc-card">
-                        <div class="cc-photo">Photo slot 4:5</div>
-                        <div class="cc-tags"><span class="cc-tag">{{ $tag }}</span><span class="cc-tag">{{ $tag2 }}</span></div>
-                        <h3>{{ $headline }}</h3>
-                    </article>
-                @endforeach
-            </div>
-        </div>
-        <div class="cc-btn-row"><a class="af-btn af-btn-black" href="{{ route('program') }}">See how it works</a></div>
-    </section>
-
     <section class="cc-section" data-bg="amber">
         <div class="cc-wrap">
             <h2 class="cc-huge" data-reveal><span>Our Promise</span><span>& Daily</span><span>Payout</span></h2>

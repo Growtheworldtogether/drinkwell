@@ -8,16 +8,7 @@
         <span class="cc-chip-demo">Demo</span>
 
         <nav aria-label="Primary" class="cc-nav-links">
-            <div class="cc-drop">
-                <a href="{{ route('program') }}" class="af-nav-link" aria-haspopup="true" @if (request()->routeIs('program')) aria-current="page" @endif>How it works</a>
-                <div class="cc-drop-panel">
-                    <a href="{{ route('program') }}#split">The daily split</a>
-                    <a href="{{ route('program') }}#day">A day in the life of a machine</a>
-                    <a href="{{ route('program') }}#deposit">Paying the deposit</a>
-                    <a href="{{ route('terms') }}">Terms</a>
-                    <a href="{{ route('privacy') }}">Privacy</a>
-                </div>
-            </div>
+            <a href="{{ route('program') }}" class="af-nav-link" @if (request()->routeIs('program')) aria-current="page" @endif>How it works</a>
             <a href="{{ url('/') }}#machines" class="af-nav-link">Machines</a>
             <a href="{{ url('/') }}#calculator" class="af-nav-link">Calculator</a>
             @guest

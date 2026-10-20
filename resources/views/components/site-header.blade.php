@@ -16,7 +16,16 @@
 
         <nav aria-label="Primary" class="af-nav-links">
             @foreach ($links as [$route, $label])
-                <a href="{{ route($route) }}" class="af-nav-link" @if (request()->routeIs($route)) aria-current="page" @endif>{{ $label }}</a>
+                <div class="cc-drop">
+                    <a href="{{ route($route) }}" class="af-nav-link" aria-haspopup="true" @if (request()->routeIs($route)) aria-current="page" @endif>{{ $label }}</a>
+                    <div class="cc-drop-panel">
+                        <a href="{{ route('program') }}#split">The daily split</a>
+                        <a href="{{ route('program') }}#day">A day in the life of a machine</a>
+                        <a href="{{ route('program') }}#deposit">Paying the deposit</a>
+                        <a href="{{ route('terms') }}">Terms</a>
+                        <a href="{{ route('privacy') }}">Privacy</a>
+                    </div>
+                </div>
             @endforeach
             @guest
                 <a href="{{ route('login') }}" class="af-nav-link">Sign in</a>

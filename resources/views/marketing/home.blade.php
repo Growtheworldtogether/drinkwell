@@ -1,4 +1,5 @@
 @php
+    $facilities = collect($facilities);
     $fmt = fn (int $c) => \App\Support\Money::format($c);
     $calc = collect($tiers)->map(fn ($t) => ['label' => $t['label'], 'stake' => $t['stake'], 'share' => $t['share'], 'capacity' => $t['capacity']])->all();
 @endphp
@@ -6,7 +7,7 @@
     <section class="cc-hero cc-tint-butter" data-tint-cycle>
         <span class="cc-orb cc-orb-a" aria-hidden="true"></span><span class="cc-orb cc-orb-b" aria-hidden="true"></span><span class="cc-orb cc-orb-c" aria-hidden="true"></span>
         <div class="af-wrap">
-            <h1 class="cc-display"><span>Own half</span><span>of a smart</span><span>vending machine.</span></h1>
+            <h1 class="cc-display"><span>Own half</span><span>of a smart</span><span class="cc-word" data-words="vending machine.|payout every day.|co-partner team.">vending machine.</span></h1>
             <p class="cc-lead">{{ $brand->name }} pairs seniors as 50/50 co-partners on a machine that sells every drink at {{ $fmt(config('drinkwell.unit_price_cents')) }}. Watch stock, sales and payouts in real time. This is a classroom simulation.</p>
             <div class="af-ctas">
                 @auth
@@ -137,8 +138,7 @@
                         ['Stock', 'Hospital machines peak at the lunch hour'],
                     ] as [$tag, $headline])
                         <article class="cc-card">
-                            <div class="cc-slot">Photo slot 4:3 / {{ strtolower($tag) }}</div>
-                            <span class="cc-chip">{{ $tag }}</span>
+                            <div class="cc-slot-wrap"><span class="cc-tab cc-tab-{{ $loop->index % 4 }}">{{ $tag }}</span><div class="cc-slot">Photo slot 4:3 / {{ strtolower($tag) }}</div></div>
                             <h3>{{ $headline }}</h3>
                         </article>
                     @endforeach
@@ -150,10 +150,18 @@
     <section class="cc-section">
         <div class="af-wrap">
             <h2 class="cc-title" data-reveal>Where machines stand.</h2>
-            <div class="cc-show">
-                <a href="{{ route('program') }}"><span class="cc-dot"></span>Hospitals</a>
-                <a href="{{ route('program') }}"><span class="cc-dot"></span>Stations</a>
-                <a href="{{ route('program') }}"><span class="cc-dot"></span>Campuses</a>
+            <div class="cc-rows" aria-label="Facilities that host a machine">
+                @foreach ([$facilities->take(ceil($facilities->count() / 2)), $facilities->slice(ceil($facilities->count() / 2))] as $r => $row)
+                    <div class="cc-row {{ $r ? 'cc-row-right' : '' }}">
+                        <div class="cc-row-track">
+                            @for ($n = 0; $n < 2; $n++)
+                                @foreach ($row as $k => $name)
+                                    <a href="{{ route('program') }}" @if ($n) aria-hidden="true" tabindex="-1" @endif><span class="cc-dot cc-dot-{{ ($k + $r) % 4 }}"></span>{{ $name }}</a>
+                                @endforeach
+                            @endfor
+                        </div>
+                    </div>
+                @endforeach
             </div>
         </div>
     </section>

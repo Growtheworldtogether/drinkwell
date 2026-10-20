@@ -14,6 +14,7 @@ class PagesController extends Controller
         return view('marketing.home', [
             'tiers' => $this->tiers(),
             'machines' => VendingMachine::query()->count(),
+            'facilities' => VendingMachine::query()->orderBy('facility_name')->pluck('facility_name')->unique()->values()->all(),
         ]);
     }
 

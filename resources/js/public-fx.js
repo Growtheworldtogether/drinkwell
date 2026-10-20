@@ -68,4 +68,30 @@ export function initPublicFx() {
         track.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') chip.classList.add('is-on'); });
         track.addEventListener('pointerleave', () => chip.classList.remove('is-on'));
     });
+
+    // Header: floats as a pill at the top, becomes a full-width bar once the page has scrolled.
+    const bar = document.querySelector('.cc-nav');
+    if (bar) {
+        const mark = () => bar.classList.toggle('is-scrolled', window.scrollY > 40);
+        window.addEventListener('scroll', mark, { passive: true });
+        mark();
+    }
+
+    // Hero line three swaps between phrases. The first phrase stays in the HTML for readers and no-script visitors.
+    const word = document.querySelector('[data-words]');
+    if (word && !calm) {
+        const words = word.dataset.words.split('|');
+        let w = 0;
+        setInterval(() => {
+            word.classList.add('is-out');
+            setTimeout(() => {
+                w = (w + 1) % words.length;
+                word.textContent = words[w];
+                word.classList.remove('is-out');
+                word.classList.add('is-pre');
+                void word.offsetWidth;
+                word.classList.remove('is-pre');
+            }, 360);
+        }, 3600);
+    }
 }

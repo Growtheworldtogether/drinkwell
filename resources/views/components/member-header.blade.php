@@ -1,0 +1,32 @@
+@props(['mode' => 'member'])
+@php
+    $user = auth()->user();
+    $sheetLink = 'flex min-h-12 items-center text-body text-af-ink hover:underline';
+    $links = $mode === 'admin'
+        ? [['admin.overview', 'Overview'], ['admin.pairings', 'Pairings'], ['admin.machines', 'Machines'], ['admin.settings', 'Settings'], ['admin.audit', 'Audit log']]
+        : array_values(array_filter([
+            $user?->role === \App\Enums\Role::Partner ? ['hub.dashboard', 'Dashboard'] : null,
+            ['onboard.status', 'Pairing and deposit'],
+            ['profile.edit', 'Profile'],
+        ]));
+@endphp
+{{-- Signed-in header: same glass bar as the public pages, with the member or administrator links. --}}
+<header class="cc-nav">
+    <div class="cc-wrap cc-nav-in">
+        <a href="{{ $user?->homeUrl() ?? url('/') }}" class="af-brand"><x-brand.logo variant="light" /></a>
+
+        <nav aria-label="Primary" class="cc-nav-links">
+            @foreach ($links as [$r, $label])
+                <a href="{{ route($r) }}" class="af-nav-link" @if (request()->routeIs($r)) aria-current="page" @endif>{{ $label }}</a>
+            @endforeach
+            <form method="POST" action="{{ route('logout') }}">@csrf<button type="submit" class="af-nav-link">Sign out</button></form>
+        </nav>
+
+        <x-menu-sheet tone="light">
+            @foreach ($links as [$r, $label])
+                <a href="{{ route($r) }}" class="{{ $sheetLink }}">{{ $label }}</a>
+            @endforeach
+            <form method="POST" action="{{ route('logout') }}">@csrf<button type="submit" class="{{ $sheetLink }} w-full text-left">Sign out</button></form>
+        </x-menu-sheet>
+    </div>
+</header>

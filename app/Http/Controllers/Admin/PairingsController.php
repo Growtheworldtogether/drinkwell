@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Exceptions\NoMachineAvailable;
+use App\Exceptions\SimulationRefused;
+use App\Models\VendingMachine;
+use App\Services\MachineEngine;
 use App\Http\Controllers\Controller;
 use App\Models\MachineOwnership;
 use App\Models\PairingRequest;
@@ -10,7 +13,9 @@ use App\Services\AuditLogger;
 use App\Services\PairingService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 /** The administrator plays the co-partner: pairs waiting members and enters the payment details they will see. */
 class PairingsController extends Controller
@@ -21,6 +26,7 @@ class PairingsController extends Controller
             'waiting' => PairingRequest::query()->with('user')->where('status', PairingRequest::FINDING)->oldest()->get(),
             'paired' => PairingRequest::query()->with('user')->where('status', PairingRequest::PAIRED)->latest('paired_at')->get(),
             'ownerships' => MachineOwnership::query()->get()->keyBy('user_id'),
+            'machines' => VendingMachine::query()->orderBy('id')->get(['id', 'serial_no', 'facility_name']),
         ]);
     }
 
@@ -64,5 +70,34 @@ class PairingsController extends Controller
             'reference' => ['nullable', 'string', 'max:40'],
             'note' => ['nullable', 'string', 'max:255'],
         ]);
+    }
+
+    /** A member's receipt, for administrators only. */
+    public function proof(PairingRequest $pairing): StreamedResponse
+    {
+        abort_unless($pairing->proof_path && Storage::disk('local')->exists($pairing->proof_path), 404);
+
+        return Storage::disk('local')->response($pairing->proof_path, $pairing->proof_name, ['Content-Disposition' => 'inline']);
+    }
+
+    /** Demo tools: run the clock, a sales burst or a driver restock on any machine. */
+    public function demo(Request $request, MachineEngine $engine): RedirectResponse
+    {
+        $data = $request->validate(['machine_id' => ['required', 'integer', 'exists:vending_machines,id'], 'do' => ['required', 'in:advance,burst,restock']]);
+        $machine = VendingMachine::query()->findOrFail($data['machine_id']);
+
+        try {
+            match ($data['do']) {
+                'advance' => $engine->fastForward($machine),
+                'burst' => $engine->salesBurst($machine),
+                'restock' => $engine->driverRestock($machine),
+            };
+        } catch (SimulationRefused $e) {
+            return back()->with('sim_error', $e->getMessage());
+        }
+
+        AuditLogger::log($request->user(), 'sim.'.$data['do'], $machine);
+
+        return back()->with('status', 'Done: '.['advance' => 'fast-forwarded 24 hours', 'burst' => 'sales burst', 'restock' => 'driver restock'][$data['do']].' on '.$machine->serial_no.'.');
     }
 }

@@ -18,6 +18,7 @@ class ProfileController extends Controller
     {
         return view('portal.profile.edit', [
             'user' => $request->user(),
+            'payout' => $request->user()->payoutAccounts()->where('is_default', true)->first(),
         ]);
     }
 

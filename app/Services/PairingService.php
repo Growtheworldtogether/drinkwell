@@ -70,7 +70,7 @@ class PairingService
             $machine->update(['assignment_status' => AssignmentStatus::Paired]);
             $user->forceFill(['role' => Role::Partner])->save();
 
-            app(MachineEngine::class)->log($machine, 'pairing', "Paired with {$partner->name} (simulated).");
+            app(MachineEngine::class)->log($machine, 'pairing', "Paired with {$partner->name}.");
 
             return $mine;
         });

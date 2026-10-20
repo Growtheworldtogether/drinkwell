@@ -1,52 +1,50 @@
 @php
     $fmt = fn (int $c) => \App\Support\Money::format($c);
-    $tierLabel = \App\Enums\Tier::from($req->tier)->label();
+    $tier = \App\Enums\Tier::from($req->tier);
     $pending = $mine && $mine->settlement_status === \App\Enums\SettlementStatus::PendingSettlement;
     $stage = ! $mine ? 1 : (! $pending ? 4 : ($req?->deposit_reported_at ? 3 : 2));
+    $bg = ! $mine ? 'amber' : 'mint';
 @endphp
 <x-app-layout title="Your partner and deposit">
-    <div class="pf-page">
-        @if (session('status'))
-            <p class="pf-notice" role="status">{{ session('status') }}</p>
-        @endif
-
-        @include('onboard._progress', ['stage' => $stage])
-
-        @if (! $mine)
-            <section class="pf-panel" aria-labelledby="st-find">
-                <div class="pf-panel-head"><p class="pf-label" id="st-find">Finding a partner</p></div>
-                <p class="pf-text">We are looking for a co-partner for your {{ $tierLabel }}. This usually takes <strong>1 business day</strong>. We will email you as soon as you are paired, and the details will appear on this page.</p>
-                <dl class="pf-rows">
-                    <div><dt>Option</dt><dd>{{ $tierLabel }}</dd></div>
-                    <div><dt>Your deposit</dt><dd class="pf-mono">{{ $fmt(\App\Enums\Tier::from($req->tier)->stakeCents()) }}</dd></div>
-                    <div><dt>Requested</dt><dd>{{ $req->created_at->format('M j, g:i a') }}</dd></div>
-                </dl>
-            </section>
-        @else
-            <section class="pf-panel" aria-labelledby="st-machine">
-                <div class="pf-panel-head"><p class="pf-label" id="st-machine">Your machine</p></div>
-                <dl class="pf-rows">
-                    <div><dt>Serial number</dt><dd class="pf-mono">{{ $machine->serial_no }}</dd></div>
-                    <div><dt>Facility</dt><dd>{{ $machine->facility_name }}, {{ $machine->city }}</dd></div>
-                    <div><dt>Option</dt><dd>{{ $machine->tier->label() }}</dd></div>
-                    <div><dt>Your deposit</dt><dd class="pf-mono">{{ $fmt($mine->capital_cents) }}</dd></div>
-                    <div><dt>Status</dt><dd><x-status-tag :status="$mine->settlement_status->value" :label="$pending ? 'Waiting for '.$partner->name.' to confirm' : 'Confirmed'" :tone="$pending ? 'warn' : 'ok'" /></dd></div>
-                </dl>
-            </section>
-
-            <section class="pf-panel" aria-labelledby="st-partner">
-                <div class="pf-panel-head"><p class="pf-label" id="st-partner">Your co-partner</p></div>
-                <dl class="pf-rows">
-                    <div><dt>Name</dt><dd>{{ $partner->name }}</dd></div>
-                    @if ($partner->profile?->city)<div><dt>City</dt><dd>{{ $partner->profile->city }}</dd></div>@endif
-                </dl>
-            </section>
-
-            @if ($pending)
-                @include('onboard._deposit')
-            @else
-                <p class="pf-text">Your deposit is confirmed. <a class="pf-link" href="{{ route('hub.dashboard') }}">Open the dashboard</a>.</p>
+    <section class="cc-screen" data-bg="{{ $bg }}">
+        <div class="cc-wrap" style="max-width:900px">
+            @if (session('status'))
+                <x-cc.notice>{{ session('status') }}</x-cc.notice>
             @endif
-        @endif
-    </div>
+
+            @if (! $mine)
+                <h1 class="cc-title1" style="font-size:clamp(40px,7vw,96px)">Finding a partner</h1>
+                <p class="cc-lead" style="margin-bottom:28px">We are looking for a co-partner for your {{ $tier->label() }}. This usually takes <strong>1 business day</strong>. We will email you as soon as you are paired.</p>
+                @include('onboard._progress', ['stage' => 1])
+                <div class="cc-panel">
+                    <h2>Your request</h2>
+                    <dl class="cc-dl">
+                        <div class="cc-kv"><dt>Option</dt><dd>{{ $tier->label() }}</dd></div>
+                        <div class="cc-kv"><dt>Your deposit</dt><dd>{{ $fmt($tier->stakeCents()) }}</dd></div>
+                        <div class="cc-kv"><dt>Requested</dt><dd>{{ $req->created_at->format('M j, g:i a') }}</dd></div>
+                        <div class="cc-kv"><dt>Next</dt><dd>We email you as soon as you are paired</dd></div>
+                    </dl>
+                </div>
+            @else
+                <h1 class="cc-title1" style="font-size:clamp(40px,7vw,96px)">{{ $pending ? 'You are paired' : 'You are all set' }}</h1>
+                <p class="cc-lead" style="margin-bottom:28px">Your co-partner is <strong>{{ $partner->name }}</strong>@if ($partner->profile?->city) in {{ $partner->profile->city }}@endif.</p>
+                @include('onboard._progress', ['stage' => $stage])
+                <div class="cc-panel">
+                    <h2>Your machine</h2>
+                    <dl class="cc-dl">
+                        <div class="cc-kv"><dt>Serial number</dt><dd>{{ $machine->serial_no }}</dd></div>
+                        <div class="cc-kv"><dt>Facility</dt><dd>{{ $machine->facility_name }}, {{ $machine->city }}</dd></div>
+                        <div class="cc-kv"><dt>Option</dt><dd>{{ $machine->tier->label() }}</dd></div>
+                        <div class="cc-kv"><dt>Your deposit</dt><dd>{{ $fmt($mine->capital_cents) }}</dd></div>
+                        <div class="cc-kv"><dt>Status</dt><dd><span class="cc-tone {{ $pending ? '' : 'ok' }}">{{ $pending ? ($req?->deposit_reported_at ? 'Proof sent, waiting for '.$partner->name.' to confirm' : 'Waiting for '.$partner->name.' to confirm') : 'Confirmed' }}</span></dd></div>
+                    </dl>
+                </div>
+                @if ($pending)
+                    @include('onboard._deposit')
+                @else
+                    <div class="cc-btn-row" style="justify-content:flex-start"><a class="af-btn af-btn-black" href="{{ route('hub.dashboard') }}">Open the dashboard</a></div>
+                @endif
+            @endif
+        </div>
+    </section>
 </x-app-layout>

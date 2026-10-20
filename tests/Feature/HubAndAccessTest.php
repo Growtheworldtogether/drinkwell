@@ -51,10 +51,10 @@ it('shows a partner their own dashboard with the toolbar and the ledger', functi
     $this->get(route('hub.dashboard'))
         ->assertOk()
         ->assertSee($m->serial_no)
-        ->assertSee('Fast-forward 24 hours')
-        ->assertSee('Trigger sales burst')
-        ->assertSee('Driver restock')
-        ->assertSee('Export CSV');
+        ->assertDontSee('Fast-forward 24 hours')
+        ->assertDontSee('Trigger sales burst')
+        ->assertDontSee('Driver restock')
+        ->assertSee('Download CSV');
 });
 
 it('returns live telemetry as json', function () {

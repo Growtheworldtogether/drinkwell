@@ -1,100 +1,95 @@
-@php $fmt = fn (int $c) => \App\Support\Money::format($c); @endphp
+@php $fmt = fn (int $c) => \App\Support\Money::format($c); $first = \Illuminate\Support\Str::before(auth()->user()->name, ' '); @endphp
 <x-app-layout title="Dashboard">
-    <div class="pf-page" data-hub data-src="{{ route('hub.telemetry') }}">
-        @if (session('status'))
-            <p class="pf-notice" role="status">{{ session('status') }}</p>
-        @endif
-        @if ($snap['settlement'] === 'pending_settlement')
-            <p class="pf-notice" role="status">Waiting for your co-partner to confirm your deposit, so no payouts accrue yet. <a class="pf-link" href="{{ route('onboard.status') }}">See the steps</a>.</p>
-            @if ($deposit)
-                @include('onboard._deposit', $deposit)
+    <section class="cc-screen" data-bg="gray" style="padding-top:120px">
+        <div class="cc-wrap" data-hub data-src="{{ route('hub.telemetry') }}">
+            @if (session('status'))
+                <x-cc.notice>{{ session('status') }}</x-cc.notice>
             @endif
-        @endif
+            <h1 class="cc-title1" style="font-size:clamp(40px,6vw,88px);margin-bottom:28px">Hello, {{ $first }}</h1>
 
-        <x-stat-strip>
-            <x-stat label="Paid to you" :cents="$snap['paid_cents']" />
-            <x-stat label="Accruing today" :cents="$snap['accrued_today_cents']" note="estimate until the day closes" />
-            <x-stat label="Deposit returned"><span data-bind="payback">{{ $snap['payback_pct'] }}%</span></x-stat>
-            <x-stat label="Machine clock"><span data-bind="clock">{{ $snap['clock'] }}</span></x-stat>
-        </x-stat-strip>
-        <div class="dw-bar mt-2" role="img" aria-label="Deposit returned"><span data-payback-bar style="width: {{ $snap['payback_pct'] }}%"></span></div>
+            @if ($snap['settlement'] === 'pending_settlement')
+                <x-cc.notice>Waiting for your co-partner to confirm your deposit, so no payouts accrue yet.</x-cc.notice>
+                @if ($deposit)
+                    @include('onboard._deposit', $deposit)
+                @endif
+            @endif
 
-        <div class="dw-grid2 mt-4">
-            <x-dark-band variant="panel">
-                <p class="dw-tele-label">Live inventory, <span data-bind="date">{{ $snap['date'] }}</span></p>
-                <div class="dw-gauge-wrap mt-3">
-                    <div class="dw-gauge" role="img" aria-label="Stock level"><div class="dw-gauge-fill" data-gauge-fill data-state="{{ $snap['state'] }}" style="height: {{ $snap['fill_pct'] }}%"></div></div>
-                    <div>
-                        <p class="dw-tele-num"><span data-bind="stock">{{ $snap['stock'] }}</span> / <span data-bind="capacity">{{ $snap['capacity'] }}</span></p>
-                        <p class="dw-tele-label">units left (<span data-bind="fill">{{ $snap['fill_pct'] }}%</span>)</p>
-                        <p class="dw-tele-num mt-3" data-bind="state">{{ $snap['state_label'] }}</p>
-                        <p class="dw-tele-label">temperature <span data-bind="temp">{{ number_format($snap['temp_c'], 1) }}</span> C</p>
-                    </div>
-                </div>
-                <dl class="dw-tele-label mt-4">
-                    <div>Sold today <span class="dw-tele-num" data-bind="sold">{{ $snap['sold_today'] }}</span></div>
-                    <div class="mt-2">Revenue today <span class="dw-tele-num" data-bind="revenue">{{ $fmt($snap['revenue_today_cents']) }}</span></div>
-                </dl>
-            </x-dark-band>
-
-            <x-dark-band variant="panel">
-                <p class="dw-tele-label">Sales ticker ({{ $fmt(config('drinkwell.unit_price_cents')) }} a drink)</p>
-                <ul class="dw-list mt-2" data-ticker>
-                    @forelse ($snap['ticker'] as $t)
-                        <li class="dw-tick"><span>{{ $t['time'] }}  unit {{ $t['unit'] }}</span><span>{{ $fmt($t['cents']) }}</span></li>
-                    @empty
-                        <li class="dw-tick"><span>No sales yet today</span><span></span></li>
-                    @endforelse
-                </ul>
-                <p class="dw-tele-label mt-4">Machine log</p>
-                <ul class="dw-list mt-2" data-logs>
-                    @foreach ($snap['logs'] as $l)
-                        <li class="dw-tick"><span>{{ $l['at'] }}  {{ $l['event'] }}</span><span>{{ $l['message'] }}</span></li>
-                    @endforeach
-                </ul>
-            </x-dark-band>
-        </div>
-
-        <div class="dw-grid2 mt-4">
-            <x-panel title="Facility">
-                <p class="mb-3 text-body"><b>{{ $snap['facility'] }}</b>, {{ $snap['city'] }} <span class="pf-mono">({{ $snap['serial'] }})</span></p>
-                <div class="dw-map" data-facility-map data-lat="{{ $snap['lat'] }}" data-lng="{{ $snap['lng'] }}" data-name="{{ $snap['facility'] }}" role="img" aria-label="Map of the facility"></div>
-            </x-panel>
-            <x-panel title="Daily payouts">
-                <div class="dw-chart"><canvas data-payout-chart data-rows='@json($chart)' role="img" aria-label="Daily payouts"></canvas></div>
-            </x-panel>
-        </div>
-
-        <div class="mt-4"><x-simulation-toolbar :machine="$machine" /></div>
-
-        <section class="pf-panel mt-4" aria-labelledby="hub-ledger">
-            <div class="pf-panel-head">
-                <p class="pf-label" id="hub-ledger">Payout ledger</p>
-                <a class="pf-link" href="{{ route('hub.ledger.csv') }}">Export CSV</a>
+            <div class="cc-tiles">
+                <div class="cc-tile"><small>Paid to you</small><b data-bind="paid">{{ $fmt($snap['paid_cents']) }}</b><span>all payouts so far</span></div>
+                <div class="cc-tile"><small>Accruing today</small><b data-bind="accrued">{{ $fmt($snap['accrued_today_cents']) }}</b><span>estimate until the day closes</span></div>
+                <div class="cc-tile"><small>Deposit returned</small><b data-bind="payback">{{ $snap['payback_pct'] }}%</b><span>of your deposit</span></div>
+                <div class="cc-tile"><small>Machine clock</small><b data-bind="clock">{{ $snap['clock'] }}</b><span data-bind="date">{{ $snap['date'] }}</span></div>
             </div>
-            @if ($ledger->isEmpty())
-                <x-empty-state title="No payouts yet">Payouts appear here after the first day closes with a confirmed deposit. Use the toolbar to fast-forward a day.</x-empty-state>
-            @else
-                <div class="pf-tablewrap">
-                    <table class="pf-table">
-                        <caption class="sr-only">Daily payouts</caption>
-                        <thead><tr><th>Date</th><th>Units</th><th>Gross</th><th>Fee</th><th>Pool</th><th>Your payout</th><th>Reference</th></tr></thead>
-                        <tbody>
-                            @foreach ($ledger as $d)
-                                <tr>
-                                    <td data-label="Date" class="pf-mono">{{ $d->distribution_date->toDateString() }}</td>
-                                    <td data-label="Units" class="pf-mono">{{ $d->day->units_sold }}</td>
-                                    <td data-label="Gross" class="pf-mono">{{ $fmt($d->day->gross_cents) }}</td>
-                                    <td data-label="Fee" class="pf-mono">{{ $fmt($d->day->fee_cents) }}</td>
-                                    <td data-label="Pool" class="pf-mono">{{ $fmt($d->day->pool_cents) }}</td>
-                                    <td data-label="Your payout" class="pf-mono">{{ $fmt($d->payout_cents) }}</td>
-                                    <td data-label="Reference" class="pf-mono">{{ $d->ach_ref }}</td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+
+            <div class="cc-dgrid">
+                <div class="cc-panel">
+                    <h2>Live inventory</h2>
+                    <p>Drinks left: <strong><span data-bind="stock">{{ $snap['stock'] }}</span> of <span data-bind="capacity">{{ $snap['capacity'] }}</span></strong> (<span data-bind="fill">{{ $snap['fill_pct'] }}%</span>)</p>
+                    <div class="cc-gauge" role="img" aria-label="Stock level"><i data-gauge-fill data-state="{{ $snap['state'] }}" style="width: {{ $snap['fill_pct'] }}%"></i></div>
+                    <dl class="cc-dl" style="margin-top:12px">
+                        <div class="cc-kv"><dt>Status</dt><dd data-bind="state">{{ $snap['state_label'] }}</dd></div>
+                        <div class="cc-kv"><dt>Sold today</dt><dd data-bind="sold">{{ $snap['sold_today'] }}</dd></div>
+                        <div class="cc-kv"><dt>Revenue today</dt><dd data-bind="revenue">{{ $fmt($snap['revenue_today_cents']) }}</dd></div>
+                        <div class="cc-kv"><dt>Temperature</dt><dd><span data-bind="temp">{{ number_format($snap['temp_c'], 1) }}</span> C</dd></div>
+                    </dl>
                 </div>
-            @endif
-        </section>
-    </div>
+
+                <div class="cc-panel">
+                    <h2>Sales ticker</h2>
+                    <p class="cc-hint" style="margin-top:-4px">{{ $fmt(config('drinkwell.unit_price_cents')) }} a drink</p>
+                    <ul class="cc-ticker" data-ticker>
+                        @forelse ($snap['ticker'] as $t)
+                            <li class="dw-tick"><span>{{ $t['time'] }}  unit {{ $t['unit'] }}</span><span>{{ $fmt($t['cents']) }}</span></li>
+                        @empty
+                            <li class="dw-tick"><span>No sales yet today</span><span></span></li>
+                        @endforelse
+                    </ul>
+                </div>
+
+                <div class="cc-panel">
+                    <h2>Your machine</h2>
+                    <div class="dw-map" data-facility-map data-lat="{{ $snap['lat'] }}" data-lng="{{ $snap['lng'] }}" data-name="{{ $snap['facility'] }}" role="img" aria-label="Map of the facility"></div>
+                    <p style="margin-top:12px"><strong>{{ $snap['facility'] }}</strong>, {{ $snap['city'] }} ({{ $snap['serial'] }})</p>
+                </div>
+
+                <div class="cc-panel">
+                    <h2>Daily payouts</h2>
+                    <div class="dw-chart"><canvas data-payout-chart data-rows='@json($chart)' role="img" aria-label="Daily payouts"></canvas></div>
+                    <h2 style="margin-top:20px;font-size:20px">Machine log</h2>
+                    <ul class="cc-ticker" data-logs>
+                        @foreach ($snap['logs'] as $l)
+                            <li class="dw-tick"><span>{{ $l['at'] }}  {{ $l['event'] }}</span><span>{{ $l['message'] }}</span></li>
+                        @endforeach
+                    </ul>
+                </div>
+            </div>
+
+            <div class="cc-panel" style="margin-top:16px">
+                <h2>Payout ledger <a class="cc-back" href="{{ route('hub.ledger.csv') }}" style="float:right;margin:0;font-size:17px">Download CSV</a></h2>
+                @if ($ledger->isEmpty())
+                    <p>No payouts yet. Payouts appear here after the first day closes with a confirmed deposit.</p>
+                @else
+                    <div class="cc-tablewrap">
+                        <table class="cc-tbl">
+                            <caption class="sr-only">Daily payouts</caption>
+                            <thead><tr><th>Date</th><th>Drinks</th><th>Sales</th><th>Fee</th><th>Pool</th><th>Your payout</th><th>Reference</th></tr></thead>
+                            <tbody>
+                                @foreach ($ledger as $d)
+                                    <tr>
+                                        <td>{{ $d->distribution_date->format('M j') }}</td>
+                                        <td>{{ $d->day->units_sold }}</td>
+                                        <td>{{ $fmt($d->day->gross_cents) }}</td>
+                                        <td>{{ $fmt($d->day->fee_cents) }}</td>
+                                        <td>{{ $fmt($d->day->pool_cents) }}</td>
+                                        <td><strong>{{ $fmt($d->payout_cents) }}</strong></td>
+                                        <td>{{ $d->ach_ref }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                @endif
+            </div>
+        </div>
+    </section>
 </x-app-layout>

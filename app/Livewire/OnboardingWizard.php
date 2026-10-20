@@ -15,10 +15,10 @@ use Livewire\Attributes\Title;
 use Livewire\Component;
 
 /**
- * Four steps: details and age (51 or older), the machine option, a simulated identity and bank check, then a request for a partner.
+ * Four steps: details and age (51 or older), the machine option, a bank check, then a request for a partner.
  * Every step is validated on the server. No real bank details are asked for: the account is generated and fictional.
  */
-#[Layout('layouts::marketing')]
+#[Layout('layouts::app')]
 #[Title('Get started')]
 class OnboardingWizard extends Component
 {
@@ -32,7 +32,7 @@ class OnboardingWizard extends Component
 
     public string $city = '';
 
-    public string $tier = 'commercial';
+    public string $tier = '';
 
     public string $holderName = '';
 
@@ -43,8 +43,6 @@ class OnboardingWizard extends Component
     public string $accountNumber = '';
 
     public string $accountNumberConfirmation = '';
-
-    public bool $agreeSim = false;
 
     public bool $agreeTerms = false;
 
@@ -77,13 +75,14 @@ class OnboardingWizard extends Component
     public function goTo(int $step): void
     {
         $this->step = max(1, min($this->step, $step));
+        $this->resetValidation();
     }
 
     public function next(): void
     {
         match ($this->step) {
             1 => $this->validateDetails(),
-            2 => $this->validate(['tier' => ['required', 'in:commercial,enterprise']]),
+            2 => $this->validate(['tier' => ['required', 'in:commercial,enterprise']], ['tier.required' => 'Please tick a machine to continue.', 'tier.in' => 'Please tick a machine to continue.']),
             3 => $this->validateBank(),
             default => null,
         };
@@ -105,7 +104,7 @@ class OnboardingWizard extends Component
         }
 
         $this->validateDetails();
-        $this->validate(['tier' => ['required', 'in:commercial,enterprise']]);
+        $this->validate(['tier' => ['required', 'in:commercial,enterprise']], ['tier.required' => 'Please tick a machine to continue.']);
         $this->validateBank();
         $this->validate(['agreeTerms' => ['accepted']], ['agreeTerms.accepted' => 'Accept the terms to continue.']);
 
@@ -153,11 +152,9 @@ class OnboardingWizard extends Component
             'routingNumber' => ['required', 'string', new AbaRoutingNumber],
             'accountNumber' => ['required', 'string', 'regex:/^\d{4,17}$/'],
             'accountNumberConfirmation' => ['required', 'same:accountNumber'],
-            'agreeSim' => ['accepted'],
         ], [
             'accountNumber.regex' => 'The account number is 4 to 17 digits.',
             'accountNumberConfirmation.same' => 'The two account numbers do not match.',
-            'agreeSim.accepted' => 'Confirm that you understand this is a simulation.',
         ], ['holderName' => 'account holder name', 'bankName' => 'bank name', 'routingNumber' => 'routing number', 'accountNumber' => 'account number', 'accountNumberConfirmation' => 'account number confirmation']);
     }
 

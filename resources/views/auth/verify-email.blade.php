@@ -1,27 +1,20 @@
-<x-auth-page title="Verify your email" intro="Enter the six digit code we emailed to confirm your address. The code expires in 10 minutes.">
-    <p class="mb-6 break-anywhere font-mono tabular-nums text-af-700">{{ $email }}</p>
+<x-auth-page title="Check your email" intro="We sent a six-digit code to the address below. It works for 10 minutes." bg="cream">
+    <p class="cc-sub" style="margin-top:-12px;font-weight:700;overflow-wrap:anywhere">{{ $email }}</p>
 
     @if ($errors->has('mail'))
-        <x-banner type="error" class="mb-6">{{ $errors->first('mail') }}</x-banner>
+        <x-cc.notice type="error">{{ $errors->first('mail') }}</x-cc.notice>
     @endif
 
-    <form method="POST" action="{{ route('verification.verify') }}" class="flex flex-col gap-4">
+    <form method="POST" action="{{ route('verification.verify') }}" class="cc-form">
         @csrf
 
-        <x-otp-input name="code" label="Verification code" />
+        <x-cc.otp name="code" label="Your code" />
 
-        <x-button type="submit" class="w-full sm:w-auto sm:self-end">Verify email</x-button>
+        <button type="submit" class="af-btn af-btn-black">Verify</button>
     </form>
 
-    <div class="mt-8 flex flex-col gap-4 border-t border-af-200 pt-6 sm:flex-row sm:items-center sm:justify-between">
-        <form method="POST" action="{{ route('verification.send') }}">
-            @csrf
-            <x-button type="submit" variant="secondary" class="w-full sm:w-auto">Send a new code</x-button>
-        </form>
-
-        <form method="POST" action="{{ route('logout') }}">
-            @csrf
-            <x-button type="submit" variant="tertiary" class="w-full sm:w-auto">Log out</x-button>
-        </form>
+    <div class="cc-links" style="margin-top:20px">
+        <form method="POST" action="{{ route('verification.send') }}">@csrf<button type="submit" class="cc-edit" style="float:none">Send a new code</button></form>
+        <form method="POST" action="{{ route('logout') }}">@csrf<button type="submit" class="cc-edit" style="float:none">Use another email</button></form>
     </div>
 </x-auth-page>

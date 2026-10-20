@@ -1,6 +1,6 @@
 // Dashboard behaviour: polls the machine, redraws the gauge, ticker and numbers, and draws the payout chart.
 // It reads the same JSON the server used for the first paint, so a refresh never changes a figure.
-import { colors } from './tokens.js';
+import { colors, mesh } from './tokens.js';
 import { money } from './calculator.js';
 
 const POLL_MS = 10000;
@@ -29,7 +29,7 @@ export function render(root, s) {
     }
     const fill = root.querySelector('[data-gauge-fill]');
     if (fill) {
-        fill.style.height = s.fill_pct + '%';
+        fill.style.width = s.fill_pct + '%';
         fill.dataset.state = s.state;
     }
     setText(root, 'fill', s.fill_pct + '%');
@@ -83,10 +83,10 @@ export function initHub(root) {
     const canvas = root.querySelector('[data-payout-chart]');
     if (canvas && window.Chart) {
         const rows = JSON.parse(canvas.dataset.rows || '[]');
-        const mono = { family: 'Geist Mono, ui-monospace, Menlo, Consolas, monospace', size: 11 };
+        const mono = { family: 'Montserrat, ui-sans-serif, system-ui, sans-serif', size: 13 };
         new window.Chart(canvas, {
             type: 'bar',
-            data: { labels: rows.map((r) => r.date), datasets: [{ label: 'Daily payout', data: rows.map((r) => r.cents / 100), backgroundColor: colors.accent, borderWidth: 0 }] },
+            data: { labels: rows.map((r) => r.date), datasets: [{ label: 'Daily payout', data: rows.map((r) => r.cents / 100), backgroundColor: mesh.coral[0], borderWidth: 0 }] },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,

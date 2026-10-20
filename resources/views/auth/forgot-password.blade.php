@@ -1,13 +1,11 @@
-<x-auth-page title="Reset your password" intro="Enter your email address and we will send you a six digit code. You use the code on the next page to choose a new password.">
-    <form method="POST" action="{{ route('password.email') }}" class="flex flex-col gap-4">
+<x-auth-page title="Forgot your password?" intro="Enter your email and we will send you a six-digit code." bg="amber">
+    <form method="POST" action="{{ route('password.email') }}" class="cc-form">
         @csrf
         <x-form.guard />
 
-        <x-field name="email" label="Email" type="email" :value="old('email')" required autofocus autocomplete="username" />
+        <x-cc.field name="email" label="Email" type="email" :value="old('email')" required autofocus autocomplete="username" placeholder="you@example.com" />
 
-        <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <a href="{{ route('password.reset') }}" class="flex min-h-11 items-center hover:underline">I already have a code</a>
-            <x-button type="submit" class="w-full sm:w-auto">Send code</x-button>
-        </div>
+        <button type="submit" class="af-btn af-btn-black">Send me a code</button>
+        <div class="cc-links"><a href="{{ route('password.reset') }}">I already have a code</a><a href="{{ route('login') }}">Back to sign in</a></div>
     </form>
 </x-auth-page>

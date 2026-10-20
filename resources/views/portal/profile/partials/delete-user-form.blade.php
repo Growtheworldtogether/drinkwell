@@ -1,10 +1,16 @@
-<p class="mb-4 text-af-500">Deleting your account removes it and its data permanently. Download anything you want to keep first.</p>
+<p>This removes your account and its data for good. You will be asked for your password first.</p>
 
-<form method="post" action="{{ route('profile.destroy') }}">
+<form method="post" action="{{ route('profile.destroy') }}" class="cc-form" x-data="{ open: {{ $errors->userDeletion->isNotEmpty() ? 'true' : 'false' }} }">
     @csrf
     @method('delete')
 
-    <x-inline-confirm trigger="Delete account" title="Delete your account?" confirm="Delete account" :open="$errors->userDeletion->isNotEmpty()">
-        <x-field name="password" label="Password" type="password" id="delete_password" help="Enter your password to confirm." :error="$errors->userDeletion->first('password') ?: null" autocomplete="current-password" />
-    </x-inline-confirm>
+    <button type="button" class="af-btn cc-bad" style="width:auto" x-show="! open" x-on:click="open = true">Delete account</button>
+
+    <div x-show="open" x-cloak class="cc-form">
+        <x-cc.field name="password" label="Your password" type="password" id="delete_password" help="Enter your password to confirm." :error="$errors->userDeletion->first('password') ?: null" autocomplete="current-password" />
+        <div class="cc-step-nav">
+            <button type="submit" class="af-btn cc-bad" style="width:auto">Yes, delete my account</button>
+            <button type="button" class="af-btn cc-btn-outline" style="width:auto" x-on:click="open = false">Cancel</button>
+        </div>
+    </div>
 </form>

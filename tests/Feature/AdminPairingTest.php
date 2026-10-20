@@ -127,3 +127,32 @@ it('records "I sent my deposit" once, and the administrator confirms it', functi
 it('no longer has a demo shortcut for members to confirm their own deposit', function () {
     expect(\Illuminate\Support\Facades\Route::has('onboard.demo-confirm'))->toBeFalse();
 });
+
+it('stores a payment proof privately, rejects bad files, and serves it only to the owner and admins', function () {
+    Mail::fake();
+    \Illuminate\Support\Facades\Storage::fake('local');
+    machine();
+    $req = waitingMember();
+    $admin = signedIn(Role::Admin);
+    $this->post(route('admin.pairings.assign', $req), details());
+    $member = $req->user->fresh();
+
+    $this->actingAs($member)->post(route('onboard.report'), ['proof' => \Illuminate\Http\UploadedFile::fake()->create('x.exe', 10)])->assertSessionHasErrors('proof');
+    $this->post(route('onboard.report'), ['proof' => \Illuminate\Http\UploadedFile::fake()->create('big.pdf', 6000, 'application/pdf')])->assertSessionHasErrors('proof');
+
+    $this->post(route('onboard.report'), ['proof' => \Illuminate\Http\UploadedFile::fake()->image('receipt.jpg'), 'sent_on' => now()->toDateString()])->assertSessionDoesntHaveErrors();
+    $path = $req->fresh()->proof_path;
+    expect($path)->not->toBeNull();
+    \Illuminate\Support\Facades\Storage::disk('local')->assertExists($path);
+
+    $this->get(route('onboard.proof'))->assertOk();
+    $this->actingAs($admin)->get(route('admin.pairings.proof', $req))->assertOk();
+    $this->actingAs(User::factory()->role(Role::Partner)->create())->get(route('admin.pairings.proof', $req))->assertForbidden();
+
+    $this->actingAs($member)->post(route('onboard.report'), ['proof' => \Illuminate\Http\UploadedFile::fake()->image('new.png')]);
+    \Illuminate\Support\Facades\Storage::disk('local')->assertMissing($path);
+});
+
+it('keeps demo tools off the member dashboard and behind admin only', function () {
+    $this->actingAs(User::factory()->role(Role::Partner)->create())->post(route('admin.demo'), [])->assertForbidden();
+});

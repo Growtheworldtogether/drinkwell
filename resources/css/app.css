@@ -3069,3 +3069,75 @@
         font-size: 15px;
     }
 }
+
+/* Progress strip on the status page */
+@layer components {
+    .pf-steps {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: 0 0 24px;
+        padding: 0;
+        list-style: none;
+    }
+
+    .pf-steps li {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 16px 8px 8px;
+        border: 1px solid #c9c9c9;
+        border-radius: 9999px;
+        color: #595959;
+        font-size: 16px;
+    }
+
+    .pf-steps li span {
+        display: grid;
+        place-items: center;
+        width: 28px;
+        height: 28px;
+        border-radius: 9999px;
+        background: #e2e2e2;
+        font-weight: 700;
+    }
+
+    .pf-steps li.is-done span,
+    .pf-steps li.is-now span {
+        background: #000;
+        color: #fff;
+    }
+
+    .pf-steps li.is-now {
+        border-color: #000;
+        color: #000;
+        font-weight: 700;
+    }
+}
+
+/* Admin pairing rows */
+@layer components {
+    .pf-detail {
+        padding: 12px 16px;
+        border-top: 1px solid #e2e2e2;
+    }
+
+    .pf-detail summary {
+        min-height: 44px;
+        padding-block: 8px;
+        cursor: pointer;
+    }
+
+    .pf-form-grid {
+        display: grid;
+        gap: 16px;
+        grid-template-columns: minmax(0, 1fr);
+        padding-block: 16px;
+    }
+
+    @media (min-width: 768px) {
+        .pf-form-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .pf-form-grid > p,
+        .pf-form-grid > .pf-actions { grid-column: 1 / -1; }
+    }
+}

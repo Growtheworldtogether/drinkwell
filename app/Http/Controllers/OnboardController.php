@@ -17,18 +17,24 @@ class OnboardController extends Controller
 
     public function status(Request $request): View|RedirectResponse
     {
-        $mine = MachineOwnership::query()->with('machine')->where('user_id', $request->user()->id)->first();
+        $user = $request->user();
+        $req = $user->pairingRequest;
+        $mine = MachineOwnership::query()->with('machine')->where('user_id', $user->id)->first();
 
-        if (! $mine) {
+        if (! $req && ! $mine) {
             return redirect()->route('onboard');
         }
 
+        if (! $mine) {
+            return view('onboard.status', ['req' => $req, 'mine' => null]);
+        }
+
         return view('onboard.status', [
+            'req' => $req,
             'mine' => $mine,
             'machine' => $mine->machine,
             'partner' => $this->pairing->partnerOf($mine),
-            'reference' => PairingService::reference($mine),
-            'reported' => session('reported', false),
+            'reference' => $req?->reference ?: PairingService::reference($mine),
         ]);
     }
 
@@ -36,20 +42,13 @@ class OnboardController extends Controller
     public function report(Request $request, MailDispatcher $mail): RedirectResponse
     {
         $mine = MachineOwnership::query()->where('user_id', $request->user()->id)->firstOrFail();
+        $req = $request->user()->pairingRequest;
 
-        if ($mine->settlement_status === SettlementStatus::PendingSettlement) {
+        if ($mine->settlement_status === SettlementStatus::PendingSettlement && $req && ! $req->deposit_reported_at) {
+            $req->update(['deposit_reported_at' => now()]);
             $mail->sendToAdmins(fn () => new DepositReportedAdmin($request->user(), $mine), 'funding');
         }
 
-        return redirect()->route('onboard.status')->with('reported', true)->with('status', 'Thanks. An administrator will confirm your deposit.');
-    }
-
-    /** Demo shortcut so a classroom run needs no second person: settle the deposit now. */
-    public function demoConfirm(Request $request): RedirectResponse
-    {
-        $mine = MachineOwnership::query()->where('user_id', $request->user()->id)->firstOrFail();
-        $this->pairing->settle($mine);
-
-        return redirect()->route('hub.dashboard')->with('status', 'Deposit confirmed (demo). Payouts start tomorrow.');
+        return redirect()->route('onboard.status')->with('status', 'Thanks. We will let you know as soon as your co-partner confirms it.');
     }
 }

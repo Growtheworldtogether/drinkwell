@@ -3,7 +3,6 @@
 namespace App\Livewire;
 
 use App\Enums\Tier;
-use App\Exceptions\NoMachineAvailable;
 use App\Models\PartnerProfile;
 use App\Models\PayoutAccount;
 use App\Rules\AbaRoutingNumber;
@@ -16,7 +15,7 @@ use Livewire\Attributes\Title;
 use Livewire\Component;
 
 /**
- * Four steps: details and age (51 or older), the machine option, a simulated identity and bank check, then pairing.
+ * Four steps: details and age (51 or older), the machine option, a simulated identity and bank check, then a request for a partner.
  * Every step is validated on the server. No real bank details are asked for: the account is generated and fictional.
  */
 #[Layout('layouts::marketing')]
@@ -57,7 +56,7 @@ class OnboardingWizard extends Component
     {
         $user = auth()->user();
 
-        if ($user->ownerships()->exists()) {
+        if ($user->ownerships()->exists() || $user->pairingRequest()->exists()) {
             $this->redirectRoute('onboard.status', navigate: false);
 
             return;
@@ -126,15 +125,7 @@ class OnboardingWizard extends Component
         $user->forceFill(['name' => trim($this->name), 'phone' => $this->phone])->save();
         $this->saveBank($user->id);
 
-        try {
-            $pairing->pair($user->fresh(), Tier::from($this->tier));
-        } catch (NoMachineAvailable $e) {
-            $this->addError('form', $e->getMessage().' Try the other option or come back later.');
-
-            return;
-        } catch (\DomainException) {
-            // Already paired in another tab.
-        }
+        $pairing->request($user->fresh(), Tier::from($this->tier));
 
         $this->redirectRoute('onboard.status');
     }
@@ -191,7 +182,7 @@ class OnboardingWizard extends Component
     public function render(): View
     {
         return view('livewire.onboarding-wizard', [
-            'steps' => [1 => 'About you', 2 => 'Your machine', 3 => 'Bank account', 4 => 'Review and pair'],
+            'steps' => [1 => 'About you', 2 => 'Your machine', 3 => 'Bank account', 4 => 'Review and send'],
             'maxBirthDate' => now()->subYears((int) config('drinkwell.min_age'))->toDateString(),
             'tiers' => collect(Tier::cases())->mapWithKeys(fn (Tier $t) => [$t->value => [
                 'label' => $t->label(), 'stake' => $t->stakeCents(), 'capacity' => $t->capacity(),

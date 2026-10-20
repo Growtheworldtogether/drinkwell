@@ -22,7 +22,13 @@ class HubController extends Controller
 
         $rows = DailyDistribution::query()->with('day')->where('user_id', $user->id)->orderByDesc('distribution_date')->limit(30)->get();
 
+        $mine = \App\Models\MachineOwnership::query()->where('user_id', $user->id)->first();
+        $deposit = $mine && $mine->settlement_status === \App\Enums\SettlementStatus::PendingSettlement
+            ? ['req' => $user->pairingRequest, 'mine' => $mine, 'partner' => app(\App\Services\PairingService::class)->partnerOf($mine), 'reference' => $user->pairingRequest?->reference ?: \App\Services\PairingService::reference($mine)]
+            : null;
+
         return view('hub.dashboard', [
+            'deposit' => $deposit,
             'snap' => $this->view->snapshot($machine, $user),
             'machine' => $machine,
             'ledger' => $rows,

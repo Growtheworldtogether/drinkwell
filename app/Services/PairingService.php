@@ -10,6 +10,7 @@ use App\Exceptions\NoMachineAvailable;
 use App\Mail\PairingDossier;
 use App\Mail\PairingNoticeToPartner;
 use App\Models\MachineOwnership;
+use App\Models\PairingRequest;
 use App\Models\User;
 use App\Models\VendingMachine;
 use Illuminate\Support\Facades\DB;
@@ -25,7 +26,7 @@ class PairingService
 {
     public function __construct(private SimulatedPartners $partners, private MailDispatcher $mail) {}
 
-    public function pair(User $user, Tier $tier): MachineOwnership
+    public function pair(User $user, Tier $tier, bool $notify = true): MachineOwnership
     {
         if ($user->ownerships()->exists()) {
             throw new \DomainException('This account is already paired with a machine.');
@@ -77,10 +78,75 @@ class PairingService
         // Mail goes out after the commit, so a mail outage cannot undo the pairing.
         $ownership->loadMissing('machine');
         $partner = $this->partnerOf($ownership);
-        $this->mail->sendQuietly(new PairingDossier($user, $partner, $ownership), $user);
-        $this->mail->logSimulated(new PairingNoticeToPartner($user, $partner, $ownership), $partner);
+        if ($notify) {
+            $this->mail->sendQuietly(new PairingDossier($user, $partner, $ownership), $user);
+            $this->mail->logSimulated(new PairingNoticeToPartner($user, $partner, $ownership), $partner);
+        }
 
         return $ownership;
+    }
+
+    /** A new member asks to be paired. Nothing is assigned until an administrator pairs them. */
+    public function request(User $user, Tier $tier): PairingRequest
+    {
+        return PairingRequest::firstOrCreate(['user_id' => $user->id], ['tier' => $tier->value, 'status' => PairingRequest::FINDING]);
+    }
+
+    /**
+     * An administrator pairs a waiting member: assigns a machine, shows the co-partner under the name given, stores the
+     * payment details the member will see, and emails them.
+     *
+     * @param  array{partner_name: string, partner_city: ?string, account_holder: string, bank_name: string, routing_number: ?string, account_number: string, reference: ?string, note: ?string}  $d
+     */
+    public function assign(PairingRequest $req, array $d): MachineOwnership
+    {
+        $user = $req->user;
+        $mine = $this->pair($user, Tier::from($req->tier), notify: false);
+
+        $partner = $this->partnerOf($mine);
+        $partner->update(['name' => $d['partner_name']]);
+        if (! empty($d['partner_city'])) {
+            $partner->profile?->update(['city' => $d['partner_city']]);
+        }
+
+        $req->update(['status' => PairingRequest::PAIRED, 'paired_at' => now()] + $this->details($d, $mine));
+
+        $mine->loadMissing('machine');
+        $this->mail->sendQuietly(new PairingDossier($user, $partner->fresh('profile'), $mine, $req->fresh()), $user);
+
+        return $mine;
+    }
+
+    /** Fixes a typo in the details after pairing and emails the member the corrected version. */
+    public function updateDetails(PairingRequest $req, array $d): void
+    {
+        $mine = MachineOwnership::query()->with('machine')->where('user_id', $req->user_id)->firstOrFail();
+        $partner = $this->partnerOf($mine);
+        $partner->update(['name' => $d['partner_name']]);
+        if (! empty($d['partner_city'])) {
+            $partner->profile?->update(['city' => $d['partner_city']]);
+        }
+
+        $req->update($this->details($d, $mine));
+        $this->mail->sendQuietly(new PairingDossier($req->user, $partner->fresh('profile'), $mine, $req->fresh(), updated: true), $req->user);
+    }
+
+    /** @return array<string, mixed> */
+    private function details(array $d, MachineOwnership $mine): array
+    {
+        $number = trim((string) $d['account_number']);
+
+        return [
+            'partner_name' => trim($d['partner_name']),
+            'partner_city' => ($d['partner_city'] ?? null) ?: null,
+            'account_holder' => trim($d['account_holder']),
+            'bank_name' => trim($d['bank_name']),
+            'routing_number' => ($d['routing_number'] ?? null) ?: null,
+            'account_number' => $number,
+            'account_last4' => substr($number, -4),
+            'reference' => ($d['reference'] ?? null) ?: self::reference($mine),
+            'note' => ($d['note'] ?? null) ?: null,
+        ];
     }
 
     public function partnerOf(MachineOwnership $mine): User

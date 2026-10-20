@@ -21,7 +21,7 @@
             <ol class="cc-cards3">
                 <li class="cc-card cc-card-1" data-reveal><div class="cc-photo" aria-hidden="true"><span>Photo</span></div><div class="cc-card-body"><h3>Plain words</h3><p>Everything is written clearly, and the text on every page can be made bigger.</p></div></li>
                 <li class="cc-card cc-card-2" data-reveal><div class="cc-photo" aria-hidden="true"><span>Photo</span></div><div class="cc-card-body"><h3>Honest money</h3><p>Every amount is counted in whole cents and the pool is always even, so nobody is ever short a cent. Sales sell at {{ $fmt(config('drinkwell.unit_price_cents')) }} a drink.</p></div></li>
-                <li class="cc-card cc-card-3" data-reveal><div class="cc-photo" aria-hidden="true"><span>Photo</span></div><div class="cc-card-body"><h3>Your details stay safe</h3><p>No card payments on this site. Bank details are stored encrypted and only the last four digits are shown.</p></div></li>
+                <li class="cc-card cc-card-3" data-reveal><div class="cc-photo" aria-hidden="true"><span>Photo</span></div><div class="cc-card-body"><h3>Your details stay safe</h3><p>Your deposit goes to your co-partner, never to us, and there are no card payments on this site. Bank details are stored encrypted and only the last four digits are shown.</p></div></li>
             </ol>
         </div>
     </section>

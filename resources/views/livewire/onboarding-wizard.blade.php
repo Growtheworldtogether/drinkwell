@@ -2,7 +2,7 @@
     <div class="af-wrap af-apply">
         <p class="af-apply-meta"><span class="tabular-nums">Step {{ $step }} of 4</span>: {{ $steps[$step] }}</p>
         <h1 class="af-h1">{{ $steps[$step] }}</h1>
-        <p class="af-lead">Pairing takes a minute.</p>
+        <p class="af-lead">Sign-up takes a minute.</p>
 
         <ol class="af-apply-steps mt-6" aria-label="Onboarding steps">
             @foreach ($steps as $number => $label)
@@ -59,7 +59,7 @@
                         <div><dt>Date of birth</dt><dd class="font-mono">{{ $dob }}</dd></div>
                         <div><dt>Option</dt><dd>{{ $tiers[$tier]['label'] }}, deposit <span class="font-mono">{{ \App\Support\Money::format($tiers[$tier]['stake']) }}</span></dd></div>
                     </dl>
-                    <p>Pairing assigns you a machine and a co-partner right away. The co-partner is simulated. Your ownership then waits in "pending settlement" until the off-platform deposit is confirmed.</p>
+                    <p>We then look for a co-partner for your machine. This is usually done within 1 business day, and we email you their details when you are paired.</p>
                     <x-field name="agreeTerms" label="I accept the terms and privacy notice." type="checkbox" wire:model="agreeTerms" />
                     <p><a class="underline" href="{{ route('terms') }}" target="_blank" rel="noopener">Terms</a> and <a class="underline" href="{{ route('privacy') }}" target="_blank" rel="noopener">privacy</a> open in a new tab.</p>
                 @endif
@@ -68,7 +68,7 @@
                 @if ($step > 1)
                     <button type="button" class="af-btn af-btn-soft" wire:click="back">Back</button>
                 @endif
-                <button type="submit" class="af-btn af-btn-black" wire:loading.attr="disabled">{{ $step === 4 ? 'Pair me now' : 'Continue' }}</button>
+                <button type="submit" class="af-btn af-btn-black" wire:loading.attr="disabled">{{ $step === 4 ? 'Find me a partner' : 'Continue' }}</button>
             </div>
         </form>
     </div>

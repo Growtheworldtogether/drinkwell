@@ -82,6 +82,12 @@ class User extends Authenticatable
         return $this->hasOne(PartnerProfile::class);
     }
 
+    /** @return HasOne<PairingRequest, $this> */
+    public function pairingRequest(): HasOne
+    {
+        return $this->hasOne(PairingRequest::class);
+    }
+
     /** @return HasMany<MachineOwnership, $this> */
     public function ownerships(): HasMany
     {

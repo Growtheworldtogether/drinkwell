@@ -14,8 +14,8 @@
             <h2 class="cc-huge" data-reveal><span>Start in</span><span>three steps</span></h2>
             <ol class="cc-cards3">
                 <li class="cc-card cc-card-1" data-reveal><div class="cc-photo" aria-hidden="true"><span>Photo</span></div><div class="cc-card-body"><span class="cc-num">1</span><h3>Tell us about you</h3><p>Sign up, verify your email, and give your date of birth. Co-partners are {{ config('drinkwell.min_age') }} or older.</p></div></li>
-                <li class="cc-card cc-card-2" data-reveal><div class="cc-photo" aria-hidden="true"><span>Photo</span></div><div class="cc-card-body"><span class="cc-num">2</span><h3>Get paired at once</h3><p>You get a machine and a co-partner right away. Your pairing email has every detail.</p></div></li>
-                <li class="cc-card cc-card-3" data-reveal><div class="cc-photo" aria-hidden="true"><span>Photo</span></div><div class="cc-card-body"><span class="cc-num">3</span><h3>Pay the deposit</h3><p>The deposit is sent by bank wire, not by card on this site. Once it is confirmed, daily payouts begin.</p></div></li>
+                <li class="cc-card cc-card-2" data-reveal><div class="cc-photo" aria-hidden="true"><span>Photo</span></div><div class="cc-card-body"><span class="cc-num">2</span><h3>Get a partner</h3><p>We find you a co-partner and a machine, usually within 1 business day. Your email and your dashboard then show every detail.</p></div></li>
+                <li class="cc-card cc-card-3" data-reveal><div class="cc-photo" aria-hidden="true"><span>Photo</span></div><div class="cc-card-body"><span class="cc-num">3</span><h3>Pay your co-partner</h3><p>You are buying half of a machine they already own, so you pay them directly. Once they confirm it, daily payouts begin.</p></div></li>
             </ol>
         </div>
     </section>
@@ -40,8 +40,8 @@
 
     <section id="deposit" class="cc-section cc-center" data-bg="cream">
         <div class="cc-wrap">
-            <h2 class="cc-h2" data-reveal>Paying the deposit</h2>
-            <p class="cc-lead" style="margin-inline:auto" data-reveal>There is no card form on this site. After pairing, you get an email with your machine, your co-partner's contact details, a reference and a ready-made message to send. Your share stays "pending settlement" until the deposit is confirmed.</p>
+            <h2 class="cc-h2" data-reveal>Paying your co-partner</h2>
+            <p class="cc-lead" style="margin-inline:auto" data-reveal>There is no card form on this site. When you are paired, we email you your co-partner's name and payment details, and the same details show on your dashboard. You are buying your half of a machine they already own, so the deposit goes straight to them and never to us. Your share starts the day they confirm it.</p>
             <div class="cc-btn-row" data-reveal><a class="af-btn af-btn-black" href="{{ route('register') }}">Get started</a><a class="af-btn cc-btn-outline" href="{{ route('questions') }}">Read the questions</a></div>
         </div>
     </section>

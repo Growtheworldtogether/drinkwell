@@ -24,7 +24,7 @@
                 </details>
                 <details class="cc-q" data-reveal>
                     <summary>How do I get a co-partner?</summary>
-                    <p>You are paired the moment you finish signing up. Your pairing email shows your machine, your co-partner's contact details and a reference number.</p>
+                    <p>After you sign up we find you a co-partner, usually within 1 business day. Your status page says "Finding a partner" until then. When you are paired, we email you their name and payment details and show them on your dashboard.</p>
                 </details>
                 <details class="cc-q" data-reveal>
                     <summary>How does the machine earn money?</summary>
@@ -40,11 +40,11 @@
                 </details>
                 <details class="cc-q" data-reveal>
                     <summary>When do payouts start?</summary>
-                    <p>As soon as your deposit is confirmed. Until then your share shows as pending settlement on your dashboard.</p>
+                    <p>The day your co-partner confirms your deposit. Until then your dashboard says you are waiting for them to confirm.</p>
                 </details>
                 <details class="cc-q" data-reveal>
-                    <summary>How do I pay the deposit?</summary>
-                    <p>By bank wire. There is no card payment on this site. Your pairing email explains what to send and which reference to use.</p>
+                    <summary>How do I pay my deposit?</summary>
+                    <p>You send it straight to your co-partner, because you are buying your half of a machine they already own. It never goes to us. The account details and reference are in your pairing email and on your dashboard. There is no card payment on this site.</p>
                 </details>
                 <details class="cc-q" data-reveal>
                     <summary>Can I see my history?</summary>

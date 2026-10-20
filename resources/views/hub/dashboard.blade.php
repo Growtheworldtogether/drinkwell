@@ -5,7 +5,10 @@
             <p class="pf-notice" role="status">{{ session('status') }}</p>
         @endif
         @if ($snap['settlement'] === 'pending_settlement')
-            <p class="pf-notice" role="status">Your deposit is pending settlement, so no payouts accrue yet. <a class="pf-link" href="{{ route('onboard.status') }}">See the steps</a>.</p>
+            <p class="pf-notice" role="status">Waiting for your co-partner to confirm your deposit, so no payouts accrue yet. <a class="pf-link" href="{{ route('onboard.status') }}">See the steps</a>.</p>
+            @if ($deposit)
+                @include('onboard._deposit', $deposit)
+            @endif
         @endif
 
         <x-stat-strip>

@@ -1,9 +1,13 @@
 <x-mail::message>
-# Your machine and co-partner
+# {{ $updated ? 'Updated payment details' : 'Your machine and co-partner' }}
 
 Hello {{ $userName }},
 
-You are paired with a co-partner on one machine. **This is a classroom simulation: the people and amounts are fictional, and no real money moves.**
+@if ($updated)
+We corrected the payment details for your deposit. Please use the details below. **Demo: the people and amounts are fictional, and no real money moves.**
+@else
+You are paired with a co-partner on one machine. **Demo: the people and amounts are fictional, and no real money moves.**
+@endif
 
 <x-mail::panel>
 **Machine {{ $machine->serial_no }}**
@@ -11,22 +15,29 @@ You are paired with a co-partner on one machine. **This is a classroom simulatio
 {{ $machine->tier->label() }}. Your deposit: {{ $stake }}.
 </x-mail::panel>
 
-**Your co-partner (simulated)**
-{{ $partner->name }}
-{{ $partner->email }}
-{{ $partner->profile?->phone }}
+**Your co-partner**
+{{ $partner->name }}@if ($partner->profile?->city), {{ $partner->profile->city }}@endif
 
-**Settlement happens off the platform.** {{ $brand->name }} takes no card or online payment. In the story, each partner sends their deposit by bank wire to the escrow account, quoting this reference:
+**Send your deposit to your co-partner.** You are buying your half of a machine they already own, so the deposit goes straight to them and never to {{ $brand->name }}.
 
-**{{ $reference }}**
-
-Your ownership stays "pending settlement" until the deposit is confirmed. Payouts start the day after.
-
-**A message you can send to your co-partner**
-
+@if ($request)
 <x-mail::panel>
-{!! nl2br(e($copy)) !!}
+**Account holder:** {{ $request->account_holder }}
+**Bank:** {{ $request->bank_name }}
+@if ($request->routing_number)
+**Routing number:** {{ $request->routing_number }}
+@endif
+**Account number:** {{ $request->account_number }}
+**Amount:** {{ $stake }}
+**Reference:** {{ $reference }}
+@if ($request->note)
+
+{{ $request->note }}
+@endif
 </x-mail::panel>
+@endif
+
+When you have sent it, open your status page and choose "I sent my deposit". Your share starts the day your co-partner confirms it.
 
 <x-mail::button :url="$statusUrl">See your status</x-mail::button>
 </x-mail::message>

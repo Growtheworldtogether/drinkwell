@@ -3,12 +3,13 @@
 namespace App\Mail;
 
 use App\Models\MachineOwnership;
+use App\Models\PairingRequest;
 use App\Models\User;
 use App\Services\PairingService;
 
 class PairingDossier extends BrandedMail
 {
-    public function __construct(protected User $user, protected User $partner, protected MachineOwnership $ownership) {}
+    public function __construct(protected User $user, protected User $partner, protected MachineOwnership $ownership, protected ?PairingRequest $request = null, protected bool $updated = false) {}
 
     public function template(): string
     {
@@ -17,18 +18,13 @@ class PairingDossier extends BrandedMail
 
     protected function subjectLine(): string
     {
-        return 'Your machine and co-partner';
+        return $this->updated ? 'Updated payment details for your deposit' : 'Your machine and co-partner';
     }
 
     protected function data(): array
     {
         $m = $this->ownership->machine;
-        $ref = PairingService::reference($this->ownership);
-
-        $copy = "Hello {$this->partner->name},\n\n"
-            ."I am {$this->user->name}, your co-partner on machine {$m->serial_no} ({$m->facility_name}, {$m->city}).\n"
-            ."I will send my deposit of {$this->money($this->ownership->capital_cents)} to the escrow account with reference {$ref} and will tell you when it is done. "
-            .'Please confirm when yours is sent too.'."\n\nThank you,\n{$this->user->name}";
+        $ref = $this->request?->reference ?: PairingService::reference($this->ownership);
 
         return [
             'userName' => $this->user->name,
@@ -36,7 +32,8 @@ class PairingDossier extends BrandedMail
             'machine' => $m,
             'stake' => $this->money($this->ownership->capital_cents),
             'reference' => $ref,
-            'copy' => $copy,
+            'request' => $this->request,
+            'updated' => $this->updated,
             'statusUrl' => route('onboard.status'),
         ];
     }

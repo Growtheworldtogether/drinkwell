@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\BrandingController;
 use App\Http\Controllers\Admin\MachinesController;
+use App\Http\Controllers\Admin\PairingsController;
 use App\Http\Controllers\Admin\RecordsController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\HubController;
@@ -44,7 +45,6 @@ Route::middleware(['auth', 'active', 'verified.otp', 'role:applicant,partner'])-
     Route::livewire('/', OnboardingWizard::class)->name('onboard');
     Route::get('/status', [OnboardController::class, 'status'])->name('onboard.status');
     Route::post('/report', [OnboardController::class, 'report'])->name('onboard.report');
-    Route::post('/demo-confirm', [OnboardController::class, 'demoConfirm'])->name('onboard.demo-confirm');
 });
 
 // The co-partner hub.
@@ -67,6 +67,9 @@ Route::middleware(['admin.ip', 'auth', 'active', 'role:admin', 'admin.idle', 'th
     Route::get('/', [$m, 'overview'])->name('overview');
     Route::get('/machines', [$m, 'index'])->name('machines');
     Route::get('/machines/{machine}', [$m, 'show'])->name('machines.show');
+    Route::get('/pairings', [PairingsController::class, 'index'])->name('pairings');
+    Route::post('/pairings/{pairing}/assign', [PairingsController::class, 'assign'])->name('pairings.assign');
+    Route::put('/pairings/{pairing}', [PairingsController::class, 'update'])->name('pairings.update');
     Route::post('/ownerships/{ownership}/confirm', [$m, 'confirmDeposit'])->name('ownerships.confirm');
 
     Route::view('/settings', 'admin.settings.general')->name('settings');

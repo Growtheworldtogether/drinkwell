@@ -6,7 +6,7 @@
 <body class="bg-af-white text-af-ink font-sans antialiased">
     @php
         $groups = [
-            'Operate' => [['admin.overview', 'Overview'], ['admin.machines', 'Machines']],
+            'Operate' => [['admin.overview', 'Overview'], ['admin.pairings', 'Pairings'], ['admin.machines', 'Machines']],
             'Platform' => [['admin.settings', 'Settings']],
             'Records' => [['admin.audit', 'Audit log'], ['admin.emails', 'Email log'], ['admin.integrity', 'Integrity']],
         ];

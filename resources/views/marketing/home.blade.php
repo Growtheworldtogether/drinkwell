@@ -21,7 +21,7 @@
 
     <section class="cc-section cc-center" data-bg="mint">
         <div class="cc-wrap">
-            <p class="cc-statement" data-reveal>At {{ $brand->name }}, we are refreshing what it means to co-own: one drink, one payout at a time.</p>
+            <p class="cc-statement" data-reveal>At {{ $brand->name }}, we are refreshing what it means to co&#8209;own: one drink, one payout at a time.</p>
             <div class="cc-btn-row" data-reveal><a class="af-btn af-btn-black" href="{{ route('program') }}">Discover how it works</a></div>
         </div>
     </section>

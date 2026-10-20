@@ -41,6 +41,7 @@ export default { colors, fonts, screens, shadows };
 // Colors of the animated gradient behind the public home page, one set per section mood.
 export const mesh = {
     coral: ['#F7723A', '#F8805E', '#FCB791', '#F6613B', '#F8A06E'],
+    mint: ['#86D8BC', '#92D8CF', '#ACE5C6', '#9ADBD0', '#B5E8C8'],
     gray: ['#F5F5F5', '#F3F3F3', '#F7F7F7', '#F2F2F2', '#F5F5F5'],
     amber: ['#F6AF4E', '#F3BF6B', '#F1D49D', '#F0AF56', '#EFD49A'],
     cream: ['#F4EEDE', '#F2EFE7', '#F8EFDF', '#F1EDE1', '#F4F4F4'],

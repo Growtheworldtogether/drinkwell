@@ -10,11 +10,16 @@ check() {  # $1 label, $2 regex, $3.. paths (missing paths are skipped; a match 
   if [ -n "$out" ]; then echo "FAIL: $label"; echo "$out"; fail=1; fi
 }
 UI="resources app"
+# Only the public home stylesheet may use gradients, blur, translucency, shadow and motion. Everything else keeps the flat rules.
+PUBX=(--exclude=public.css --exclude=public-fx.js)
 PORTAL="resources/views/portal resources/views/admin resources/views/apply resources/views/layouts/app.blade.php resources/views/layouts/admin.blade.php resources/views/livewire"
 PUBLIC="resources/views/marketing resources/views/auth resources/views/layouts/marketing.blade.php"
 
+XARGS=("${PUBX[@]}")
 check "gradients"             '\bbg-gradient|\b(from|via|to)-(af-[a-z0-9-]+|[a-z]+-\d{2,3})\b|bg-clip-text|text-transparent|linear-gradient|radial-gradient|conic-gradient' $UI
+XARGS=("${PUBX[@]}")
 check "blur / glass / alpha"  'backdrop-blur|backdrop-filter|\bblur-(sm|md|lg|xl)|\bbg-[a-z0-9-]+/\d+' $UI
+XARGS=()
 # CSS filter is banned except the v9 grayscale tiles on .leaflet-tile-pane (and the allowed marker drop-shadow).
 XARGS=(--exclude=app.css)
 check "css filter"            '(^|[^-])filter:' resources/views resources/js app
@@ -23,7 +28,9 @@ check "left-border accents"   '\bborder-l(-\d+)?\b|\bborder-s\b' $UI
 check "default radius"        '\brounded(?![-\w])|\brounded-(?!pill\b|input\b|panel\b)' $UI
 check "pill in portal"        '\brounded-(pill|input)\b' $PORTAL
 check "panel radius on public" '\brounded-panel\b' $PUBLIC
+XARGS=("${PUBX[@]}")
 check "shadows"               '(?<!drop-)\bshadow(?![-\w])|\bshadow-(?!popover\b)[a-z0-9]+|\bdrop-shadow-' $UI
+XARGS=()
 check "opacity hover / fade"  'hover:opacity|group-hover:opacity|transition-opacity|\bfade|\banimate-' $UI
 XARGS=(--exclude=payback-chart.js --exclude=public-fx.js)
 check "scroll effects"        'IntersectionObserver|data-aos|\baos\b|scroll-smooth|snap-y|parallax' $UI

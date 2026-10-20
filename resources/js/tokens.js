@@ -37,3 +37,12 @@ export const screens = { sm: '640px', lg: '1024px', xl: '1280px' };
 export const shadows = { popover: '0 4px 16px rgba(0,0,0,0.12)' };
 
 export default { colors, fonts, screens, shadows };
+
+// Colors of the animated gradient behind the public home page, one set per section mood.
+export const mesh = {
+    coral: ['#F7723A', '#F8805E', '#FCB791', '#F6613B', '#F8A06E'],
+    gray: ['#F5F5F5', '#F3F3F3', '#F7F7F7', '#F2F2F2', '#F5F5F5'],
+    amber: ['#F6AF4E', '#F3BF6B', '#F1D49D', '#F0AF56', '#EFD49A'],
+    cream: ['#F4EEDE', '#F2EFE7', '#F8EFDF', '#F1EDE1', '#F4F4F4'],
+    white: ['#FFFFFF', '#F7F7F7', '#FFFFFF', '#F4F4F4', '#FFFFFF'],
+};

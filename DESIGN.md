@@ -291,3 +291,14 @@ Use only tokens from section 2 and the spacing scale from section 5.
 Include: empty, loading, error and success states. Every control must perform a real action.
 Return the file list changed and confirm the design lint passes.
 ```
+
+---
+
+## Public home page (supersedes the Uber-style public rules above)
+
+The home page follows the Coca-Cola Company homepage: a full-screen animated gradient behind everything that changes with the section in view (coral, grey, amber, cream, white), a header that is transparent over the hero and a glass bar once scrolled, staggered headlines, photo cards with chips, black pill buttons, two rows of round thumbnails with pale names, colored tabs on cards, a help panel, a plain white footer.
+
+- All of it lives in `resources/css/public.css` and `resources/js/public-fx.js`. Those two files alone may use gradients, blur, translucency, shadow and motion. The design lint excludes only them.
+- Portal and admin keep the flat rules in the sections above.
+- Type is Montserrat on the public pages. Money and tables on the home page keep tabular figures.
+- No logo, photo, wording or font file of the reference site is used. Photo slots stay grey/colored until real photos are supplied.

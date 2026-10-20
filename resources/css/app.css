@@ -3069,3 +3069,389 @@
         font-size: 15px;
     }
 }
+
+/*
+ * Public "cc" look: warm solid backgrounds, floating pill nav, huge staggered headline, black pills,
+ * big-radius photo-style cards with chips. Option cards, stepper and facts table follow the retail
+ * product-page pattern. Flat colors only: no gradients, shadows, blur or alpha.
+ */
+@layer components {
+    .cc-nav {
+        background: transparent;
+        color: theme('colors.af.ink');
+        padding-block: 16px 0;
+        position: absolute;
+        inset-inline: 0;
+        top: 0;
+    }
+
+    .cc-nav-in {
+        height: 64px;
+        padding-inline: 16px 8px;
+        border-radius: 9999px;
+        background: theme('colors.af.white');
+    }
+
+    .cc-nav .af-nav-link {
+        color: theme('colors.af.ink');
+        font-size: 16px;
+        font-weight: 500;
+    }
+
+    .cc-section {
+        padding-block: 64px;
+    }
+
+    .cc-hero {
+        padding-top: 128px;
+        padding-bottom: 48px;
+        background: theme('colors.af.butter');
+    }
+
+    .cc-display {
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        font-size: 48px;
+        font-weight: 700;
+        line-height: 1;
+        letter-spacing: -0.04em;
+    }
+
+    .cc-display span:nth-child(2) {
+        padding-left: 16%;
+    }
+
+    .cc-display span:nth-child(3) {
+        padding-left: 4%;
+    }
+
+    @media (min-width: theme('screens.lg')) {
+        .cc-display {
+            font-size: 104px;
+        }
+    }
+
+    .cc-lead {
+        max-width: 44ch;
+        margin: 32px 0 24px;
+        font-size: 20px;
+        line-height: 1.5;
+    }
+
+    .cc-btn-outline {
+        background: transparent;
+        color: theme('colors.af.ink');
+        border: 2px solid theme('colors.af.ink');
+    }
+
+    .cc-btn-outline:hover {
+        background: theme('colors.af.ink');
+        color: theme('colors.af.white');
+    }
+
+    .cc-photos {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 16px;
+        margin-top: 48px;
+    }
+
+    @media (min-width: theme('screens.lg')) {
+        .cc-photos {
+            grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+        }
+    }
+
+    .cc-photo {
+        position: relative;
+        min-height: 360px;
+        overflow: hidden;
+        border-radius: 32px;
+        background: theme('colors.af.white');
+    }
+
+    .cc-photo [data-map] {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+    }
+
+    .cc-photo-stack {
+        display: grid;
+        gap: 16px;
+        grid-template-rows: 1fr 1fr;
+    }
+
+    .cc-photo-card {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        gap: 12px;
+        min-height: 172px;
+        padding: 24px;
+        border-radius: 32px;
+        background: theme('colors.af.peach');
+    }
+
+    .cc-photo-card:nth-child(2) {
+        background: theme('colors.af.mint');
+    }
+
+    .cc-photo-card h3 {
+        font-size: 24px;
+        font-weight: 700;
+        line-height: 1.1;
+        letter-spacing: -0.02em;
+    }
+
+    .cc-chip {
+        position: absolute;
+        top: 16px;
+        left: 16px;
+        z-index: 2;
+        padding: 4px 12px;
+        border-radius: 9999px;
+        background: theme('colors.af.white');
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+    .cc-photo-card .cc-chip {
+        position: static;
+        align-self: flex-start;
+    }
+
+    .cc-chip-dark {
+        background: theme('colors.af.black');
+        color: theme('colors.af.white');
+    }
+
+    .cc-title {
+        font-size: 40px;
+        font-weight: 700;
+        line-height: 1.02;
+        letter-spacing: -0.035em;
+        text-wrap: balance;
+    }
+
+    @media (min-width: theme('screens.lg')) {
+        .cc-title {
+            font-size: 64px;
+        }
+    }
+
+    .cc-on-cream {
+        background: theme('colors.af.cream');
+    }
+
+    .cc-on-peach {
+        background: theme('colors.af.peach');
+    }
+
+    .cc-on-mint {
+        background: theme('colors.af.mint');
+    }
+
+    /* Option cards: large radius, selected one gets a heavy ring. */
+    .cc-options {
+        display: grid;
+        gap: 16px;
+        grid-template-columns: minmax(0, 1fr);
+        margin-top: 32px;
+    }
+
+    @media (min-width: theme('screens.lg')) {
+        .cc-options {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+
+    .cc-option {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        padding: 32px;
+        border-radius: 32px;
+        background: theme('colors.af.white');
+    }
+
+    .cc-option h3 {
+        font-size: 32px;
+        font-weight: 700;
+        letter-spacing: -0.03em;
+        line-height: 1.05;
+    }
+
+    .cc-big {
+        font-family: theme('fontFamily.mono');
+        font-size: 40px;
+        font-weight: 600;
+        letter-spacing: -0.04em;
+        font-variant-numeric: tabular-nums;
+    }
+
+    /* Facts table: heavy top rule, hairline rows, like a nutrition label. */
+    .cc-facts {
+        margin: 16px 0 0;
+        border-top: 8px solid theme('colors.af.ink');
+    }
+
+    .cc-facts > div {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        padding-block: 8px;
+        border-bottom: 1px solid theme('colors.af.200');
+    }
+
+    .cc-facts dt {
+        color: theme('colors.af.700');
+    }
+
+    .cc-facts dd {
+        font-family: theme('fontFamily.mono');
+        font-weight: 600;
+        text-align: right;
+        font-variant-numeric: tabular-nums;
+    }
+
+    /* Calculator: ring-select tiles and a numeric stepper. */
+    .cc-pick {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 16px;
+        border-radius: 24px;
+        border: 2px solid theme('colors.af.200');
+        background: theme('colors.af.white');
+        cursor: pointer;
+    }
+
+    .cc-pick:has(input:checked) {
+        border-color: theme('colors.af.ink');
+    }
+
+    .cc-pick input {
+        accent-color: theme('colors.af.ink');
+        width: 20px;
+        height: 20px;
+    }
+
+    .cc-stepper {
+        display: inline-flex;
+        align-items: center;
+        gap: 16px;
+        margin-top: 8px;
+    }
+
+    .cc-stepper button {
+        width: 44px;
+        height: 44px;
+        border: 2px solid theme('colors.af.ink');
+        border-radius: 9999px;
+        background: theme('colors.af.white');
+        font-size: 24px;
+        line-height: 1;
+        cursor: pointer;
+    }
+
+    .cc-stepper button:active {
+        transform: scale(0.95);
+    }
+
+    .cc-stepper output {
+        min-width: 48px;
+        text-align: center;
+        font-family: theme('fontFamily.mono');
+        font-size: 24px;
+        font-weight: 600;
+    }
+
+    /* Loose showcase: big pale names that go black on hover, round thumbs. */
+    .cc-show {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 16px 32px;
+        margin-top: 32px;
+    }
+
+    .cc-show a {
+        display: inline-flex;
+        align-items: center;
+        gap: 16px;
+        font-size: 40px;
+        font-weight: 700;
+        letter-spacing: -0.03em;
+        color: theme('colors.af.300');
+        text-decoration: none;
+    }
+
+    .cc-show a:hover {
+        color: theme('colors.af.black');
+    }
+
+    .cc-dot {
+        display: inline-block;
+        width: 64px;
+        height: 64px;
+        border-radius: 9999px;
+        background: theme('colors.af.butter');
+    }
+
+    .cc-show a:nth-child(2) .cc-dot {
+        background: theme('colors.af.peach');
+    }
+
+    .cc-show a:nth-child(3) .cc-dot {
+        background: theme('colors.af.mint');
+    }
+
+    .cc-steps {
+        display: grid;
+        gap: 16px;
+        grid-template-columns: minmax(0, 1fr);
+        margin-top: 32px;
+        padding: 0;
+        list-style: none;
+    }
+
+    @media (min-width: theme('screens.lg')) {
+        .cc-steps {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+    }
+
+    .cc-steps li {
+        padding: 32px;
+        border-radius: 32px;
+        background: theme('colors.af.white');
+    }
+
+    .cc-steps h3 {
+        font-size: 24px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+    }
+
+    .cc-steps p {
+        margin-top: 8px;
+        color: theme('colors.af.700');
+    }
+
+    .cc-foot {
+        background: theme('colors.af.white');
+        color: theme('colors.af.ink');
+    }
+
+    .cc-foot a,
+    .cc-foot button {
+        color: theme('colors.af.ink');
+    }
+
+    .cc-foot .af-foot-contact,
+    .cc-foot .af-foot-note {
+        color: theme('colors.af.700');
+    }
+}

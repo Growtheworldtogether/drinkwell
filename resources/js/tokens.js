@@ -20,6 +20,10 @@ export const colors = {
     'danger-tint': '#F9EEED',
     'dark': '#0B0B0B',
     dim: '#B5B5B5',
+    cream: '#F7F2E8',
+    butter: '#FBE8A0',
+    peach: '#F8D3BA',
+    mint: '#D5EBD0',
 };
 
 export const fonts = {

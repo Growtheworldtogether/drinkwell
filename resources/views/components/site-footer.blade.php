@@ -6,7 +6,7 @@
     ])->filter(fn ($link) => Route::has($link[0]));
 @endphp
 {{-- v9 footer: links, then the support contact, then the Demo mark at the right end of its own row. Support contact comes from the branding settings. --}}
-<footer class="af-foot">
+<footer class="af-foot cc-foot">
     <div class="af-wrap">
         @foreach ($links as [$route, $label])
             <a href="{{ route($route) }}">{{ $label }}</a>

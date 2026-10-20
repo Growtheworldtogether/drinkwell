@@ -4,13 +4,15 @@
         <div class="cc-foot-cols">
             <div>
                 <h4>About us</h4>
+                <a href="{{ route('about') }}">About</a>
                 <a href="{{ route('program') }}">How it works</a>
-                <a href="{{ url('/') }}#machines">Machines</a>
-                <a href="{{ url('/') }}#calculator">Calculator</a>
+                <a href="{{ route('earnings') }}">Your earnings</a>
+                <a href="{{ route('locations') }}">Locations</a>
             </div>
             <div>
                 <h4>Need help?</h4>
                 <a href="mailto:{{ $brand->supportEmail }}" class="break-anywhere">{{ $brand->supportEmail }}</a>
+                <a href="{{ route('questions') }}">Questions</a>
                 <a href="{{ route('program') }}#deposit">Paying the deposit</a>
             </div>
             <div>

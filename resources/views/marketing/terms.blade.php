@@ -9,15 +9,17 @@
     ];
 @endphp
 <x-marketing-layout title="Terms">
-    <section class="af-band">
-        <div class="af-wrap af-legal">
-            <h1 class="af-h1">Terms of use</h1>
-            @foreach ($sections as $i => [$title, $text])
-                <section class="mt-8" aria-labelledby="terms-{{ $i + 1 }}">
-                    <h2 id="terms-{{ $i + 1 }}" class="text-h3"><span class="font-mono tabular-nums">{{ $i + 1 }}.</span> {{ $title }}</h2>
-                    <p class="mt-2 text-body">{{ $text }}</p>
-                </section>
-            @endforeach
+    <section class="cc-pagehead" data-bg="gray">
+        <div class="cc-wrap"><h1 class="cc-title1">Terms of use</h1></div>
+    </section>
+    <section class="cc-section" data-bg="gray">
+        <div class="cc-wrap cc-prosewrap">
+            <div class="cc-prose">
+                @foreach ($sections as $i => [$title, $text])
+                    <h2 id="terms-{{ $i + 1 }}">{{ $i + 1 }}. {{ $title }}</h2>
+                    <p>{{ $text }}</p>
+                @endforeach
+            </div>
         </div>
     </section>
 </x-marketing-layout>

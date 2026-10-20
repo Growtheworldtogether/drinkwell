@@ -23,6 +23,35 @@ class PagesController extends Controller
         return view('marketing.program', ['tiers' => $this->tiers()]);
     }
 
+    public function earnings(): View
+    {
+        $tiers = $this->tiers();
+        $calc = collect($tiers)->map(fn ($t) => ['label' => $t['label'], 'stake' => $t['stake'], 'share' => $t['share'], 'capacity' => $t['capacity']])->all();
+
+        return view('marketing.earnings', ['tiers' => $tiers, 'calc' => $calc]);
+    }
+
+    public function locations(): View
+    {
+        $machines = VendingMachine::query()->orderBy('facility_type')->orderBy('facility_name')->get(['facility_name', 'facility_type', 'city', 'tier']);
+
+        return view('marketing.locations', [
+            'groups' => $machines->groupBy('facility_type'),
+            'cities' => $machines->pluck('city')->unique()->count(),
+            'total' => $machines->count(),
+        ]);
+    }
+
+    public function questions(): View
+    {
+        return view('marketing.questions', ['tiers' => $this->tiers()]);
+    }
+
+    public function about(): View
+    {
+        return view('marketing.about', ['tiers' => $this->tiers()]);
+    }
+
     public function terms(): View
     {
         return view('marketing.terms');

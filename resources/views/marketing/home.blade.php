@@ -26,69 +26,19 @@
         </div>
     </section>
 
-    <section id="machines" class="cc-section cc-center" data-bg="gray">
+    <section class="cc-section cc-center" data-bg="gray">
         <div class="cc-wrap">
             <h2 class="cc-h2" data-reveal>Two machines, one 50/50 split</h2>
             <p class="cc-lead" style="margin-inline:auto" data-reveal>Every machine sells out every day. The platform fee is taken first, the rest is split in half.</p>
-            <div class="cc-options">
-                @foreach ($tiers as $key => $t)
-                    <article data-reveal class="cc-option" aria-labelledby="tier-{{ $key }}">
-                        <h3 id="tier-{{ $key }}">{{ $t['label'] }}</h3>
-                        <p class="cc-big">{{ $fmt($t['share']) }}</p>
-                        <p class="text-af-700">your share a day, deposit back in about {{ $t['payback'] }} days</p>
-                        <dl class="cc-facts">
-                            <div><dt>Machine cost</dt><dd>{{ $fmt($t['machine_cost']) }}</dd></div>
-                            <div><dt>Your 50% deposit</dt><dd>{{ $fmt($t['stake']) }}</dd></div>
-                            <div><dt>Capacity (sells out daily)</dt><dd>{{ $t['capacity'] }} drinks</dd></div>
-                            <div><dt>Gross a day</dt><dd>{{ $fmt($t['gross']) }}</dd></div>
-                            <div><dt>Bottling and logistics fee</dt><dd>{{ $fmt($t['fee']) }}</dd></div>
-                            <div><dt>Pool to split</dt><dd>{{ $fmt($t['pool']) }}</dd></div>
-                            <div><dt>Daily band</dt><dd>{{ $fmt($t['band_min']) }} to {{ $fmt($t['band_max']) }}</dd></div>
-                        </dl>
-                    </article>
-                @endforeach
-            </div>
+            @include('marketing.partials.options')
         </div>
     </section>
 
-    <section id="calculator" class="cc-section cc-center" data-bg="gray">
-        <div class="cc-wrap" x-data="yieldCalculator(@js($calc))">
-            <h2 class="cc-h2" data-reveal>Yield calculator</h2>
-            <p class="cc-lead" style="margin-inline:auto" data-reveal>Pick a machine and see how fast the deposit comes back at the usual daily share.</p>
-            <div class="cc-options">
-                <div class="cc-option">
-                    <fieldset class="min-w-0">
-                        <legend class="mb-3 text-label uppercase tracking-label text-af-500">Option</legend>
-                        <div class="flex flex-col gap-3">
-                            @foreach ($tiers as $key => $t)
-                                <label class="cc-pick">
-                                    <input type="radio" name="calc-tier" value="{{ $key }}" x-model="tier">
-                                    <span class="block font-medium">{{ $t['label'] }} <span class="font-mono tabular-nums">({{ $fmt($t['stake']) }} deposit)</span></span>
-                                </label>
-                            @endforeach
-                        </div>
-                    </fieldset>
-                    <p class="mt-6 text-label uppercase tracking-label text-af-500" id="calc-days-label">Days</p>
-                    <div class="cc-stepper">
-                        <button type="button" aria-label="One day less" @click="days = Math.max(1, days - 1)">-</button>
-                        <output aria-labelledby="calc-days-label" x-text="days"></output>
-                        <button type="button" aria-label="One day more" @click="days = Math.min(60, days + 1)">+</button>
-                    </div>
-                    <input id="calc-days" class="dw-range" type="range" min="1" max="60" step="1" x-model.number="days" aria-labelledby="calc-days-label">
-                    <dl class="cc-facts">
-                        <div><dt>Share a day</dt><dd x-text="money(t.share)"></dd></div>
-                        <div><dt>Earned in <span x-text="days"></span> days</dt><dd x-text="money(total)"></dd></div>
-                        <div><dt>Deposit</dt><dd x-text="money(t.stake)"></dd></div>
-                        <div><dt>Left after deposit</dt><dd x-text="money(net)"></dd></div>
-                        <div><dt>Deposit back in</dt><dd><span x-text="paybackExact"></span> days (day <span x-text="payback"></span>)</dd></div>
-                    </dl>
-                </div>
-                <div class="cc-option">
-                    <p class="text-label uppercase tracking-label text-af-500">Amortization (cumulative payout against deposit)</p>
-                    <div class="dw-curve mt-3"><canvas x-ref="curve" role="img" aria-label="Cumulative payout against the deposit"></canvas></div>
-                </div>
-            </div>
-            <p class="mt-6 text-af-700">Figures use the middle of the daily band. Real days vary by a small amount and are shown on your dashboard.</p>
+    <section class="cc-section cc-center" data-bg="gray">
+        <div class="cc-wrap">
+            <h2 class="cc-h2" data-reveal>See what you could earn</h2>
+            <p class="cc-lead" style="margin-inline:auto" data-reveal>Pick a machine and a number of days, and watch how fast the deposit comes back.</p>
+            <div class="cc-btn-row" data-reveal><a class="af-btn af-btn-black" href="{{ route('earnings') }}">Your earnings</a></div>
         </div>
     </section>
 

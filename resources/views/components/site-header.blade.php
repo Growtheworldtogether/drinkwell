@@ -7,9 +7,9 @@
         <a href="{{ url('/') }}" class="af-brand"><x-brand.logo variant="light" /></a>
 
         <nav aria-label="Primary" class="cc-nav-links">
-            <a href="{{ route('program') }}" class="af-nav-link" @if (request()->routeIs('program')) aria-current="page" @endif>How it works</a>
-            <a href="{{ url('/') }}#machines" class="af-nav-link">Machines</a>
-            <a href="{{ url('/') }}#calculator" class="af-nav-link">Calculator</a>
+            @foreach ([['program', 'How it works'], ['earnings', 'Your earnings'], ['locations', 'Locations'], ['questions', 'Questions']] as [$r, $label])
+                <a href="{{ route($r) }}" class="af-nav-link" @if (request()->routeIs($r)) aria-current="page" @endif>{{ $label }}</a>
+            @endforeach
             @guest
                 <a href="{{ route('login') }}" class="af-nav-link">Sign in</a>
             @endguest
@@ -25,9 +25,9 @@
         @endauth
 
         <x-menu-sheet tone="light">
-            <a href="{{ route('program') }}" class="{{ $sheetLink }}">How it works</a>
-            <a href="{{ url('/') }}#machines" class="{{ $sheetLink }}">Machines</a>
-            <a href="{{ url('/') }}#calculator" class="{{ $sheetLink }}">Calculator</a>
+            @foreach ([['program', 'How it works'], ['earnings', 'Your earnings'], ['locations', 'Locations'], ['questions', 'Questions']] as [$r, $label])
+                <a href="{{ route($r) }}" class="{{ $sheetLink }}">{{ $label }}</a>
+            @endforeach
             @auth
                 <form method="POST" action="{{ route('logout') }}">@csrf<button type="submit" class="{{ $sheetLink }} w-full text-left">Sign out</button></form>
                 <a href="{{ route('dashboard') }}" class="af-btn af-btn-black mt-4">Dashboard</a>

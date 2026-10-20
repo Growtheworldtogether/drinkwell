@@ -90,6 +90,11 @@
         text-transform: uppercase;
     }
 
+    @media (max-width: 479px) {
+        .cc-chip-demo { display: none; }
+        .cc-nav-in { gap: 12px; }
+    }
+
     .cc-nav-links {
         display: none;
         align-items: center;
@@ -184,7 +189,7 @@
         display: flex;
         flex-direction: column;
         margin: 0;
-        font-size: clamp(38px, 7vw, 100px);
+        font-size: clamp(32px, 7vw, 100px);
         font-weight: 600;
         line-height: 0.98;
         letter-spacing: -0.035em;
@@ -251,7 +256,7 @@
     }
 
     .cc-huge {
-        font-size: clamp(44px, 7vw, 104px);
+        font-size: clamp(36px, 7vw, 104px);
         font-weight: 600;
         line-height: 1;
         letter-spacing: -0.035em;
@@ -492,13 +497,14 @@
         font-size: clamp(36px, 4.6vw, 68px);
         font-weight: 600;
         letter-spacing: -0.03em;
-        color: #d5d5d5;
+        color: #595959;
         text-decoration: none;
         white-space: nowrap;
         transition: color 0.25s ease;
     }
 
     .cc-row-track a:hover { color: #000; }
+    .cc-row-track a:hover { text-decoration: underline; }
 
     .cc-dot {
         display: inline-flex;
@@ -653,17 +659,22 @@
         right: 20px;
         bottom: 20px;
         z-index: 30;
-        width: 60px;
-        height: 60px;
-        border: 0;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        height: 52px;
+        padding: 0 22px;
+        border: 2px solid #000;
         border-radius: 9999px;
         background: #fff;
         box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
         font-family: inherit;
-        font-size: 22px;
+        font-size: 16px;
         font-weight: 700;
         cursor: pointer;
     }
+
+    .cc-access b { font-size: 20px; }
 
     html.big-text { font-size: 112.5%; }
 

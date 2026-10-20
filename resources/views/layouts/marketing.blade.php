@@ -15,7 +15,7 @@
         </main>
         <x-site-footer />
     </div>
-    <button type="button" class="cc-access" data-text-size aria-label="Larger text">Aa</button>
+    <button type="button" class="cc-access" data-text-size aria-pressed="false"><b aria-hidden="true">Aa</b><span data-text-size-label>Bigger text</span></button>
     @livewireScriptConfig
 </body>
 </html>

@@ -7,7 +7,7 @@
     <section class="cc-hero" data-bg="coral">
         <div class="cc-wrap">
             <h1 class="cc-display"><span>We Co-own</span><span>the Machine</span><span>and Share the</span><span class="cc-word" data-words="Daily Payout|Morning Rush|Lunch Peak">Daily Payout</span></h1>
-            <p class="cc-lead">{{ $brand->name }} pairs seniors as 50/50 co-partners on a machine that sells every drink at {{ $fmt(config('drinkwell.unit_price_cents')) }}. This is a classroom simulation.</p>
+            <p class="cc-lead">You and a partner each put in half the cost of a drink machine, and split the daily earnings. This is a classroom simulation, so no real money moves.</p>
             <div class="af-ctas">
                 @auth
                     <a class="af-btn af-btn-black" href="{{ route('dashboard') }}">Open dashboard</a>
@@ -94,7 +94,7 @@
 
     <section class="cc-section" data-bg="amber">
         <div class="cc-wrap">
-            <h2 class="cc-huge" data-reveal><span>Our Promise</span><span>& Daily</span><span>Payout</span></h2>
+            <h2 class="cc-huge" data-reveal><span>How you</span><span>get</span><span>paid</span></h2>
             <div class="cc-big-cards">
                 <article class="cc-big-card" data-reveal><h3>What makes a co-partnership work</h3><small>Photo slot 4:5</small></article>
                 <article class="cc-big-card" data-reveal><h3>Learn more about the program</h3><small>Photo slot 4:5</small></article>
@@ -103,7 +103,7 @@
     </section>
 
     <section class="cc-section cc-center" data-bg="cream">
-        <div class="cc-wrap"><h2 class="cc-h2" data-reveal>Say "Hello" to the machines</h2></div>
+        <div class="cc-wrap"><h2 class="cc-h2" data-reveal>Where your machine stands</h2></div>
         <div class="cc-rows" aria-label="Facilities that host a machine">
             @foreach ([$facilities->take(ceil($facilities->count() / 2)), $facilities->slice(ceil($facilities->count() / 2))] as $r => $row)
                 <div class="cc-row {{ $r ? 'cc-row-right' : '' }}">
@@ -122,7 +122,7 @@
 
     <section class="cc-section" data-bg="gray">
         <div class="cc-wrap">
-            <h2 class="cc-huge" data-reveal><span>Unleash</span><span>Your Earnings</span></h2>
+            <h2 class="cc-huge" data-reveal><span>Start in</span><span>three steps</span></h2>
         </div>
         <div class="cc-tabs-row">
             <a class="cc-tabcard" href="{{ route('register') }}"><span>Pairing</span></a>

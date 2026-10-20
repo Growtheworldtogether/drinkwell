@@ -58,7 +58,14 @@ export function initPublicFx() {
     initMesh(calm);
 
     const size = document.querySelector('[data-text-size]');
-    if (size) size.addEventListener('click', () => root.classList.toggle('big-text'));
+    if (size) {
+        const label = size.querySelector('[data-text-size-label]');
+        size.addEventListener('click', () => {
+            const on = root.classList.toggle('big-text');
+            size.setAttribute('aria-pressed', String(on));
+            if (label) label.textContent = on ? 'Normal text' : 'Bigger text';
+        });
+    }
 
     const reveals = document.querySelectorAll('[data-reveal]');
     if (calm || !('IntersectionObserver' in window)) {

@@ -1,0 +1,3071 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Type scale per surface (SPEC 12.2). Display and H1 are fluid so a phone never gets a headline above 40px. */
+@layer base {
+    .surface-public {
+        --fs-display: clamp(2.25rem, 1.25rem + 4.2vw, 4rem);
+        --lh-display: 1.0625;
+        --fs-h1: clamp(2rem, 1.3rem + 2.6vw, 2.75rem);
+        --lh-h1: 1.0909;
+        --fs-h2: clamp(1.5rem, 1.1rem + 1.5vw, 2rem);
+        --lh-h2: 1.1875;
+        --fs-h3: 1.25rem;
+        --lh-h3: 1.3;
+        --fs-body: 1.125rem;
+        --lh-body: 1.5556;
+        --fs-label: 0.875rem;
+        --lh-label: 1.2857;
+    }
+
+    .surface-portal {
+        --fs-display: 1.75rem;
+        --lh-display: 2rem;
+        --fs-h1: 1.75rem;
+        --lh-h1: 2rem;
+        --fs-h2: 1.25rem;
+        --lh-h2: 1.625rem;
+        --fs-h3: 1rem;
+        --lh-h3: 1.375rem;
+        --fs-body: 0.875rem;
+        --lh-body: 1.3125rem;
+        --fs-label: 0.6875rem;
+        --lh-label: 0.875rem;
+    }
+
+    html {
+        -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+        overflow-wrap: break-word;
+    }
+
+    [x-cloak],
+    [hidden] {
+        display: none !important;
+    }
+
+    /* Focus ring on every interactive element: 2px accent, 2px offset. */
+    :focus-visible {
+        outline: 2px solid theme('colors.af.accent');
+        outline-offset: 2px;
+    }
+
+    .font-mono,
+    code,
+    kbd {
+        font-variant-numeric: tabular-nums;
+    }
+
+    input[type='checkbox'],
+    input[type='radio'] {
+        accent-color: theme('colors.af.accent');
+        width: 1.25rem;
+        height: 1.25rem;
+        flex-shrink: 0;
+    }
+
+    /* 16px controls on phones so iOS does not zoom on focus. */
+    @media not all and (min-width: theme('screens.sm')) {
+        input,
+        select,
+        textarea {
+            font-size: 1rem;
+        }
+    }
+
+    img,
+    svg,
+    video,
+    canvas {
+        max-width: 100%;
+    }
+}
+
+@layer utilities {
+    .pt-safe {
+        padding-top: env(safe-area-inset-top);
+    }
+
+    .pb-safe {
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    .pl-safe {
+        padding-left: env(safe-area-inset-left);
+    }
+
+    .pr-safe {
+        padding-right: env(safe-area-inset-right);
+    }
+
+    .break-anywhere {
+        overflow-wrap: anywhere;
+    }
+}
+
+/* <x-table>: stacked label/value cards below sm, contained scroller from sm, sticky first column from sm to lg. */
+@layer components {
+    .af-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    @media not all and (min-width: theme('screens.sm')) {
+        .af-table,
+        .af-table tbody,
+        .af-table tr,
+        .af-table td {
+            display: block;
+        }
+
+        .af-table thead {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+            clip: rect(0 0 0 0);
+        }
+
+        .af-table tbody tr {
+            @apply mb-3 border border-af-200 bg-af-white p-3 rounded-panel;
+        }
+
+        .af-table td {
+            @apply flex items-baseline justify-between gap-4 border-0 px-0 py-1 text-right;
+            min-width: 0;
+        }
+
+        .af-table td::before {
+            content: attr(data-label);
+            @apply shrink-0 text-left text-label font-medium uppercase tracking-label text-af-500;
+        }
+
+        .af-table td[data-label='']::before {
+            content: none;
+        }
+
+        .af-table td[data-actions] {
+            @apply justify-end pt-3;
+        }
+    }
+
+    @media (min-width: theme('screens.sm')) and (max-width: 1023.98px) {
+        .af-table th:first-child,
+        .af-table td:first-child {
+            position: sticky;
+            left: 0;
+            z-index: 1;
+            @apply bg-af-white;
+        }
+    }
+}
+
+/* Route QA maps (dev pages, SPEC 7.10). Flat, tokens only. */
+@layer components {
+    .af-route-map {
+        @apply w-full border border-af-200 bg-af-100 rounded-panel;
+        aspect-ratio: 4 / 3;
+        min-height: 20rem;
+    }
+
+    @media (min-width: theme('screens.lg')) {
+        .af-route-map {
+            aspect-ratio: auto;
+            height: 40rem;
+        }
+    }
+
+    .af-node-label {
+        @apply flex items-center gap-1 whitespace-nowrap font-mono text-label text-af-ink;
+        background: none;
+        border: 0;
+    }
+
+    .af-node-label[hidden] {
+        display: none;
+    }
+
+    .af-node-dot {
+        @apply block h-3 w-3 border-2 border-af-white bg-af-black;
+        border-radius: 9999px;
+        margin: -6px 0 0 -6px;
+    }
+
+    .af-node-text {
+        @apply border border-af-200 bg-af-white px-1;
+    }
+
+    .af-row-selected {
+        @apply bg-af-100;
+    }
+}
+
+/*
+ * Every Leaflet map (SPEC 12.3): zoom controls follow DESIGN.md. 44 px targets below lg, 36 px from lg,
+ * flat, token colors, 4 px radius. Leaflet drops its control drop shade only under .leaflet-touch, which
+ * resources/js/leaflet-setup.js puts on every map. Unlayered on purpose: Leaflet's own stylesheet is unlayered and would
+ * otherwise win, and the selectors out-rank its `.leaflet-touch .leaflet-bar a`.
+ */
+.leaflet-container .leaflet-control-zoom.leaflet-bar {
+    border: 1px solid theme('colors.af.300');
+    border-radius: 4px;
+    background: theme('colors.af.white');
+    overflow: hidden;
+}
+
+.leaflet-container .leaflet-control-zoom.leaflet-bar a {
+    width: 44px;
+    height: 44px;
+    line-height: 44px;
+    border-radius: 0;
+    border-bottom: 1px solid theme('colors.af.300');
+    background-color: theme('colors.af.white');
+    color: theme('colors.af.ink');
+    font-family: theme('fontFamily.mono');
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.leaflet-container .leaflet-control-zoom.leaflet-bar a:last-child {
+    border-bottom: 0;
+}
+
+.leaflet-container .leaflet-control-zoom.leaflet-bar a:hover {
+    background-color: theme('colors.af.100');
+}
+
+.leaflet-container .leaflet-control-zoom.leaflet-bar a.leaflet-disabled {
+    color: theme('colors.af.500');
+    background-color: theme('colors.af.100');
+}
+
+@media (min-width: theme('screens.lg')) {
+    .leaflet-container .leaflet-control-zoom.leaflet-bar a {
+        width: 36px;
+        height: 36px;
+        line-height: 36px;
+    }
+}
+
+/*
+ * Grayscale basemap, as in the v9 reference. The filter sits on the tile pane only, so the route, the vehicle marker
+ * and the labels (all in other panes) keep their own colors. This is the one filter in the app; design-lint allows it.
+ * Slightly lifted so the map reads as pale as the v9 land color and the black route stays the strongest line.
+ */
+.af-grayscale-tiles .leaflet-tile-pane {
+    filter: grayscale(1) contrast(0.88) brightness(1.08);
+}
+
+/* Car colors for the shared sprite (components/car-sprite). Tokens only. */
+:root {
+    --car-body: theme('colors.af.ink');
+    --car-roof: theme('colors.af.700');
+    --car-glass: theme('colors.af.500');
+    --car-wheel: theme('colors.af.black');
+    --car-edge: theme('colors.af.white');
+    --car-lamp: theme('colors.af.100');
+    --car-tail: theme('colors.af.danger');
+}
+
+/*
+ * Public bands, header, hero, map furniture and footer. Source of truth for the look is
+ * docs/reference/html/v9-home.html. Plain CSS on tokens, so what you see in the reference is what ships.
+ * Breakpoints are the project's own (640, 1024). The card and pills take the popover token in markup.
+ */
+@layer components {
+    .af-wrap {
+        max-width: 70rem;
+        margin-inline: auto;
+        padding-inline: 16px;
+    }
+
+    @media (min-width: theme('screens.sm')) {
+        .af-wrap {
+            padding-inline: 24px;
+        }
+    }
+
+    /* Header: black bar, brand left, links, one white pill. */
+    .af-nav {
+        position: sticky;
+        top: 0;
+        z-index: 40;
+        background: theme('colors.af.black');
+        color: theme('colors.af.white');
+        padding-top: env(safe-area-inset-top);
+    }
+
+    .af-nav-in {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        height: 64px;
+        white-space: nowrap;
+    }
+
+    .af-brand {
+        display: flex;
+        align-items: center;
+        min-width: 0;
+        min-height: 44px;
+        margin-right: auto;
+    }
+
+    .af-nav-links {
+        display: none;
+        align-items: center;
+        gap: 24px;
+    }
+
+    .af-nav-link {
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
+        font-size: 17px;
+        line-height: 1.5;
+        color: theme('colors.af.white');
+        text-decoration: none;
+    }
+
+    .af-nav-link:hover {
+        text-decoration: underline;
+    }
+
+    /* Sign out is a form button, so it is reset to read like the links beside it. */
+    button.af-nav-link,
+    .af-foot button {
+        border: 0;
+        background: none;
+        font-family: inherit;
+        cursor: pointer;
+    }
+
+    .af-nav-links form {
+        display: contents;
+    }
+
+    /* Compound selector so it out-ranks .af-btn, which comes later. Below sm the pill lives in the Menu sheet. */
+    .af-btn.af-nav-cta {
+        display: none;
+    }
+
+    @media (min-width: theme('screens.sm')) {
+        .af-btn.af-nav-cta {
+            display: inline-flex;
+        }
+    }
+
+    @media (min-width: theme('screens.lg')) {
+        .af-nav-in {
+            gap: 24px;
+        }
+
+        .af-nav-links {
+            display: flex;
+        }
+    }
+
+    /* Pill buttons of the public bands. */
+    .af-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 44px;
+        padding: 12px 20px;
+        border: 0;
+        border-radius: 9999px;
+        font-family: theme('fontFamily.sans');
+        font-size: 15px;
+        font-weight: 500;
+        line-height: 1.2;
+        text-decoration: none;
+        white-space: nowrap;
+    }
+
+    .af-btn-light {
+        background: theme('colors.af.white');
+        color: theme('colors.af.black');
+    }
+
+    .af-btn-light:hover {
+        background: theme('colors.af.200');
+    }
+
+    .af-btn-black {
+        background: theme('colors.af.black');
+        color: theme('colors.af.white');
+    }
+
+    .af-btn-black:hover {
+        background: theme('colors.af.700');
+    }
+
+    .af-btn-black:active {
+        background: theme('colors.af.500');
+    }
+
+    .af-btn-soft {
+        background: theme('colors.af.100');
+        color: theme('colors.af.black');
+    }
+
+    .af-btn-soft:hover {
+        background: theme('colors.af.200');
+    }
+
+    /* Headings and lead copy of the public bands. */
+    .af-h1 {
+        margin: 0 0 16px;
+        font-size: 40px;
+        font-weight: 600;
+        line-height: 1.02;
+        letter-spacing: -0.03em;
+        text-wrap: balance;
+    }
+
+    .af-h2 {
+        margin: 0 0 12px;
+        font-size: 30px;
+        font-weight: 600;
+        line-height: 1.1;
+        letter-spacing: -0.02em;
+        text-wrap: balance;
+    }
+
+    .af-lead {
+        max-width: 42ch;
+        font-size: 20px;
+        line-height: 1.5;
+        color: theme('colors.af.700');
+    }
+
+    /* Small grey text on the public pages reads as the darker grey, for older eyes. */
+    .surface-public .text-af-500 {
+        color: theme('colors.af.700');
+    }
+
+    @media (min-width: theme('screens.lg')) {
+        .af-h1 {
+            font-size: 56px;
+        }
+
+        .af-h2 {
+            font-size: 36px;
+        }
+    }
+
+    /* Hero: copy left (5 parts), live map right (7 parts), map runs to the page edge. */
+    .af-hero {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .af-hero-copy {
+        align-self: center;
+        padding: 40px 16px;
+    }
+
+    .af-hero-copy .af-lead {
+        margin-bottom: 32px;
+    }
+
+    .af-ctas {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .af-hero-map {
+        position: relative;
+        min-height: 480px;
+        overflow: hidden;
+        background: theme('colors.af.100');
+    }
+
+    .af-hero-map [data-map] {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        cursor: default;
+        touch-action: pan-y;
+    }
+
+    @media (min-width: theme('screens.lg')) {
+        .af-hero {
+            grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+            min-height: 560px;
+        }
+
+        .af-hero-copy {
+            padding: 64px 32px 64px max(24px, calc((100vw - 70rem) / 2 + 24px));
+        }
+
+        .af-hero-map {
+            min-height: 560px;
+        }
+    }
+
+    /* Floating trip card over the map. */
+    .af-trip {
+        position: absolute;
+        left: 12px;
+        right: 12px;
+        bottom: 12px;
+        z-index: 1000;
+        padding: 16px 20px;
+        border-radius: 16px;
+        background: theme('colors.af.white');
+        color: theme('colors.af.black');
+    }
+
+    @media (min-width: theme('screens.lg')) {
+        .af-trip {
+            left: 24px;
+            right: auto;
+            bottom: 24px;
+            width: 320px;
+            max-width: calc(100% - 48px);
+        }
+    }
+
+    .af-trip-top {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        font-size: 13px;
+        color: theme('colors.af.500');
+    }
+
+    .af-trip-name {
+        margin-top: 2px;
+        font-size: 18px;
+        font-weight: 600;
+        line-height: 1.25;
+    }
+
+    .af-trip-bar {
+        height: 3px;
+        margin: 12px 0;
+        overflow: hidden;
+        border-radius: 2px;
+        background: theme('colors.af.200');
+    }
+
+    .af-trip-bar i {
+        display: block;
+        height: 100%;
+        background: theme('colors.af.black');
+        transform: scaleX(0);
+        transform-origin: 0 50%;
+    }
+
+    .af-trip-row {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+    }
+
+    .af-trip-row span {
+        display: block;
+        font-size: 12px;
+        color: theme('colors.af.500');
+    }
+
+    .af-trip-row b {
+        font-family: theme('fontFamily.mono');
+        font-size: 16px;
+        font-weight: 500;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .af-trip-note {
+        margin-top: 12px;
+        font-size: 12px;
+        color: theme('colors.af.500');
+    }
+
+    /* Map furniture: the car, the pickup and drop-off pins and their pills. */
+    .af-car-icon {
+        background: none;
+        border: 0;
+    }
+
+    .af-car-sh {
+        display: grid;
+        place-items: center;
+        width: 48px;
+        height: 48px;
+        filter: drop-shadow(0 2px 2.5px rgba(0, 0, 0, 0.34));
+    }
+
+    /* The other cabs: lighter, so the main car stays the strongest mark on the map. */
+    .af-car-amb {
+        --car-body: theme('colors.af.300');
+        --car-roof: theme('colors.af.200');
+        --car-glass: theme('colors.af.100');
+        --car-lamp: theme('colors.af.white');
+        --car-tail: theme('colors.af.500');
+    }
+
+    .af-car-amb .af-car-sh {
+        filter: drop-shadow(0 1px 1.5px rgba(0, 0, 0, 0.2));
+    }
+
+    .af-car-rot {
+        width: 22px;
+        height: 40px;
+        will-change: transform;
+    }
+
+    .af-car-rot svg {
+        display: block;
+    }
+
+    .af-pin i {
+        position: relative;
+        display: block;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        outline: 2px solid theme('colors.af.white');
+        background: theme('colors.af.black');
+    }
+
+    .af-pin i::after {
+        content: '';
+        position: absolute;
+        left: 6px;
+        top: 6px;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: theme('colors.af.white');
+    }
+
+    .af-pin-do i,
+    .af-pin-do i::after {
+        border-radius: 2px;
+    }
+
+    .af-pin-do i::after {
+        border-radius: 0;
+    }
+
+    .af-pl {
+        position: absolute;
+        left: 0;
+        top: 0;
+        padding: 9px 13px;
+        border-radius: 9999px;
+        background: theme('colors.af.white');
+        color: theme('colors.af.black');
+        font-size: 13px;
+        font-weight: 500;
+        line-height: 1;
+        white-space: nowrap;
+    }
+
+    .af-pl-do {
+        background: theme('colors.af.black');
+        color: theme('colors.af.white');
+    }
+
+    .af-pl-do b {
+        margin-left: 8px;
+        font-family: theme('fontFamily.mono');
+        font-size: 13px;
+        font-weight: 500;
+        color: theme('colors.af.dim');
+    }
+
+    .af-pl.r {
+        transform: translate(18px, -50%);
+    }
+
+    .af-pl.l {
+        transform: translate(calc(-100% - 18px), -50%);
+    }
+
+    .af-pl.t {
+        transform: translate(-50%, calc(-100% - 18px));
+    }
+
+    .af-pl.b {
+        transform: translate(-50%, 18px);
+    }
+
+    /* Bands. */
+    .af-band {
+        padding-block: 56px;
+    }
+
+    .af-band-black {
+        background: theme('colors.af.black');
+        color: theme('colors.af.white');
+    }
+
+    .af-band-black .af-lead {
+        color: theme('colors.af.dim');
+    }
+
+    .af-band-soft {
+        background: theme('colors.af.100');
+    }
+
+    .af-two {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 40px;
+        align-items: center;
+    }
+
+    .af-two-top {
+        align-items: start;
+    }
+
+    @media (min-width: theme('screens.lg')) {
+        .af-band {
+            padding-block: 80px;
+        }
+
+        .af-two {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 64px;
+        }
+    }
+
+    /* Live ledger feed. */
+    .af-feed {
+        min-height: 300px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .af-feed-row {
+        display: grid;
+        grid-template-columns: 52px minmax(0, 1fr) auto;
+        gap: 12px;
+        padding: 14px 0;
+        border-bottom: 1px solid theme('colors.af.700');
+        font-size: 16px;
+    }
+
+    .af-feed-time {
+        font-family: theme('fontFamily.mono');
+        font-size: 13px;
+        color: theme('colors.af.dim');
+    }
+
+    .af-feed-amt {
+        font-family: theme('fontFamily.mono');
+        text-align: right;
+        white-space: nowrap;
+    }
+
+    .af-feed-sum {
+        margin-top: 16px;
+        font-family: theme('fontFamily.mono');
+        font-size: 15px;
+        color: theme('colors.af.dim');
+    }
+
+    .af-feed-note {
+        margin-top: 12px;
+        font-size: 14px;
+        color: theme('colors.af.dim');
+    }
+
+    /* Charging photo slot: soft block with a 16 px corner, 21:8. */
+    .af-slot {
+        display: flex;
+        align-items: flex-end;
+        max-width: 100%;
+        margin-bottom: 32px;
+        overflow: hidden;
+        padding: 20px;
+        aspect-ratio: 21 / 8;
+        border-radius: 16px;
+        background: theme('colors.af.100');
+        font-size: 13px;
+        line-height: 1.4;
+        color: theme('colors.af.500');
+    }
+
+    .af-slot span {
+        max-width: 48ch;
+    }
+
+    .af-slot-photo {
+        margin-right: 0;
+        margin-left: 0;
+        padding: 0;
+        aspect-ratio: 16 / 9;
+    }
+
+    @media (min-width: theme('screens.sm')) {
+        .af-slot-photo {
+            aspect-ratio: 21 / 8;
+        }
+    }
+
+    .af-slot-photo img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .af-link {
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
+        font-weight: 500;
+        color: theme('colors.af.black');
+        text-decoration: underline;
+        text-underline-offset: 4px;
+    }
+
+    /* Payback band. */
+    .af-big {
+        font-family: theme('fontFamily.mono');
+        font-size: 52px;
+        font-weight: 600;
+        line-height: 1;
+        letter-spacing: -0.03em;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .af-big small {
+        font-size: 24px;
+        font-weight: 500;
+        letter-spacing: 0;
+        color: theme('colors.af.500');
+    }
+
+    .af-bars {
+        display: block;
+        width: 100%;
+        height: auto;
+        margin-top: 24px;
+    }
+
+    @media (min-width: theme('screens.lg')) {
+        .af-big {
+            font-size: 72px;
+        }
+    }
+
+    /* From application to first payout: one lane, one car, four rows. */
+    .af-road {
+        position: relative;
+        margin-top: 32px;
+        padding: 56px 0 56px 88px;
+    }
+
+    .af-road-lane {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 64px;
+        border-radius: 32px;
+        background: theme('colors.af.100');
+    }
+
+    .af-road-lane::before {
+        content: '';
+        position: absolute;
+        left: 50%;
+        top: 28px;
+        bottom: 28px;
+        border-left: 2px dashed theme('colors.af.300');
+        transform: translateX(-50%);
+    }
+
+    .af-road-car {
+        position: absolute;
+        left: 0;
+        top: 0;
+        will-change: transform;
+    }
+
+    .af-steps {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .af-steps li {
+        border-top: 1px solid theme('colors.af.200');
+    }
+
+    .af-steps li:last-child {
+        border-bottom: 1px solid theme('colors.af.200');
+    }
+
+    .af-step-btn {
+        display: block;
+        width: 100%;
+        padding: 20px 0;
+        border: 0;
+        background: none;
+        font-family: theme('fontFamily.sans');
+        font-size: 30px;
+        font-weight: 600;
+        line-height: 1.1;
+        letter-spacing: -0.02em;
+        text-align: left;
+        color: theme('colors.af.500');
+        cursor: pointer;
+        transition: color 0.25s;
+    }
+
+    .af-step-btn:hover {
+        color: theme('colors.af.700');
+    }
+
+    .af-steps li.on .af-step-btn {
+        color: theme('colors.af.black');
+    }
+
+    .af-steps p {
+        display: none;
+        max-width: 40ch;
+        padding: 0 0 20px;
+        font-size: 19px;
+        color: theme('colors.af.700');
+    }
+
+    .af-steps li.on p {
+        display: block;
+    }
+
+    .af-step-pg {
+        width: 0;
+        height: 2px;
+        background: theme('colors.af.black');
+    }
+
+    .af-steps li.on .af-step-pg {
+        animation: af-pgf 4.8s linear forwards;
+    }
+
+    .af-steps-man .af-step-pg {
+        display: none;
+    }
+
+    @keyframes af-pgf {
+        to {
+            width: 100%;
+        }
+    }
+
+    @media (min-width: theme('screens.lg')) {
+        .af-road {
+            padding-left: 104px;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .af-step-btn {
+            transition: none;
+        }
+
+        .af-step-pg {
+            display: none;
+        }
+    }
+
+    /* Footer. */
+    .af-foot {
+        padding-block: 48px 32px;
+        background: theme('colors.af.black');
+        color: theme('colors.af.white');
+    }
+
+    .af-foot .af-wrap {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px 24px;
+    }
+
+    .af-foot-note {
+        flex-basis: 100%;
+        text-align: right;
+        color: theme('colors.af.dim');
+    }
+
+    .af-foot a,
+    .af-foot button {
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
+        padding: 0;
+        font-size: inherit;
+        color: theme('colors.af.white');
+    }
+
+    .af-foot-contact {
+        flex-basis: 100%;
+        font-size: 16px;
+        color: theme('colors.af.dim');
+    }
+
+    /* Plain-words list on the Home page: five numbered rows, hairlines, no boxes. */
+    .af-plain {
+        margin: 32px 0 0;
+        padding: 0;
+        list-style: none;
+        counter-reset: plain;
+    }
+
+    .af-plain li {
+        display: grid;
+        grid-template-columns: 40px minmax(0, 1fr);
+        gap: 4px 12px;
+        padding: 20px 0;
+        border-top: 1px solid theme('colors.af.200');
+        counter-increment: plain;
+    }
+
+    .af-plain li:last-child {
+        border-bottom: 1px solid theme('colors.af.200');
+    }
+
+    .af-plain li::before {
+        content: counter(plain);
+        grid-row: span 2;
+        font-family: theme('fontFamily.mono');
+        font-size: 24px;
+        line-height: 1.3;
+        color: theme('colors.af.700');
+    }
+
+    .af-plain b {
+        font-size: 22px;
+        font-weight: 600;
+        line-height: 1.3;
+        letter-spacing: -0.01em;
+    }
+
+    .af-plain p {
+        max-width: 56ch;
+        font-size: 19px;
+        line-height: 1.5;
+        color: theme('colors.af.700');
+    }
+
+    .af-plain-note {
+        max-width: 56ch;
+        margin-top: 24px;
+        font-size: 19px;
+        line-height: 1.5;
+    }
+
+    @media (min-width: theme('screens.lg')) {
+        .af-plain li {
+            grid-template-columns: 64px minmax(0, 1fr);
+        }
+
+        .af-plain b {
+            font-size: 26px;
+        }
+    }
+
+    /* Questions page: native open and close rows, big targets, a plus that turns into a minus. */
+    .af-faq-jump {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px 24px;
+        margin: 24px 0 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .af-faq-jump a {
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
+        font-size: 19px;
+        font-weight: 500;
+        text-decoration: underline;
+        text-underline-offset: 4px;
+    }
+
+    .af-faq-sec {
+        margin-top: 48px;
+    }
+
+    .af-faq-sec > h2 {
+        margin-bottom: 8px;
+    }
+
+    .af-faq details {
+        border-top: 1px solid theme('colors.af.200');
+    }
+
+    .af-faq details:last-child {
+        border-bottom: 1px solid theme('colors.af.200');
+    }
+
+    .af-faq summary {
+        position: relative;
+        display: block;
+        min-height: 64px;
+        padding: 16px 48px 16px 0;
+        font-size: 21px;
+        font-weight: 600;
+        line-height: 1.35;
+        cursor: pointer;
+        list-style: none;
+    }
+
+    .af-faq summary::-webkit-details-marker {
+        display: none;
+    }
+
+    .af-faq summary::after {
+        content: '+';
+        position: absolute;
+        top: 12px;
+        right: 0;
+        font-family: theme('fontFamily.mono');
+        font-size: 28px;
+        font-weight: 400;
+        line-height: 1.4;
+    }
+
+    .af-faq details[open] summary::after {
+        content: '\2212';
+    }
+
+    .af-faq details > div {
+        max-width: 62ch;
+        padding: 0 0 20px;
+        font-size: 19px;
+        line-height: 1.6;
+        color: theme('colors.af.700');
+    }
+
+    .af-faq details > div p + p {
+        margin-top: 12px;
+    }
+
+    .af-faq a:not(.af-btn) {
+        text-decoration: underline;
+        text-underline-offset: 3px;
+    }
+
+    /* Terms and Privacy: one readable column. */
+    .af-legal {
+        max-width: 48rem;
+    }
+
+    .af-legal-meta {
+        margin: 0 0 16px;
+        font-family: theme('fontFamily.mono');
+        font-size: 16px;
+        color: theme('colors.af.700');
+    }
+
+    .af-legal h2.text-h3 {
+        font-size: 22px;
+    }
+
+    .af-legal p {
+        font-size: 19px;
+        line-height: 1.6;
+    }
+
+    /* Sign in, register and the email code: a narrow centred column. */
+    .af-auth {
+        max-width: 34rem;
+    }
+
+    .af-auth .af-h1 {
+        font-size: 40px;
+    }
+
+    /* Investor portal and admin shell, and the Overview page (reference: docs/reference/html/portal-*.html). */
+    .pf-app {
+        min-height: 100dvh;
+        font-size: 14px;
+        line-height: 21px;
+        color: theme('colors.af.ink');
+    }
+
+    .pf-rail,
+    .pf-bar {
+        display: none;
+    }
+
+    .pf-brand,
+    .pf-brand-sm {
+        display: flex;
+        align-items: center;
+        min-height: 44px;
+    }
+
+    .pf-nav-link {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        min-height: 44px;
+        padding: 0 12px;
+        border-radius: 4px;
+        font-size: 14px;
+        color: theme('colors.af.ink');
+        text-decoration: none;
+    }
+
+    .pf-nav-link:hover {
+        background: theme('colors.af.100');
+    }
+
+    .pf-nav-link.is-active {
+        background: theme('colors.af.100');
+        font-weight: 500;
+        color: theme('colors.af.accent');
+    }
+
+    .pf-count {
+        min-width: 24px;
+        padding: 0 8px;
+        border: 1px solid theme('colors.af.300');
+        border-radius: 9999px;
+        font-family: theme('fontFamily.mono');
+        font-size: 12px;
+        line-height: 22px;
+        text-align: center;
+        color: theme('colors.af.500');
+    }
+
+    .pf-nav-head {
+        padding: 24px 12px 4px;
+        font-size: 11px;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: theme('colors.af.500');
+    }
+
+    .pf-user-name {
+        font-weight: 500;
+        overflow-wrap: anywhere;
+    }
+
+    .pf-user-mail {
+        margin-bottom: 8px;
+        color: theme('colors.af.500');
+        overflow-wrap: break-word;
+    }
+
+    .pf-signout {
+        min-height: 44px;
+        padding: 0;
+        border: 0;
+        background: none;
+        font: inherit;
+        color: theme('colors.af.ink');
+        text-decoration: underline;
+        cursor: pointer;
+    }
+
+    .pf-col {
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        min-height: 100dvh;
+    }
+
+    .pf-bar-sm {
+        position: sticky;
+        top: 0;
+        z-index: 30;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-height: 56px;
+        padding: 0 16px;
+        border-bottom: 1px solid theme('colors.af.200');
+        background: theme('colors.af.white');
+    }
+
+    .pf-bar-title {
+        flex: 1;
+        min-width: 0;
+        overflow: hidden;
+        font-size: 16px;
+        font-weight: 600;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .pf-bar-h1 {
+        margin: 0 auto 0 0;
+        font-size: 20px;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+    }
+
+    .pf-bar-actions {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+    }
+
+    .pf-stat {
+        display: flex;
+        align-items: baseline;
+        gap: 8px;
+        white-space: nowrap;
+    }
+
+    .pf-stat span,
+    .pf-label {
+        font-size: 11px;
+        font-weight: 500;
+        line-height: 14px;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: theme('colors.af.500');
+    }
+
+    .pf-stat b,
+    .pf-mono {
+        font-family: theme('fontFamily.mono');
+        font-variant-numeric: tabular-nums;
+    }
+
+    .pf-stat b {
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+    .pf-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 44px;
+        padding: 0 16px;
+        border-radius: 4px;
+        background: theme('colors.af.accent');
+        font-weight: 500;
+        color: theme('colors.af.white');
+        text-decoration: none;
+    }
+
+    .pf-btn:hover {
+        background: theme('colors.af.accent-ink');
+    }
+
+    .pf-btn-wide {
+        display: flex;
+        width: 100%;
+    }
+
+    .pf-main {
+        flex: 1;
+        width: 100%;
+        max-width: 90rem;
+        margin-inline: auto;
+        padding: 16px;
+    }
+
+    .pf-main-fluid {
+        max-width: none;
+    }
+
+    .pf-foot {
+        padding: 16px;
+        border-top: 1px solid theme('colors.af.200');
+    }
+
+    .pf-page {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .pf-notice {
+        padding: 12px 16px;
+        border: 1px solid theme('colors.af.300');
+        border-radius: 4px;
+    }
+
+    .pf-notice b {
+        margin-right: 8px;
+        font-weight: 600;
+    }
+
+    .pf-switch {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .pf-switch a {
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
+        padding: 0 16px;
+        border: 1px solid theme('colors.af.300');
+        border-radius: 9999px;
+        color: theme('colors.af.ink');
+        text-decoration: none;
+    }
+
+    .pf-switch a[aria-current='page'] {
+        border-color: theme('colors.af.black');
+        background: theme('colors.af.black');
+        color: theme('colors.af.white');
+    }
+
+    .pf-kpis {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1px;
+        overflow: hidden;
+        border: 1px solid theme('colors.af.200');
+        border-radius: 4px;
+        background: theme('colors.af.200');
+    }
+
+    .pf-kpi {
+        min-width: 0;
+        padding: 16px;
+        background: theme('colors.af.white');
+    }
+
+    .pf-num {
+        margin-top: 8px;
+        font-family: theme('fontFamily.mono');
+        font-size: 20px;
+        font-weight: 500;
+        line-height: 28px;
+        overflow-wrap: anywhere;
+    }
+
+    .pf-note {
+        margin-top: 4px;
+        color: theme('colors.af.500');
+    }
+
+    .pf-panel {
+        min-width: 0;
+        padding: 16px;
+        border: 1px solid theme('colors.af.200');
+        border-radius: 4px;
+        background: theme('colors.af.white');
+    }
+
+    .pf-panel-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 12px;
+    }
+
+    .pf-chip {
+        padding: 2px 8px;
+        border: 1px solid theme('colors.af.500');
+        border-radius: 4px;
+        font-family: theme('fontFamily.mono');
+        font-size: 11px;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: theme('colors.af.500');
+    }
+
+    .pf-chip[data-state='in_trip'] {
+        border-color: theme('colors.af.ok');
+        color: theme('colors.af.ok');
+    }
+
+    .pf-chip[data-state='charging'] {
+        border-color: theme('colors.af.accent');
+        color: theme('colors.af.accent');
+    }
+
+    .pf-live {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 16px;
+    }
+
+    .pf-map-panel {
+        position: relative;
+        padding: 0;
+        overflow: hidden;
+    }
+
+    .pf-map-panel .pf-panel-head {
+        margin: 0;
+        padding: 16px;
+    }
+
+    .pf-map {
+        height: 260px;
+        background: theme('colors.af.100');
+    }
+
+    .pf-legend {
+        position: absolute;
+        bottom: 24px;
+        left: 16px;
+        z-index: 900;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        border: 1px solid theme('colors.af.200');
+        border-radius: 4px;
+        background: theme('colors.af.white');
+    }
+
+    .pf-key-route {
+        display: inline-block;
+        width: 24px;
+        height: 3px;
+        background: theme('colors.af.black');
+    }
+
+    .pf-key-alt {
+        display: inline-block;
+        width: 24px;
+        height: 0;
+        margin-left: 8px;
+        border-top: 2px dashed theme('colors.af.300');
+    }
+
+    .pf-hint {
+        padding: 8px 16px;
+        font-size: 12px;
+        color: theme('colors.af.500');
+    }
+
+    .pf-tele {
+        min-width: 0;
+        padding: 16px;
+        border-radius: 4px;
+        background: theme('colors.af.dark');
+        color: theme('colors.af.white');
+    }
+
+    .pf-tele .pf-label,
+    .pf-tele dt {
+        color: theme('colors.af.dim');
+    }
+
+    .pf-tele-big {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+        margin: 12px 0 0;
+    }
+
+    .pf-tele-big dt {
+        font-size: 11px;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+
+    .pf-tele-big dd {
+        margin-top: 4px;
+        font-family: theme('fontFamily.mono');
+        font-size: 20px;
+        line-height: 26px;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .pf-tele-wide {
+        grid-column: 1 / -1;
+    }
+
+    .pf-tele-wide dd {
+        font-size: 32px;
+        line-height: 38px;
+    }
+
+    .pf-bar-track {
+        height: 6px;
+        margin-top: 8px;
+        overflow: hidden;
+        background: theme('colors.af.200');
+    }
+
+    .pf-bar-track i {
+        display: block;
+        height: 100%;
+        background: theme('colors.af.black');
+        transform-origin: left;
+    }
+
+    .pf-tele .pf-bar-track {
+        background: theme('colors.af.700');
+    }
+
+    .pf-tele .pf-bar-track i {
+        background: theme('colors.af.white');
+    }
+
+    .pf-bar-full {
+        margin-top: 16px;
+    }
+
+    .pf-tele-rows {
+        margin: 16px 0 0;
+        border-top: 1px solid theme('colors.af.700');
+    }
+
+    .pf-tele-rows div {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 10px 0;
+    }
+
+    .pf-tele-rows dd {
+        min-width: 0;
+        text-align: right;
+        overflow-wrap: anywhere;
+    }
+
+    .pf-tele-alert-h {
+        margin-top: 12px;
+        padding-top: 16px;
+        border-top: 1px solid theme('colors.af.700');
+    }
+
+    .pf-tele-alert {
+        margin-top: 4px;
+    }
+
+    .pf-two,
+    .pf-two-xl,
+    .pf-two-wide {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 16px;
+    }
+
+    .pf-big {
+        margin-top: 12px;
+        font-family: theme('fontFamily.mono');
+        font-size: 28px;
+        font-weight: 500;
+        line-height: 34px;
+    }
+
+    .pf-big-sm {
+        font-family: theme('fontFamily.sans');
+        font-size: 20px;
+        font-weight: 600;
+        line-height: 26px;
+    }
+
+    .pf-text {
+        margin-top: 12px;
+    }
+
+    .pf-rows {
+        margin: 16px 0 0;
+        border-bottom: 1px solid theme('colors.af.200');
+    }
+
+    .pf-rows div {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 4px 16px;
+        padding: 10px 0;
+        border-top: 1px solid theme('colors.af.200');
+    }
+
+    .pf-rows dt {
+        color: theme('colors.af.500');
+    }
+
+    .pf-rows dd {
+        min-width: 0;
+        font-family: theme('fontFamily.mono');
+        margin-left: auto;
+        text-align: right;
+        overflow-wrap: anywhere;
+    }
+
+    .pf-keys {
+        display: flex;
+        gap: 16px;
+    }
+
+    .pf-keys i {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        margin-right: 6px;
+    }
+
+    .pf-sw-earned {
+        background: theme('colors.af.accent');
+    }
+
+    .pf-sw-proj {
+        background: theme('colors.af.200');
+    }
+
+    .pf-chart svg {
+        display: block;
+        width: 100%;
+        height: auto;
+    }
+
+    .pf-link {
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
+        color: theme('colors.af.ink');
+        text-decoration: underline;
+    }
+
+    .pf-ledger {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .pf-ledger li {
+        display: grid;
+        grid-template-areas: 'name amt' 'date bal';
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 4px 12px;
+        padding: 12px 0;
+        border-top: 1px solid theme('colors.af.200');
+    }
+
+    .pf-ledger-head {
+        display: none !important;
+    }
+
+    .pf-l-name {
+        grid-area: name;
+    }
+
+    .pf-l-amt {
+        grid-area: amt;
+        text-align: right;
+    }
+
+    .pf-l-date {
+        grid-area: date;
+        color: theme('colors.af.500');
+    }
+
+    .pf-l-bal {
+        grid-area: bal;
+        text-align: right;
+        color: theme('colors.af.500');
+    }
+
+    .pf-l-ref {
+        display: none;
+    }
+
+    .pf-soc {
+        margin-top: 12px;
+        color: theme('colors.af.500');
+    }
+
+    .pf-soc b {
+        margin-right: 4px;
+        font-family: theme('fontFamily.mono');
+        font-size: 28px;
+        font-weight: 500;
+        color: theme('colors.af.ink');
+    }
+
+    @media (min-width: theme('screens.lg')) {
+        .pf-app {
+            display: flex;
+        }
+
+        .pf-col {
+            flex: 1;
+        }
+
+        .pf-rail {
+            position: sticky;
+            top: 0;
+            display: flex;
+            flex: none;
+            flex-direction: column;
+            width: 208px;
+            height: 100dvh;
+            padding: 16px 12px;
+            overflow-y: auto;
+            border-right: 1px solid theme('colors.af.200');
+        }
+
+        .pf-brand {
+            padding: 8px 12px 16px;
+        }
+
+        .pf-nav {
+            flex: 1;
+        }
+
+        .pf-nav-link {
+            min-height: 40px;
+        }
+
+        .pf-user {
+            padding: 16px 12px 0;
+            border-top: 1px solid theme('colors.af.200');
+        }
+
+        .pf-bar-sm {
+            display: none;
+        }
+
+        .pf-bar {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            min-height: 56px;
+            padding: 0 32px;
+            border-bottom: 1px solid theme('colors.af.200');
+            background: theme('colors.af.white');
+        }
+
+        .pf-btn {
+            min-height: 40px;
+        }
+
+        .pf-btn-wide {
+            display: none;
+        }
+
+        .pf-main {
+            padding: 24px 32px;
+        }
+
+        .pf-foot {
+            padding: 16px 32px;
+        }
+
+        .pf-kpis {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+
+        .pf-num {
+            font-size: 28px;
+            line-height: 34px;
+        }
+
+        .pf-live {
+            grid-template-columns: minmax(0, 1fr) 384px;
+        }
+
+        .pf-map-panel {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .pf-map {
+            flex: 1;
+            min-height: 440px;
+        }
+
+        .pf-two {
+            grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+        }
+
+        .pf-two-flip {
+            grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+        }
+    }
+
+    /* Four columns by default. The reference column joins only when the panel has room for it, so
+       the entry name never gets squeezed to a sliver. */
+    @media (min-width: theme('screens.xl')) {
+        .pf-two-xl {
+            grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+        }
+
+        .pf-ledger li {
+            grid-template-areas: 'date name amt bal';
+            grid-template-columns: 6.5rem minmax(7rem, 1fr) 7rem 7rem;
+            gap: 4px 12px;
+            align-items: center;
+        }
+
+        .pf-ledger-head {
+            display: grid !important;
+            padding: 0 0 8px !important;
+            border-top: 0 !important;
+            font-size: 11px;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: theme('colors.af.500');
+        }
+
+        .pf-ledger-head span:nth-child(3) {
+            display: none;
+        }
+
+        .pf-ledger-head span:nth-child(4),
+        .pf-ledger-head span:nth-child(5) {
+            text-align: right;
+        }
+
+        .pf-l-date,
+        .pf-l-bal {
+            color: inherit;
+        }
+    }
+
+    @media (min-width: 1536px) {
+        .pf-two-wide {
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        }
+
+        .pf-ledger li {
+            grid-template-areas: 'date name ref amt bal';
+            grid-template-columns: 6.5rem minmax(8rem, 1fr) 11rem 7rem 7rem;
+        }
+
+        .pf-ledger-head span:nth-child(3) {
+            display: block;
+        }
+
+        .pf-l-ref {
+            display: block;
+            grid-area: ref;
+            color: theme('colors.af.500');
+            overflow-wrap: anywhere;
+        }
+    }
+
+    /* Portal money pages: earnings, receipt, wallet. */
+    .pf-kpis-3 {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .pf-num-text {
+        font-family: inherit;
+    }
+
+    .pf-tabs {
+        display: flex;
+        gap: 24px;
+        overflow-x: auto;
+        border-bottom: 1px solid theme('colors.af.200');
+    }
+
+    .pf-tabs a {
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
+        border-bottom: 2px solid transparent;
+        white-space: nowrap;
+        color: theme('colors.af.500');
+        text-decoration: none;
+    }
+
+    .pf-tabs a[aria-current='page'] {
+        border-bottom-color: theme('colors.af.accent');
+        color: theme('colors.af.ink');
+    }
+
+    .pf-tablewrap {
+        min-width: 0;
+        max-width: 100%;
+        overflow-x: auto;
+    }
+
+    .pf-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .pf-table thead {
+        display: none;
+    }
+
+    .pf-table tr {
+        display: block;
+        padding: 12px 0;
+        border-top: 1px solid theme('colors.af.200');
+    }
+
+    .pf-table tr:first-child {
+        border-top: 0;
+    }
+
+    .pf-table td {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 2px 0;
+        text-align: right;
+    }
+
+    .pf-table td[data-label]::before {
+        content: attr(data-label);
+        flex: none;
+        text-align: left;
+        color: theme('colors.af.500');
+    }
+
+    .pf-table td.pf-act {
+        justify-content: flex-start;
+    }
+
+    .pf-pager {
+        margin-top: 16px;
+    }
+
+    .pf-form {
+        display: grid;
+        gap: 16px;
+    }
+
+    .pf-form-inline {
+        margin-top: 8px;
+    }
+
+    .pf-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .pf-linkbtn {
+        border: 0;
+        background: none;
+        cursor: pointer;
+        font: inherit;
+    }
+
+    .pf-chip.is-ok {
+        border-color: theme('colors.af.ok');
+        color: theme('colors.af.ok');
+    }
+
+    .pf-chip.is-off {
+        border-color: theme('colors.af.dim');
+        color: theme('colors.af.500');
+    }
+
+    .pf-receipt-tools {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+    }
+
+    .pf-receipt {
+        max-width: 40rem;
+        padding: 16px;
+        border: 1px solid theme('colors.af.200');
+        border-radius: 4px;
+        background: theme('colors.af.white');
+    }
+
+    .pf-receipt-title {
+        margin-top: 4px;
+        font-size: 20px;
+        font-weight: 500;
+        line-height: 28px;
+    }
+
+    .pf-receipt-sub {
+        margin-top: 24px;
+    }
+
+    .pf-statement {
+        width: 100%;
+        margin-top: 16px;
+        border-collapse: collapse;
+    }
+
+    .pf-statement th,
+    .pf-statement td {
+        padding: 8px 0;
+        border-top: 1px solid theme('colors.af.200');
+        text-align: left;
+        vertical-align: top;
+        font-weight: 400;
+    }
+
+    .pf-statement td,
+    .pf-statement th.pf-r {
+        font-family: theme('fontFamily.mono');
+        font-variant-numeric: tabular-nums;
+        text-align: right;
+        white-space: nowrap;
+    }
+
+    .pf-statement small {
+        display: block;
+        color: theme('colors.af.500');
+    }
+
+    .pf-statement .pf-strong th,
+    .pf-statement .pf-strong td {
+        font-weight: 500;
+        border-top: 1px solid theme('colors.af.ink');
+    }
+
+    .pf-fine {
+        margin-top: 24px;
+        color: theme('colors.af.500');
+    }
+
+    @media (min-width: theme('screens.sm')) {
+        .pf-receipt {
+            padding: 24px;
+        }
+    }
+
+    /* Tables stay cards until there is room for every column. A table that is still too wide
+       scrolls inside its own panel. */
+    @media (min-width: theme('screens.xl')) {
+        .pf-table thead {
+            display: table-header-group;
+        }
+
+        .pf-table tr {
+            display: table-row;
+            padding: 0;
+        }
+
+        .pf-table th,
+        .pf-table td {
+            padding: 12px 12px 12px 0;
+            border-top: 1px solid theme('colors.af.200');
+            text-align: left;
+            white-space: nowrap;
+        }
+
+        .pf-table th {
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: theme('colors.af.500');
+        }
+
+        .pf-table td {
+            display: table-cell;
+        }
+
+        .pf-table td[data-label]::before {
+            content: none;
+        }
+
+        .pf-table .pf-r {
+            text-align: right;
+        }
+
+        .pf-table td.pf-r {
+            padding-right: 24px;
+        }
+    }
+
+    @media (min-width: theme('screens.lg')) {
+        .pf-kpis-3 {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+    }
+
+    @media print {
+        .pf-rail,
+        .pf-bar,
+        .pf-bar-sm,
+        .pf-foot,
+        .pf-noprint {
+            display: none !important;
+        }
+
+        .pf-app {
+            display: block;
+        }
+
+        .pf-main {
+            max-width: none;
+            padding: 0;
+        }
+
+        .pf-receipt {
+            max-width: none;
+            border: 0;
+            padding: 0;
+        }
+    }
+
+    /* Certificate: a hairline double border, plain type, one A4 page. */
+    .pf-cert {
+        max-width: 40rem;
+        padding: 6px;
+        border: 1px solid theme('colors.af.ink');
+        background: theme('colors.af.white');
+    }
+
+    .pf-cert-inner {
+        padding: 24px 16px;
+        border: 1px solid theme('colors.af.ink');
+    }
+
+    .pf-cert-title {
+        margin: 8px 0 24px;
+        font-size: 24px;
+        font-weight: 500;
+        line-height: 32px;
+    }
+
+    .pf-cert-holder {
+        margin: 8px 0;
+        font-size: 24px;
+        font-weight: 500;
+        line-height: 32px;
+    }
+
+    .pf-cert-rows {
+        margin-top: 24px;
+    }
+
+    @media print {
+        .pf-cert {
+            max-width: none;
+        }
+
+        .pf-cert-inner {
+            padding: 24px;
+        }
+    }
+
+    /* Rides: the trip table beside its route map. */
+    .pf-ridemap {
+        height: 240px;
+    }
+
+    .pf-ridehint {
+        padding: 12px 16px;
+        color: theme('colors.af.500');
+    }
+
+    .pf-filter {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-end;
+        gap: 12px;
+    }
+
+    /* A date field is as wide as its row on a phone, so the button wraps below it instead of sitting on it. */
+    .pf-filter > div {
+        flex: 1 1 100%;
+        min-width: 0;
+    }
+
+    .pf-filter input[type='date'] {
+        min-width: 0;
+        max-width: 100%;
+        -webkit-appearance: none;
+        appearance: none;
+    }
+
+    @media (min-width: 640px) {
+        .pf-filter > div {
+            flex: 0 1 auto;
+        }
+    }
+
+    .pf-table tr.is-picked td {
+        background: theme('colors.af.100');
+    }
+
+    /* Life: state changes and milestones. Position-only motion, flat marks, tokens only. */
+    @keyframes pf-pop-in {
+        from {
+            transform: translateY(-4px);
+        }
+
+        to {
+            transform: translateY(0);
+        }
+    }
+
+    .pf-pop {
+        animation: pf-pop-in 150ms ease-out;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .pf-pop {
+            animation: none;
+        }
+    }
+
+    .pf-bar-accent i {
+        background: theme('colors.af.accent');
+    }
+
+    .pf-milestone {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 12px;
+        font-weight: 500;
+        color: theme('colors.af.ok');
+    }
+
+    .pf-milestone svg {
+        flex: none;
+    }
+
+    .pf-milestone-row {
+        margin: 0;
+        padding: 12px 16px;
+        border: 1px solid theme('colors.af.ok');
+        border-radius: 4px;
+        font-weight: 400;
+        color: theme('colors.af.ink');
+    }
+
+    .pf-milestone-row svg {
+        color: theme('colors.af.ok');
+    }
+
+    .pf-empty {
+        display: grid;
+        justify-items: start;
+        gap: 8px;
+        max-width: 36rem;
+        padding: 16px 0;
+    }
+
+    .pf-empty-title {
+        font-weight: 600;
+    }
+
+    .pf-vrow {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-top: 12px;
+    }
+
+    .pf-vrow .pf-soc {
+        margin-top: 0;
+    }
+
+    .pf-carmark {
+        flex: none;
+    }
+
+    /* A second line under a table row: before and after values, integrity failures. */
+    .pf-table tr.pf-row-detail {
+        border-top: 0;
+        padding-top: 0;
+    }
+
+    .pf-table tr.pf-row-detail td {
+        display: block;
+        text-align: left;
+    }
+
+    .pf-ba {
+        display: grid;
+        gap: 12px;
+        margin-top: 8px;
+    }
+
+    .pf-pre {
+        margin: 4px 0 0;
+        padding: 8px;
+        overflow-x: auto;
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+        font-size: 0.8125rem;
+        border: 1px solid theme('colors.af.200');
+    }
+
+    .pf-list {
+        margin: 0;
+        padding-left: 16px;
+        display: grid;
+        gap: 4px;
+        font-size: 0.8125rem;
+    }
+
+    @media (min-width: theme('screens.lg')) {
+        .pf-ba {
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+
+    .pf-rowbtn {
+        border: 0;
+        background: none;
+        cursor: pointer;
+        font: inherit;
+        color: theme('colors.af.ink');
+        text-decoration: underline;
+        /* A finger target below lg (SPEC 12.6). Back to a plain text link from lg. */
+        display: inline-flex;
+        align-items: center;
+        min-height: 2.75rem;
+        min-width: 2.75rem;
+    }
+
+    @media (min-width: theme('screens.lg')) {
+        .pf-rowbtn {
+            display: inline;
+            min-height: 0;
+            min-width: 0;
+        }
+    }
+
+    /* Applicant pages: the wizard, the status page and the funding page. One column, big type, plain steps. */
+    .af-apply {
+        max-width: 40rem;
+    }
+
+    .af-apply .af-h1 {
+        font-size: 36px;
+    }
+
+    .af-apply-meta {
+        margin: 0 0 12px;
+        font-family: theme('fontFamily.mono');
+        font-size: 17px;
+        color: theme('colors.af.700');
+    }
+
+    .af-apply-steps {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: 0 0 32px;
+        padding: 0;
+        list-style: none;
+    }
+
+    .af-apply-steps button {
+        min-width: 44px;
+        min-height: 44px;
+        border: 1px solid theme('colors.af.300');
+        border-radius: 9999px;
+        background: theme('colors.af.white');
+        font-family: theme('fontFamily.mono');
+        font-size: 17px;
+        color: theme('colors.af.black');
+        cursor: pointer;
+    }
+
+    .af-apply-steps button[aria-current='step'] {
+        border-color: theme('colors.af.black');
+        background: theme('colors.af.black');
+        color: theme('colors.af.white');
+    }
+
+    .af-apply-steps button:disabled {
+        border-color: theme('colors.af.200');
+        color: theme('colors.af.dim');
+        cursor: not-allowed;
+    }
+
+    .af-apply-form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .af-apply-form p {
+        font-size: 19px;
+        line-height: 1.5;
+    }
+
+    .af-choice {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        min-height: 44px;
+        padding: 16px;
+        border: 1px solid theme('colors.af.300');
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .af-choice:has(input:checked) {
+        outline: 2px solid theme('colors.af.black');
+        outline-offset: -2px;
+        border-color: theme('colors.af.black');
+    }
+
+    .af-choice input {
+        flex: none;
+        width: 24px;
+        height: 24px;
+        margin-top: 2px;
+        accent-color: theme('colors.af.black');
+    }
+
+    .af-choice-full {
+        color: theme('colors.af.700');
+        cursor: not-allowed;
+    }
+
+    .af-apply-bar {
+        display: flex;
+        gap: 12px;
+        margin-top: 32px;
+    }
+
+    @media (max-width: 639px) {
+        .af-apply-bar {
+            position: sticky;
+            bottom: 0;
+            z-index: 30;
+            margin-inline: -16px;
+            padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+            border-top: 1px solid theme('colors.af.200');
+            background: theme('colors.af.white');
+        }
+
+        .af-apply-bar > * {
+            flex: 1;
+        }
+    }
+
+    /* Where the application is: four stages, the current one in black. */
+    .af-track {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 8px;
+        margin: 0 0 32px;
+        padding: 0;
+        list-style: none;
+    }
+
+    .af-track li {
+        padding-top: 8px;
+        border-top: 4px solid theme('colors.af.200');
+        font-size: 16px;
+        line-height: 1.3;
+        color: theme('colors.af.700');
+    }
+
+    .af-track li.done {
+        border-color: theme('colors.af.black');
+    }
+
+    .af-track li.on {
+        border-color: theme('colors.af.black');
+        font-weight: 600;
+        color: theme('colors.af.black');
+    }
+
+    .af-apply-text {
+        max-width: 56ch;
+        margin: 16px 0 0;
+        font-size: 20px;
+        line-height: 1.5;
+    }
+
+    .af-pay-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 16px;
+        margin: 16px 0 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    @media (min-width: 640px) {
+        .af-pay-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+
+    .af-pay-card {
+        min-width: 0;
+        padding: 16px;
+        border: 1px solid theme('colors.af.300');
+    }
+
+    .af-pay-card h3 {
+        margin: 0 0 8px;
+        font-size: 20px;
+        font-weight: 500;
+    }
+
+    .af-pay-card p {
+        margin: 0;
+        font-size: 16px;
+        line-height: 1.5;
+        white-space: pre-line;
+        overflow-wrap: anywhere;
+    }
+
+    .af-apply-text-soft {
+        color: theme('colors.af.700');
+    }
+
+    .af-apply-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-top: 24px;
+    }
+
+    @media (min-width: theme('screens.sm')) {
+        .af-apply-actions {
+            flex-direction: row;
+        }
+    }
+
+    .af-apply-sec {
+        margin-top: 48px;
+    }
+
+    .af-fig {
+        display: block;
+        font-family: theme('fontFamily.mono');
+        font-size: 28px;
+        font-weight: 600;
+        line-height: 1.2;
+        font-variant-numeric: tabular-nums;
+        overflow-wrap: anywhere;
+    }
+
+    .af-words {
+        margin: 16px 0 0;
+    }
+
+    .af-words div {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 4px 24px;
+        padding: 16px 0;
+        border-top: 1px solid theme('colors.af.200');
+    }
+
+    .af-words div:last-child {
+        border-bottom: 1px solid theme('colors.af.200');
+    }
+
+    .af-words dt {
+        font-size: 21px;
+        font-weight: 600;
+    }
+
+    .af-words dd {
+        max-width: 56ch;
+        font-size: 19px;
+        line-height: 1.5;
+        color: theme('colors.af.700');
+    }
+
+    @media (min-width: theme('screens.sm')) {
+        .af-words div {
+            grid-template-columns: 12rem minmax(0, 1fr);
+        }
+    }
+
+
+    .pf-ownerrow {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        padding-bottom: 12px;
+    }
+
+    .pf-method {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        min-width: 0;
+        margin: 0;
+        padding: 16px;
+        border: 1px solid theme('colors.af.300');
+    }
+
+    .pf-check {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        min-height: 44px;
+    }
+
+    .pf-btn-quiet {
+        background: theme('colors.af.white');
+        color: theme('colors.af.ink');
+        border: 1px solid theme('colors.af.300');
+        text-decoration: none;
+    }
+
+    .pf-brand-form {
+        gap: 16px;
+    }
+
+    .pf-pv-tab,
+    .pf-pv-nav,
+    .pf-pv-mail {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        min-height: 44px;
+        margin-bottom: 12px;
+        padding: 8px 12px;
+        border: 1px solid theme('colors.af.200');
+        border-radius: 4px;
+    }
+
+    .pf-pv-mail {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+    }
+
+    .pf-pv-nav {
+        background: theme('colors.af.black');
+        color: theme('colors.af.white');
+    }
+
+    .pf-pv-nav.pf-pv-light {
+        background: theme('colors.af.white');
+        color: theme('colors.af.ink');
+    }
+
+    .pf-pv-nav img {
+        height: 24px;
+        width: auto;
+        max-width: 100%;
+    }
+
+    .pf-pv-word {
+        font-weight: 600;
+        letter-spacing: -0.01em;
+    }
+
+    .pf-pv-dot {
+        width: 16px;
+        height: 16px;
+        background: theme('colors.af.black');
+    }
+
+    .pf-pv-icons {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    @media (min-width: theme('screens.lg')) {
+        .pf-brand-preview {
+            position: sticky;
+            top: 72px;
+        }
+    }
+
+    .pf-rows-line {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 12px 24px;
+    }
+
+    .pf-split {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .pf-split-list,
+    .pf-split-detail {
+        min-width: 0;
+    }
+
+    .pf-split-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .pf-split.has-detail .pf-split-list {
+        display: none;
+    }
+
+    .pf-decide {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-top: 16px;
+    }
+
+    @media (min-width: theme('screens.lg')) {
+        .pf-split {
+            flex-direction: row;
+            align-items: flex-start;
+        }
+
+        .pf-split-list,
+        .pf-split.has-detail .pf-split-list {
+            display: flex;
+            flex: 1 1 0;
+        }
+
+        .pf-split-detail {
+            flex: 0 0 24rem;
+        }
+
+        .pf-back {
+            display: none;
+        }
+    }
+}
+
+/* A settled or trip row posting in the ledger: position only, 150 ms, no opacity change. */
+@keyframes af-row-in {
+    from {
+        transform: translateY(-100%);
+    }
+
+    to {
+        transform: translateY(0);
+    }
+}
+
+.af-ledger-new {
+    animation: af-row-in 150ms ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .af-ledger-new {
+        animation: none;
+    }
+}
+
+/*
+ * DRinkWeLL surfaces: option cards, telemetry panels, gauge, ticker, toolbar. Plain CSS on tokens,
+ * hairline borders, no gradients, no shadows, no alpha. Spacing from the 4/8/12/16/24/32/48/64 scale.
+ */
+@layer components {
+    .dw-grid2 {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 16px;
+    }
+
+    @media (min-width: theme('screens.lg')) {
+        .dw-grid2 {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .dw-grid3 {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+    }
+
+    .dw-grid3 {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 16px;
+    }
+
+    .dw-card {
+        min-width: 0;
+        padding: 24px;
+        border: 1px solid theme('colors.af.200');
+        background: theme('colors.af.white');
+    }
+
+    .dw-card h3 {
+        font-size: 20px;
+        font-weight: 600;
+    }
+
+    .dw-rows {
+        margin-top: 16px;
+        border-top: 1px solid theme('colors.af.200');
+    }
+
+    .dw-rows > div {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 8px 0;
+        border-bottom: 1px solid theme('colors.af.200');
+    }
+
+    .dw-rows dt {
+        color: theme('colors.af.500');
+    }
+
+    .dw-rows dd {
+        font-family: theme('fontFamily.mono');
+        font-variant-numeric: tabular-nums;
+        text-align: right;
+    }
+
+    .dw-map {
+        min-height: 320px;
+        border: 1px solid theme('colors.af.200');
+        background: theme('colors.af.100');
+    }
+
+    .dw-curve {
+        position: relative;
+        height: 280px;
+    }
+
+    .dw-range {
+        width: 100%;
+        min-height: 44px;
+    }
+
+    /* Telemetry: dark panel with high-contrast text. */
+    .dw-tele {
+        min-width: 0;
+        padding: 16px;
+        border: 1px solid theme('colors.af.700');
+        background: theme('colors.af.dark');
+        color: theme('colors.af.white');
+    }
+
+    .dw-tele-label {
+        font-size: 11px;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: theme('colors.af.dim');
+    }
+
+    .dw-tele-num {
+        margin-top: 4px;
+        font-family: theme('fontFamily.mono');
+        font-size: 28px;
+        font-weight: 500;
+        font-variant-numeric: tabular-nums;
+        overflow-wrap: anywhere;
+    }
+
+    .dw-gauge {
+        position: relative;
+        width: 100%;
+        max-width: 96px;
+        height: 192px;
+        border: 1px solid theme('colors.af.dim');
+        background: theme('colors.af.dark');
+    }
+
+    .dw-gauge-fill {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background: theme('colors.af.white');
+        transition: height 400ms ease-out;
+    }
+
+    .dw-gauge-fill[data-state='low_stock'] {
+        background: theme('colors.af.dim');
+    }
+
+    .dw-gauge-fill[data-state='sold_out'] {
+        height: 0;
+    }
+
+    .dw-gauge-wrap {
+        display: flex;
+        gap: 24px;
+        align-items: flex-end;
+    }
+
+    .dw-list {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .dw-tick {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 8px 0;
+        border-bottom: 1px solid theme('colors.af.700');
+        font-family: theme('fontFamily.mono');
+        font-size: 13px;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .dw-tick > span:last-child {
+        text-align: right;
+        overflow-wrap: anywhere;
+    }
+
+    .dw-bar {
+        height: 8px;
+        border: 1px solid theme('colors.af.ink');
+        background: theme('colors.af.white');
+    }
+
+    .dw-bar > span {
+        display: block;
+        height: 100%;
+        background: theme('colors.af.accent');
+    }
+
+    .dw-toolbar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        align-items: center;
+        padding: 12px 16px;
+        border: 1px dashed theme('colors.af.500');
+        background: theme('colors.af.100');
+    }
+
+    .dw-toolbar p {
+        margin: 0;
+        width: 100%;
+        font-size: 11px;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: theme('colors.af.500');
+    }
+
+    .dw-toolbar form {
+        margin: 0;
+    }
+
+    .dw-chart {
+        position: relative;
+        height: 240px;
+    }
+
+    .dw-copy {
+        padding: 16px;
+        border: 1px solid theme('colors.af.200');
+        background: theme('colors.af.100');
+        font-family: theme('fontFamily.mono');
+        font-size: 13px;
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+    }
+
+    .dw-demo {
+        padding: 12px 16px;
+        border: 1px solid theme('colors.af.ink');
+        font-size: 15px;
+    }
+}

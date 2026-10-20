@@ -13,7 +13,7 @@
         --cc-pad: clamp(16px, 4.9vw, 72px);
         font-family: 'Montserrat', 'Geist Sans', ui-sans-serif, system-ui, sans-serif;
         color: #000;
-        font-size: 20px;
+        font-size: 18px;
         line-height: 1.55;
     }
 
@@ -105,7 +105,7 @@
 
     .cc-nav .af-nav-link {
         color: #000;
-        font-size: 18px;
+        font-size: 17px;
         font-weight: 600;
         text-decoration: none;
     }
@@ -138,10 +138,10 @@
 
     /* Pills */
     .cc-page .af-btn {
-        min-height: 56px;
-        padding: 14px 32px;
+        min-height: 52px;
+        padding: 12px 28px;
         font-family: inherit;
-        font-size: 18px;
+        font-size: 17px;
         font-weight: 700;
         transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease;
     }
@@ -208,7 +208,7 @@
     .cc-lead {
         max-width: 40ch;
         margin: 32px 0 24px;
-        font-size: 22px;
+        font-size: 20px;
         font-weight: 500;
         line-height: 1.5;
     }
@@ -303,10 +303,10 @@
         box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
     }
 
-    .cc-option h3 { font-size: 34px; font-weight: 700; letter-spacing: -0.03em; }
+    .cc-option h3 { font-size: 30px; font-weight: 700; letter-spacing: -0.03em; }
 
     .cc-big {
-        font-size: 56px;
+        font-size: 48px;
         font-weight: 700;
         letter-spacing: -0.04em;
         font-variant-numeric: tabular-nums;
@@ -342,18 +342,18 @@
     .cc-stepper { display: inline-flex; align-items: center; gap: 16px; margin-top: 8px; }
 
     .cc-stepper button {
-        width: 56px;
-        height: 56px;
+        width: 52px;
+        height: 52px;
         border: 2px solid #000;
         border-radius: 9999px;
         background: #fff;
-        font-size: 28px;
+        font-size: 26px;
         line-height: 1;
         cursor: pointer;
     }
 
     .cc-stepper button:active { transform: scale(0.95); }
-    .cc-stepper output { min-width: 64px; text-align: center; font-size: 34px; font-weight: 700; }
+    .cc-stepper output { min-width: 56px; text-align: center; font-size: 30px; font-weight: 700; }
 
     /* News carousel */
     .cc-carousel { position: relative; margin-top: 40px; }
@@ -527,7 +527,7 @@
         border-radius: 9999px;
         background: #000;
         color: #fff;
-        font-size: 16px;
+        font-size: 15px;
         font-weight: 700;
         opacity: 0;
         transition: opacity 0.2s ease;
@@ -569,7 +569,7 @@
         bottom: 16px;
         padding: 14px 16px;
         border-radius: 12px;
-        font-size: 20px;
+        font-size: 18px;
         font-weight: 700;
         color: #000;
         background: #f2c67a;
@@ -604,7 +604,7 @@
         border: 0;
         background: none;
         font: inherit;
-        font-size: 20px;
+        font-size: 18px;
         outline: none;
     }
 
@@ -615,7 +615,7 @@
         border-radius: 9999px;
         background: #fff;
         color: #000;
-        font-size: 17px;
+        font-size: 16px;
         font-weight: 600;
         text-decoration: none;
         transition: background-color 0.2s ease, color 0.2s ease;
@@ -643,10 +643,10 @@
         .cc-foot-cols { grid-template-columns: repeat(4, minmax(0, 1fr)); }
     }
 
-    .cc-foot h4 { margin-bottom: 16px; font-size: 15px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #6c6c6c; }
-    .cc-foot-cols a, .cc-foot-cols button { display: flex; min-height: 44px; align-items: center; padding: 0; font-size: 18px; font-weight: 600; color: #000; text-decoration: none; background: none; border: 0; cursor: pointer; font-family: inherit; }
+    .cc-foot h4 { margin-bottom: 16px; font-size: 14px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #6c6c6c; }
+    .cc-foot-cols a, .cc-foot-cols button { display: flex; min-height: 44px; align-items: center; padding: 0; font-size: 17px; font-weight: 600; color: #000; text-decoration: none; background: none; border: 0; cursor: pointer; font-family: inherit; }
     .cc-foot-cols a:hover { text-decoration: underline; }
-    .cc-foot-legal { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; margin-top: 48px; padding-top: 24px; border-top: 1px solid #e4e4e4; font-size: 17px; color: #353535; }
+    .cc-foot-legal { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; margin-top: 48px; padding-top: 24px; border-top: 1px solid #e4e4e4; font-size: 16px; color: #353535; }
 
     .cc-access {
         position: fixed;

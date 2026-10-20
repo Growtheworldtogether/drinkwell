@@ -376,42 +376,6 @@
     .cc-track::-webkit-scrollbar { display: none; }
     .cc-track.is-drag { cursor: grabbing; scroll-snap-type: none; user-select: none; }
 
-    .cc-card { flex: 0 0 min(80vw, 400px); scroll-snap-align: start; text-align: left; }
-
-    .cc-photo {
-        position: relative;
-        display: flex;
-        align-items: flex-end;
-        height: 340px;
-        padding: 16px;
-        overflow: hidden;
-        border-radius: 16px;
-        font-size: 11px;
-        font-weight: 600;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        color: rgba(255, 255, 255, 0.85);
-        background: linear-gradient(160deg, #f7723a, #f8805e 55%, #fcb791);
-    }
-
-    .cc-card:nth-child(2) .cc-photo { background: linear-gradient(160deg, #6acf7f, #95cb87 60%, #e4f2df); }
-    .cc-card:nth-child(3) .cc-photo { background: linear-gradient(160deg, #f79a01, #f6af4e 60%, #fceccf); }
-    .cc-card:nth-child(4) .cc-photo { background: linear-gradient(160deg, #6cc9d0, #9ed8dc 60%, #e5f5f6); }
-    .cc-card:nth-child(5) .cc-photo { background: linear-gradient(160deg, #b59e74, #d5b85c 60%, #f4eede); }
-
-    .cc-tags { display: flex; gap: 8px; margin-top: 16px; }
-
-    .cc-tag {
-        padding: 2px 10px;
-        border-radius: 9999px;
-        background: #000;
-        color: #fff;
-        font-size: 11px;
-        font-weight: 600;
-    }
-
-    .cc-card h3 { margin-top: 12px; font-size: 16px; font-weight: 700; line-height: 1.3; }
-
     .cc-cursor {
         position: absolute;
         top: 0;
@@ -456,10 +420,18 @@
         border-radius: 24px;
         color: #fff;
         text-align: left;
-        background: linear-gradient(200deg, #6b1d10, #2a0d0a);
+        align-items: flex-end;
+        background: #d4d4d4;
     }
 
-    .cc-big-card:nth-child(2) { background: linear-gradient(200deg, #1d6e17, #0d2a0b); }
+    .cc-big-card .cc-photo { position: absolute; inset: 0; aspect-ratio: auto; height: 100%; border-radius: 0; }
+
+    .cc-big-card::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.72), rgba(0, 0, 0, 0) 62%);
+    }
 
     .cc-big-card h3 { max-width: 14ch; font-size: clamp(34px, 3.4vw, 52px); font-weight: 600; line-height: 1.1; letter-spacing: -0.03em; }
 
@@ -679,12 +651,17 @@
 /* Inner pages: page head, tables, steps, questions, long text, locations */
 @layer components {
     .cc-pagehead {
-        padding-block: 144px 56px;
+        display: flex;
+        align-items: flex-end;
+        min-height: 64vh;
+        padding-block: 140px 56px;
     }
+
+    .cc-pagehead .cc-wrap { width: 100%; }
 
     .cc-title1 {
         margin: 0;
-        font-size: clamp(40px, 7vw, 96px);
+        font-size: clamp(44px, 9vw, 140px);
         font-weight: 600;
         line-height: 1;
         letter-spacing: -0.035em;
@@ -695,9 +672,6 @@
         margin-bottom: 0;
     }
 
-    .cc-pagehead + .cc-section {
-        padding-top: 24px;
-    }
 
     .cc-scroll {
         margin-top: 40px;
@@ -849,32 +823,6 @@
 
     .cc-loc li span { color: #353535; }
 
-    .cc-art { display: block; width: 100%; height: auto; }
-
-    .cc-big-card .cc-art {
-        position: absolute;
-        right: 24px;
-        bottom: 0;
-        width: min(62%, 300px);
-        transform: translateY(12%);
-    }
-
-    .cc-big-card h3 { position: relative; z-index: 1; }
-
-    .cc-pagehead .cc-wrap {
-        display: grid;
-        gap: 32px;
-        align-items: center;
-        grid-template-columns: minmax(0, 1fr);
-    }
-
-    .cc-pagehead .cc-pagehead-art { display: none; }
-
-    @media (min-width: 1024px) {
-        .cc-pagehead .cc-wrap { grid-template-columns: minmax(0, 1.4fr) minmax(0, 0.8fr); }
-        .cc-pagehead .cc-pagehead-art { display: block; max-width: 340px; justify-self: end; }
-    }
-
     .cc-step, .cc-q, .cc-loc, .cc-prose, .cc-scroll { box-shadow: 0 10px 40px rgba(0, 0, 0, 0.06); }
     .cc-step:nth-child(1) { background: #fff3ea; }
     .cc-step:nth-child(2) { background: #e9f7f1; }
@@ -883,4 +831,96 @@
     .cc-prose h2 { font-size: clamp(28px, 3vw, 40px); }
     .cc-loc-title { font-size: clamp(26px, 2.4vw, 34px); }
     .cc-q summary { font-size: clamp(20px, 2vw, 26px); }
+
+    /* Grey photo slots */
+    .cc-photo {
+        display: grid;
+        place-items: center;
+        width: 100%;
+        aspect-ratio: 4 / 3;
+        overflow: hidden;
+        border-radius: 24px;
+        background: #d4d4d4;
+        color: #8a8a8a;
+    }
+
+    .cc-photo.tall { aspect-ratio: 4 / 5; }
+
+    .cc-photo span {
+        font-size: 14px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    .cc-big-card .cc-photo span { position: relative; top: -30%; }
+
+    .cc-after { margin-top: 40px; }
+    .cc-after a { font-weight: 700; }
+
+    /* Three photo cards */
+    .cc-cards3 {
+        display: grid;
+        gap: 16px;
+        grid-template-columns: minmax(0, 1fr);
+        margin: 48px 0 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    @media (min-width: 900px) {
+        .cc-cards3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+
+    .cc-card {
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        border-radius: 24px;
+        text-align: left;
+        transition: transform 0.4s cubic-bezier(0.2, 0.7, 0.2, 1);
+    }
+
+    .cc-card:hover { transform: translateY(-8px); }
+    .cc-card .cc-photo { border-radius: 0; aspect-ratio: 4 / 3; }
+    .cc-card-1 { background: linear-gradient(170deg, #fcb791, #f7723a); }
+    .cc-card-2 { background: linear-gradient(170deg, #b5e8c8, #5fc29f); }
+    .cc-card-3 { background: linear-gradient(170deg, #f1d49d, #f6af4e); }
+    .cc-card-body { flex: 1; padding: 28px 28px 36px; }
+    .cc-card h3 { font-size: clamp(28px, 2.6vw, 38px); font-weight: 700; line-height: 1.1; letter-spacing: -0.025em; }
+    .cc-card p { margin-top: 12px; color: #111; }
+
+    .cc-num {
+        display: grid;
+        place-items: center;
+        width: 44px;
+        height: 44px;
+        margin-bottom: 16px;
+        border-radius: 9999px;
+        background: #000;
+        color: #fff;
+        font-size: 20px;
+        font-weight: 700;
+    }
+
+    /* Questions: photo beside the list */
+    .cc-faq-split { display: grid; gap: 24px; grid-template-columns: minmax(0, 1fr); }
+    .cc-faq-photo { display: none; }
+
+    @media (min-width: 1024px) {
+        .cc-faq-split { grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.6fr); align-items: start; }
+        .cc-faq-photo { display: block; position: sticky; top: 120px; }
+        .cc-faq { margin-inline: 0; max-width: none; }
+    }
+
+    /* Locations cards */
+    .cc-loc { padding: 0; overflow: hidden; }
+    .cc-loc .cc-photo { border-radius: 0; aspect-ratio: 16 / 9; }
+    .cc-loc-title, .cc-loc ul { padding-inline: 28px; }
+    .cc-loc-title { margin-top: 24px; }
+    .cc-loc ul { padding-bottom: 28px; }
+    .cc-loc-0 { background: #fff3ea; }
+    .cc-loc-1 { background: #e9f7f1; }
+    .cc-loc-2 { background: #fdf1d9; }
+    .cc-loc-3 { background: #f3edff; }
 }

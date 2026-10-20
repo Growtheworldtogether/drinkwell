@@ -4,14 +4,15 @@
 <x-marketing-layout title="Questions">
     <section class="cc-pagehead" data-bg="amber">
         <div class="cc-wrap">
-            <div><h1 class="cc-title1">Questions</h1>
-            <p class="cc-lead">Plain answers to what people ask us most. Select a question to read the answer.</p></div>
-            <img class="cc-art cc-pagehead-art" src="{{ asset('images/partners.svg') }}" alt="" loading="lazy">
+            <h1 class="cc-title1">Questions</h1>
+            <p class="cc-lead">Plain answers to what people ask us most. Select a question to read the answer.</p>
         </div>
     </section>
 
     <section class="cc-section" data-bg="gray">
         <div class="cc-wrap">
+            <div class="cc-faq-split">
+            <div class="cc-faq-photo"><div class="cc-photo tall" aria-hidden="true"><span>Photo</span></div></div>
             <div class="cc-faq">
                 <details class="cc-q" data-reveal>
                     <summary>Who can join?</summary>
@@ -57,6 +58,7 @@
                     <summary>Who do I ask if I am stuck?</summary>
                     <p>Write to {{ $brand->supportEmail }} and tell us what you were doing. A real person reads every message.</p>
                 </details>
+            </div>
             </div>
             <div class="cc-btn-row"><a class="af-btn af-btn-black" href="{{ route('register') }}">Get started</a><a class="af-btn cc-btn-outline" href="{{ route('earnings') }}">See your earnings</a></div>
         </div>

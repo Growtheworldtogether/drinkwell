@@ -3115,7 +3115,7 @@
         font-size: 48px;
         font-weight: 700;
         line-height: 1;
-        letter-spacing: -0.04em;
+        letter-spacing: -0.03em;
     }
 
     .cc-display span:nth-child(2) {
@@ -3128,7 +3128,7 @@
 
     @media (min-width: theme('screens.lg')) {
         .cc-display {
-            font-size: 104px;
+            font-size: 96px;
         }
     }
 
@@ -3167,7 +3167,7 @@
         position: relative;
         min-height: 360px;
         overflow: hidden;
-        border-radius: 32px;
+        border-radius: 24px;
         background: theme('colors.af.white');
     }
 
@@ -3190,7 +3190,7 @@
         gap: 12px;
         min-height: 172px;
         padding: 24px;
-        border-radius: 32px;
+        border-radius: 24px;
         background: theme('colors.af.peach');
     }
 
@@ -3249,6 +3249,10 @@
         background: theme('colors.af.peach');
     }
 
+    .cc-on-lilac {
+        background: theme('colors.af.lilac');
+    }
+
     .cc-on-mint {
         background: theme('colors.af.mint');
     }
@@ -3272,7 +3276,7 @@
         flex-direction: column;
         gap: 8px;
         padding: 32px;
-        border-radius: 32px;
+        border-radius: 24px;
         background: theme('colors.af.white');
     }
 
@@ -3425,7 +3429,7 @@
 
     .cc-steps li {
         padding: 32px;
-        border-radius: 32px;
+        border-radius: 24px;
         background: theme('colors.af.white');
     }
 

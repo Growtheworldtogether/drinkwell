@@ -33,7 +33,7 @@
         </div>
     </section>
 
-    <section class="cc-section cc-on-cream">
+    <section class="cc-section">
         <div class="af-wrap">
             <h2 class="cc-title">Two machines, one 50/50 split.</h2>
             <p class="cc-lead">Every machine sells out every day. The platform fee is taken first, the rest is split in half.</p>

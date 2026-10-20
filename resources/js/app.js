@@ -14,6 +14,7 @@ import brandingForm from './branding-form.js';
 import yieldCalculator from './calculator.js';
 import { initHub } from './hub.js';
 import { initFacilityMap, initPublicMap } from './map.js';
+import { initPublicFx } from './public-fx.js';
 
 // Alpine components are registered before Livewire starts Alpine (Livewire 4 bundles it).
 Alpine.data('brandingForm', brandingForm);
@@ -25,5 +26,7 @@ const facility = document.querySelector('[data-facility-map]');
 if (facility) initFacilityMap(facility);
 const hub = document.querySelector('[data-hub]');
 if (hub) initHub(hub);
+
+initPublicFx();
 
 Livewire.start();

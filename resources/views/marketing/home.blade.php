@@ -3,7 +3,8 @@
     $calc = collect($tiers)->map(fn ($t) => ['label' => $t['label'], 'stake' => $t['stake'], 'share' => $t['share'], 'capacity' => $t['capacity']])->all();
 @endphp
 <x-marketing-layout title="Co-own a vending machine">
-    <section class="cc-hero">
+    <section class="cc-hero cc-tint-butter" data-tint-cycle>
+        <span class="cc-orb cc-orb-a" aria-hidden="true"></span><span class="cc-orb cc-orb-b" aria-hidden="true"></span><span class="cc-orb cc-orb-c" aria-hidden="true"></span>
         <div class="af-wrap">
             <h1 class="cc-display"><span>Own half</span><span>of a smart</span><span>vending machine.</span></h1>
             <p class="cc-lead">{{ $brand->name }} pairs seniors as 50/50 co-partners on a machine that sells every drink at {{ $fmt(config('drinkwell.unit_price_cents')) }}. Watch stock, sales and payouts in real time. This is a classroom simulation.</p>
@@ -17,8 +18,8 @@
             </div>
             <div class="cc-photos">
                 <div class="cc-photo">
-                    <span class="cc-chip">Live map</span>
-                    <div data-map data-public-map data-src="{{ route('public.machines') }}" role="img" aria-label="Map of facilities that host a machine"></div>
+                    <span class="cc-chip">Co-partners</span>
+                    <div class="cc-slot" style="height:100%;border-radius:24px" role="img" aria-label="Photo slot: two seniors at a machine">Photo slot 16:9 / two co-partners at their machine</div>
                 </div>
                 <div class="cc-photo-stack">
                     @foreach ($tiers as $key => $t)
@@ -33,13 +34,37 @@
         </div>
     </section>
 
+    <div class="cc-ribbon" aria-label="Facts about the program">
+        <div class="cc-ribbon-row">
+            @for ($n = 0; $n < 2; $n++)
+                <span>50/50 co-partners</span><span>{{ $fmt(config('drinkwell.unit_price_cents')) }} a drink</span><span>Sells out daily</span><span>Paired at once</span><span>Age {{ config('drinkwell.min_age') }} and over</span><span>Classroom simulation</span>
+            @endfor
+        </div>
+    </div>
+
     <section class="cc-section">
         <div class="af-wrap">
-            <h2 class="cc-title">Two machines, one 50/50 split.</h2>
+            <p class="cc-statement" data-reveal>We are refreshing what it means to co-own: one drink, one payout at a time.</p>
+            <div class="af-ctas" style="margin-top:32px" data-reveal>
+                <a class="af-btn af-btn-black" href="{{ route('program') }}">Discover how it works</a>
+            </div>
+            <div class="cc-stats">
+                <div class="cc-stat" data-reveal><b data-count="{{ $machines }}">{{ $machines }}</b>machines in the network</div>
+                @foreach ($tiers as $t)
+                    <div class="cc-stat" data-reveal><b data-count="{{ $t['capacity'] }}">{{ $t['capacity'] }}</b>drinks a day, {{ strtolower($t['label']) }}</div>
+                @endforeach
+                <div class="cc-stat" data-reveal><b data-count="{{ config('drinkwell.min_age') }}">{{ config('drinkwell.min_age') }}</b>minimum age to join</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cc-section">
+        <div class="af-wrap">
+            <h2 class="cc-title" data-reveal>Two machines, one 50/50 split.</h2>
             <p class="cc-lead">Every machine sells out every day. The platform fee is taken first, the rest is split in half.</p>
             <div class="cc-options">
                 @foreach ($tiers as $key => $t)
-                    <article class="cc-option" aria-labelledby="tier-{{ $key }}">
+                    <article data-reveal class="cc-option" aria-labelledby="tier-{{ $key }}">
                         <h3 id="tier-{{ $key }}">{{ $t['label'] }}</h3>
                         <p class="cc-big">{{ $fmt($t['share']) }}</p>
                         <p class="text-af-700">your share a day, deposit back in about {{ $t['payback'] }} days</p>
@@ -60,7 +85,7 @@
 
     <section class="cc-section cc-on-peach">
         <div class="af-wrap" x-data="yieldCalculator(@js($calc))">
-            <h2 class="cc-title">Yield calculator.</h2>
+            <h2 class="cc-title" data-reveal>Yield calculator.</h2>
             <p class="cc-lead">Pick a machine and see how fast the deposit comes back at the usual daily share.</p>
             <div class="cc-options">
                 <div class="cc-option">
@@ -99,9 +124,32 @@
         </div>
     </section>
 
+    <section class="cc-section cc-on-lilac">
+        <div class="af-wrap">
+            <h2 class="cc-title" data-reveal>Latest from the machines.</h2>
+            <div class="cc-carousel">
+                <div class="cc-track" data-drag>
+                    @foreach ([
+                        ['Sales', 'Commercial machine sold out at 21:40 yesterday'],
+                        ['Restock', 'Overnight drivers refilled every machine by 05:30'],
+                        ['Payouts', 'Daily payouts landed inside the band for every partner'],
+                        ['Pairing', 'New co-partners were paired the same minute they finished signing up'],
+                        ['Stock', 'Hospital machines peak at the lunch hour'],
+                    ] as [$tag, $headline])
+                        <article class="cc-card">
+                            <div class="cc-slot">Photo slot 4:3 / {{ strtolower($tag) }}</div>
+                            <span class="cc-chip">{{ $tag }}</span>
+                            <h3>{{ $headline }}</h3>
+                        </article>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section class="cc-section">
         <div class="af-wrap">
-            <h2 class="cc-title">Where machines stand.</h2>
+            <h2 class="cc-title" data-reveal>Where machines stand.</h2>
             <div class="cc-show">
                 <a href="{{ route('program') }}"><span class="cc-dot"></span>Hospitals</a>
                 <a href="{{ route('program') }}"><span class="cc-dot"></span>Stations</a>
@@ -112,12 +160,43 @@
 
     <section class="cc-section cc-on-mint">
         <div class="af-wrap">
-            <h2 class="cc-title">How pairing works.</h2>
+            <h2 class="cc-title" data-reveal>How pairing works.</h2>
             <ol class="cc-steps">
                 <li><h3>1. Tell us about you</h3><p>Sign up, verify your email, and give your date of birth. Co-partners are {{ config('drinkwell.min_age') }} or older.</p></li>
                 <li><h3>2. Get paired at once</h3><p>You get a machine and a co-partner right away. Your co-partner is simulated, so nobody has to wait for anyone.</p></li>
                 <li><h3>3. Settle off the platform</h3><p>The deposit is sent by wire, not by card on this site. Once it is confirmed, daily payouts begin.</p></li>
             </ol>
+        </div>
+    </section>
+    <section class="cc-section">
+        <div class="af-wrap">
+            <div class="cc-help" data-reveal>
+                <h2 class="cc-title" data-reveal>We are here to help.</h2>
+                <form action="{{ route('program') }}" method="get" role="search">
+                    <label class="sr-only" for="help-q">Search the program</label>
+                    <input id="help-q" name="q" type="search" placeholder="Ask about deposits, payouts or pairing">
+                    <button class="af-btn af-btn-black" type="submit">Search</button>
+                </form>
+                <div class="cc-chips">
+                    <a href="{{ route('program') }}">How payouts work</a>
+                    <a href="{{ route('program') }}">Paying the deposit</a>
+                    <a href="{{ route('terms') }}">Terms</a>
+                    <a href="{{ route('privacy') }}">Privacy</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cc-cta">
+        <div class="af-wrap">
+            <h2 class="cc-title" data-reveal>Ready to meet your co-partner?</h2>
+            <div class="af-ctas" style="margin-top:32px" data-reveal>
+                @auth
+                    <a class="af-btn" href="{{ route('dashboard') }}">Open dashboard</a>
+                @else
+                    <a class="af-btn" href="{{ route('register') }}">Get started</a>
+                @endauth
+            </div>
         </div>
     </section>
 </x-marketing-layout>

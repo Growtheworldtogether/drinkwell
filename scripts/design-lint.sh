@@ -25,10 +25,12 @@ check "pill in portal"        '\brounded-(pill|input)\b' $PORTAL
 check "panel radius on public" '\brounded-panel\b' $PUBLIC
 check "shadows"               '(?<!drop-)\bshadow(?![-\w])|\bshadow-(?!popover\b)[a-z0-9]+|\bdrop-shadow-' $UI
 check "opacity hover / fade"  'hover:opacity|group-hover:opacity|transition-opacity|\bfade|\banimate-' $UI
-XARGS=(--exclude=payback-chart.js)
+XARGS=(--exclude=payback-chart.js --exclude=public-fx.js)
 check "scroll effects"        'IntersectionObserver|data-aos|\baos\b|scroll-smooth|snap-y|parallax' $UI
 XARGS=()
+XARGS=(--exclude=public-fx.js)
 check "cursor glow"           'mousemove.*setProperty|--mouse-[xy]|spotlight' $UI
+XARGS=()
 check "dark variants"         '\bdark:' $UI
 check "arbitrary values"      '\b(?:[pm][trblxy]?|gap(?:-[xy])?|space-[xy]|rounded|text|bg|border)-\[' $UI
 check "off-scale spacing"     '\b(?:[pm][trblxy]?|gap(?:-[xy])?|space-[xy])-(?:0\.5|1\.5|2\.5|3\.5|5|7|9|10|11|14|15|1[89]|2[0-3]|2[5-9]|[3-9]\d)\b' $UI

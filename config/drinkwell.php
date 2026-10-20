@@ -5,7 +5,7 @@ return [
     // Brand defaults. The settings table overrides them (Admin, Settings, Branding).
     'brand' => [
         'name' => 'DRinkWeLL',
-        'tagline' => 'Senior co-partner vending platform. A classroom simulation.',
+        'tagline' => 'Senior co-partner vending platform.',
         // A reserved .test address on purpose: it reads as a placeholder and can never receive mail.
         'support_email' => env('DRINKWELL_SUPPORT_EMAIL', 'support@drinkwell.test'),
         'logo_light_path' => null,

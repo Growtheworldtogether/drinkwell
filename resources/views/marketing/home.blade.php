@@ -7,7 +7,7 @@
     <section class="cc-hero" data-bg="coral">
         <div class="cc-wrap">
             <h1 class="cc-display"><span>We Co-own</span><span>the Machine</span><span>and Share the</span><span class="cc-word" data-words="Daily Payout|Morning Rush|Lunch Peak">Daily Payout</span></h1>
-            <p class="cc-lead">You and a partner each put in half the cost of a drink machine, and split the daily earnings. This is a classroom simulation, so no real money moves.</p>
+            <p class="cc-lead">You and a partner each put in half the cost of a drink machine, and split the daily earnings.</p>
             <div class="af-ctas">
                 @auth
                     <a class="af-btn af-btn-black" href="{{ route('dashboard') }}">Open dashboard</a>
@@ -88,7 +88,7 @@
                     <div class="dw-curve mt-3"><canvas x-ref="curve" role="img" aria-label="Cumulative payout against the deposit"></canvas></div>
                 </div>
             </div>
-            <p class="mt-6 text-af-700">Figures use the middle of the daily band. Real days vary by a small amount and are shown on your dashboard. Simulation only.</p>
+            <p class="mt-6 text-af-700">Figures use the middle of the daily band. Real days vary by a small amount and are shown on your dashboard.</p>
         </div>
     </section>
 

@@ -24,10 +24,6 @@
                     <form method="POST" action="{{ route('logout') }}">@csrf<button type="submit">Sign out</button></form>
                 @endauth
             </div>
-            <div>
-                <h4>This site</h4>
-                <p class="text-body">A classroom simulation. People and amounts are fictional.</p>
-            </div>
         </div>
         <div class="cc-foot-legal">
             <p>{{ $brand->name }}</p>

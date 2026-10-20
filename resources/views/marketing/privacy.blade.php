@@ -1,6 +1,6 @@
 @php
     $sections = [
-        ['What is collected', 'Name, email address, phone number, date of birth and city that you type in, and a record of what you do in the simulation.'],
+        ['What is collected', 'Name, email address, phone number, date of birth and city that you type in, and a record of what you do on the site.'],
         ['Bank details', 'The routing and account numbers you enter are stored encrypted and only the last four digits are shown. No money is ever moved from the account.'],
         ['Identity check', 'The identity check is simulated. No document or photo is collected.'],
         ['Email', 'The platform sends a one-time code, and a message with your pairing details. Messages addressed to simulated co-partners are only written to a log and are never sent.'],

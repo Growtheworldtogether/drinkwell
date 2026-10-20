@@ -2,7 +2,7 @@
     <div class="af-wrap af-apply">
         <p class="af-apply-meta"><span class="tabular-nums">Step {{ $step }} of 4</span>: {{ $steps[$step] }}</p>
         <h1 class="af-h1">{{ $steps[$step] }}</h1>
-        <p class="af-lead">Pairing takes a minute. This is a classroom simulation: no money moves.</p>
+        <p class="af-lead">Pairing takes a minute.</p>
 
         <ol class="af-apply-steps mt-6" aria-label="Onboarding steps">
             @foreach ($steps as $number => $label)

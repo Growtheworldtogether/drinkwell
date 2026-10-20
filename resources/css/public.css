@@ -646,7 +646,7 @@
     }
 
     @media (min-width: 1024px) {
-        .cc-foot-cols { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+        .cc-foot-cols { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     }
 
     .cc-foot h4 { margin-bottom: 16px; font-size: 14px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #6c6c6c; }

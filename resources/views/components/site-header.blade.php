@@ -5,7 +5,6 @@
 <header class="cc-nav">
     <div class="cc-wrap cc-nav-in">
         <a href="{{ url('/') }}" class="af-brand"><x-brand.logo variant="light" /></a>
-        <span class="cc-chip-demo">Demo</span>
 
         <nav aria-label="Primary" class="cc-nav-links">
             <a href="{{ route('program') }}" class="af-nav-link" @if (request()->routeIs('program')) aria-current="page" @endif>How it works</a>

@@ -676,7 +676,7 @@
 
     .cc-access b { font-size: 20px; }
 
-    html.big-text { font-size: 112.5%; }
+    html.big-text .cc-page { zoom: 1.15; }
 
     @media (prefers-reduced-motion: reduce) {
         .cc-nav, .cc-hero .cc-display span, .cc-hero .cc-lead, .cc-hero .af-ctas, .cc-row-track { animation: none; }

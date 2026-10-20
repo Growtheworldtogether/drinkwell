@@ -128,7 +128,6 @@
             <a class="cc-tabcard" href="{{ route('register') }}"><span>Pairing</span></a>
             <a class="cc-tabcard" href="{{ route('program') }}#deposit"><span>Deposit</span></a>
             <a class="cc-tabcard" href="{{ route('program') }}#split"><span>Payouts</span></a>
-            <a class="cc-tabcard" href="{{ route('login') }}"><span>Dashboard</span></a>
         </div>
         <div class="cc-wrap cc-center">
             <p class="cc-lead" style="margin-inline:auto" data-reveal>We are a team, helping seniors earn with a share in a machine and build a steady daily income together.</p>

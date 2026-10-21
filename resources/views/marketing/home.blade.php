@@ -34,7 +34,27 @@
 
     <section class="cc-hero" data-bg="coral">
         <div class="cc-wrap cc-hero-grid">
-            <div class="cc-hero-photo" aria-hidden="true"><div class="cc-photo"><span>Photo</span></div></div>
+            <div class="cc-hero-photo"
+                x-data="{ i: 0, stop: false, slides: [
+                    { tag: 'Pairing', title: 'Co-own a machine with a partner we find for you', link: '{{ route('program') }}', label: 'How it works' },
+                    { tag: 'Deposit', title: 'Pay your half straight to your co-partner', link: '{{ route('program') }}#deposit', label: 'How the deposit works' },
+                    { tag: 'Payouts', title: 'Share the daily payout, with every cent shown', link: '{{ route('earnings') }}', label: 'See your earnings' }
+                ] }"
+                x-init="setInterval(() => { if (! stop && ! document.hidden) i = (i + 1) % 3 }, 6000)">
+                <div class="cc-story-card">
+                    <div class="cc-photo" aria-hidden="true"><span>Photo</span></div>
+                    <div class="cc-story-dots" role="group" aria-label="Choose a story">
+                        <button type="button" class="cc-story-dot" x-bind:class="{ 'is-on': i === 0 }" x-bind:aria-pressed="(i === 0).toString()" aria-label="Pairing" x-on:click="i = 0; stop = true">1</button>
+                        <button type="button" class="cc-story-dot" x-bind:class="{ 'is-on': i === 1 }" x-bind:aria-pressed="(i === 1).toString()" aria-label="Deposit" x-on:click="i = 1; stop = true">2</button>
+                        <button type="button" class="cc-story-dot" x-bind:class="{ 'is-on': i === 2 }" x-bind:aria-pressed="(i === 2).toString()" aria-label="Payouts" x-on:click="i = 2; stop = true">3</button>
+                    </div>
+                    <div class="cc-story-body">
+                        <span class="cc-story-tag" x-text="slides[i].tag">Pairing</span>
+                        <p class="cc-story-title" aria-live="polite" x-text="slides[i].title">Co-own a machine with a partner we find for you</p>
+                        <a class="cc-story-link" x-bind:href="slides[i].link" x-text="slides[i].label" href="{{ route('program') }}">How it works</a>
+                    </div>
+                </div>
+            </div>
             <div class="cc-hero-text">
                 <h1 class="cc-display"><span>We Co-own</span><span>the Machine</span><span>and Share the</span><span class="cc-word" data-words="Daily Payout|Morning Rush|Lunch Peak">Daily Payout</span></h1>
                 <p class="cc-lead">You and a partner each put in half the cost of a drink machine, and split the daily earnings.</p>

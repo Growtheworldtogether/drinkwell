@@ -1320,6 +1320,7 @@
     }
     /* The page background always reaches the real bottom edge of the screen on phones. */
     .cc-mesh { height: 100lvh; min-height: 100%; }
+    html { background: #eee; }
 
     /* Footer: colour clouds drift across a band, and everything under the band is plain white. */
     @keyframes cc-cloud { 0% { opacity: 0; transform: translateX(30%); } 14% { opacity: 1; } 30% { opacity: 1; } 46% { opacity: 0; transform: translateX(-30%); } 100% { opacity: 0; transform: translateX(-30%); } }

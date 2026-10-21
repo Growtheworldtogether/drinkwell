@@ -17,11 +17,15 @@ export function paybackDay(share, stake, days = 60) {
 }
 
 export default function yieldCalculator(tiers) {
+    // The chart lives outside Alpine's reactive data. Alpine would otherwise watch every internal part of the
+    // Chart.js object, which on phones runs out of memory and the browser reloads the page.
+    let chart = null;
+    let queued = false;
+
     return {
         tiers,
         tier: 'commercial',
         days: 30,
-        chart: null,
         get t() { return this.tiers[this.tier]; },
         get total() { return this.t.share * this.days; },
         get net() { return this.total - this.t.stake; },
@@ -41,9 +45,15 @@ export default function yieldCalculator(tiers) {
         },
         release() { clearTimeout(this.repeat); clearInterval(this.repeat); this.repeat = null; },
         init() {
-            this.$watch('tier', () => this.draw());
-            this.$watch('days', () => this.draw());
+            this.$watch('tier', () => this.queueDraw());
+            this.$watch('days', () => this.queueDraw());
             this.$nextTick(() => this.draw());
+        },
+        // Dragging the slider fires many changes a second; draw at most once per screen frame.
+        queueDraw() {
+            if (queued) return;
+            queued = true;
+            requestAnimationFrame(() => { queued = false; this.draw(); });
         },
         draw() {
             const canvas = this.$refs.curve;
@@ -59,13 +69,13 @@ export default function yieldCalculator(tiers) {
                     { type: 'line', label: 'Your deposit', data: totals.map(() => this.t.stake / 100), borderColor: colors.black, borderDash: [6, 4], borderWidth: 1, pointRadius: 0, order: 1 },
                 ],
             };
-            if (this.chart) {
-                this.chart.data = data;
-                this.chart.update('none');
+            if (chart) {
+                chart.data = data;
+                chart.update('none');
                 return;
             }
             const mono = { family: 'Geist Mono, ui-monospace, Menlo, Consolas, monospace', size: 11 };
-            this.chart = new window.Chart(canvas, {
+            chart = new window.Chart(canvas, {
                 type: 'bar',
                 data,
                 options: {

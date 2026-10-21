@@ -11,7 +11,7 @@ function hexToRgb(hex) {
 function initMesh(calm) {
     const canvas = document.querySelector('[data-mesh]');
     if (!canvas) return;
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
     const scale = 6;
     const resize = () => { canvas.width = Math.ceil(window.innerWidth / scale); canvas.height = Math.ceil(window.innerHeight / scale); };
     resize();

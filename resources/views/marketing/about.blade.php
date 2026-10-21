@@ -29,7 +29,7 @@
     <section class="cc-section cc-center" data-bg="amber">
         <div class="cc-wrap">
             <h2 class="cc-h2" data-reveal>Get in touch</h2>
-            <p class="cc-lead" style="margin-inline:auto" data-reveal>Write to <a href="mailto:{{ $brand->supportEmail }}" class="break-anywhere"><strong>{{ $brand->supportEmail }}</strong></a>. Read the <a href="{{ route('questions') }}"><strong>questions</strong></a> first, they may already have your answer.</p>
+            <p class="cc-lead" style="margin-inline:auto" data-reveal><a href="{{ route('contact') }}"><strong>Send us a message</strong></a> or write to <a href="mailto:{{ $brand->supportEmail }}" class="break-anywhere"><strong>{{ $brand->supportEmail }}</strong></a>. Read the <a href="{{ route('questions') }}"><strong>questions</strong></a> first, they may already have your answer.</p>
         </div>
     </section>
 </x-marketing-layout>

@@ -96,7 +96,8 @@
                 </form>
                 <div class="cc-chips">
                     <a href="{{ route('program') }}">How payouts work</a>
-                    <a href="{{ route('program') }}#deposit">Paying the deposit</a>
+                    <a href="{{ route('program') }}#deposit">How your deposit works</a>
+                    <a href="{{ route('contact') }}">Contact us</a>
                     <a href="{{ route('terms') }}">Terms</a>
                     <a href="{{ route('privacy') }}">Privacy</a>
                 </div>

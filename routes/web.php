@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\PairingsController;
 use App\Http\Controllers\Admin\RecordsController;
 use App\Http\Controllers\Admin\WithdrawalsController;
 use App\Http\Controllers\BrandController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\HubController;
 use App\Http\Controllers\OnboardController;
 use App\Http\Controllers\PagesController;
@@ -28,6 +29,8 @@ Route::controller(PagesController::class)->middleware('throttle:public')->group(
     Route::get('/terms', 'terms')->name('terms');
     Route::get('/privacy', 'privacy')->name('privacy');
 });
+Route::get('/contact', [ContactController::class, 'show'])->middleware('throttle:public')->name('contact');
+Route::post('/contact', [ContactController::class, 'send'])->middleware('throttle:6,10')->name('contact.send');
 
 Route::get('/public/machines', [PublicFeedController::class, 'machines'])->middleware('throttle:telemetry')->name('public.machines');
 Route::get('/map/tiles/{z}/{x}/{y}.png', [TileController::class, 'show'])->whereNumber(['z', 'x', 'y'])->middleware('throttle:tiles')->name('map.tile');

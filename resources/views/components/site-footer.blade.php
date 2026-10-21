@@ -13,7 +13,8 @@
                 <h4>Need help?</h4>
                 <a href="mailto:{{ $brand->supportEmail }}" class="break-anywhere">{{ $brand->supportEmail }}</a>
                 <a href="{{ route('questions') }}">Questions</a>
-                <a href="{{ route('program') }}#deposit">Paying the deposit</a>
+                <a href="{{ route('program') }}#deposit">How your deposit works</a>
+                <a href="{{ route('contact') }}">Contact us</a>
             </div>
             <div>
                 <h4>Useful links</h4>

@@ -79,6 +79,8 @@ return [
         'notify.application.email' => '',
         'notify.funding.enabled' => true,
         'notify.funding.email' => '',
+        'notify.contact.enabled' => true,
+        'notify.contact.email' => '',
         'notify.withdrawal.enabled' => true,
         'notify.withdrawal.email' => '',
         'withdrawals.enabled' => true,

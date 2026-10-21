@@ -1071,4 +1071,45 @@
     .cc-cash b { font-size: clamp(32px, 5vw, 48px); font-variant-numeric: tabular-nums; }
     .cc-cash .af-btn { width: auto; min-width: 200px; }
     @media (max-width: 479px) { .cc-cash .af-btn { width: 100%; } }
+
+    .cc-field textarea { width: 100%; min-height: 140px; padding: 14px 20px; border: 2px solid #000; border-radius: 18px; background: #fff; font: inherit; font-size: 20px; color: #000; resize: vertical; }
+    .cc-field textarea:focus { outline: 4px solid rgba(247, 114, 58, .45); outline-offset: 2px; }
+    .cc-field textarea.is-bad, .cc-field input[type=search].is-bad { border-color: #b3261e; }
+    .cc-field input[type=search], .cc-field input[type=number], .cc-field input[type=url] { width: 100%; min-height: 60px; padding: 14px 20px; border: 2px solid #000; border-radius: 18px; background: #fff; font: inherit; font-size: 20px; }
+    .cc-field input[type=file] { width: 100%; padding: 14px 16px; border: 2px dashed #000; border-radius: 18px; background: #fff; }
+    .cc-contact { display: grid; gap: 20px; grid-template-columns: minmax(0, 1fr); align-items: start; }
+    @media (min-width: 900px) { .cc-contact { grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); } }
+    .cc-tiles-6 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    @media (min-width: 900px) { .cc-tiles-6 { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+    @media (min-width: 1280px) { .cc-tiles-6 { grid-template-columns: repeat(6, minmax(0, 1fr)); } }
+    @media (max-width: 479px) { .cc-tiles-6 { grid-template-columns: minmax(0, 1fr); } }
+    a.cc-tile { display: block; color: inherit; text-decoration: none; }
+    a.cc-tile:focus-visible { outline: 4px solid #000; outline-offset: 3px; }
+    .cc-link { font-weight: 700; text-decoration: underline; }
+    .cc-pre { margin: 6px 0 0; padding: 14px; max-height: 280px; overflow: auto; border-radius: 14px; background: #f3f3f3; font-size: 14px; white-space: pre-wrap; overflow-wrap: anywhere; }
+    .cc-pager { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 20px; }
+    .cc-pager p { margin: 0; font-weight: 700; }
+    .cc-pager .af-btn { width: auto; min-width: 110px; }
+    .cc-pager .is-off { opacity: .4; pointer-events: none; }
+    .cc-notify { padding: 12px 0; border-top: 1px solid #e4e4e4; }
+    .cc-notify .cc-hint { margin: 4px 0 8px; }
+    .cc-brand { display: grid; gap: 16px; grid-template-columns: minmax(0, 1fr); align-items: start; }
+    @media (min-width: 1000px) { .cc-brand { grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); } .cc-brand > aside { position: sticky; top: 100px; } }
+    .cc-brand .cc-panel { margin-bottom: 16px; }
+    .cc-pv { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 4px 0 16px; padding: 14px 16px; border-radius: 14px; background: #f3f3f3; overflow-wrap: anywhere; }
+    .cc-pv-nav { background: #111; color: #fff; font-weight: 700; }
+    .cc-pv-nav.is-light { background: #fff; color: #111; border: 2px solid #e4e4e4; }
+    .cc-pv-nav img { max-width: 100%; height: 24px; width: auto; }
+    .cc-pv-dot { width: 16px; height: 16px; border-radius: 50%; background: #999; }
+    .cc-pv-icons { display: flex; align-items: center; gap: 12px; }
+    .cc-tbl.is-wrap td.is-wrap, .cc-tbl td.is-wrap { white-space: normal; min-width: 200px; }
+    @media (max-width: 760px) {
+        .cc-tbl.is-stack thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+        .cc-tbl.is-stack, .cc-tbl.is-stack tbody, .cc-tbl.is-stack tr, .cc-tbl.is-stack td { display: block; width: 100%; }
+        .cc-tbl.is-stack tr { padding: 12px 0; border-bottom: 2px solid #e4e4e4; }
+        .cc-tbl.is-stack td { display: flex; justify-content: space-between; gap: 16px; padding: 8px 0; border: 0; white-space: normal; text-align: right; overflow-wrap: anywhere; }
+        .cc-tbl.is-stack td::before { content: attr(data-label); flex: none; font-size: 14px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: #6c6c6c; text-align: left; }
+        .cc-tbl.is-stack td[data-label=''] { justify-content: flex-start; }
+        .cc-tbl.is-stack td[data-label='']::before { content: none; }
+    }
 }

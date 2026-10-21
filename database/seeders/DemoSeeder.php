@@ -25,6 +25,12 @@ class DemoSeeder extends Seeder
     public function run(): void
     {
         if (MachineOwnership::query()->exists()) {
+            // Already seeded: running it again only (re)sets Arthur's password from DEMO_PASSWORD, so the demo
+            // member can always be signed in to without wiping anything.
+            if ($password = env('DEMO_PASSWORD')) {
+                User::where('email', 'arthur.pendelton@example.test')->first()?->forceFill(['password' => $password])->save();
+            }
+
             return;
         }
 

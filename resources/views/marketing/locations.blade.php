@@ -27,7 +27,8 @@
             <div class="cc-loc-groups">
                 @foreach ($groups as $type => $rows)
                     <section class="cc-loc cc-loc-{{ $loop->index % 4 }}" data-reveal aria-labelledby="loc-{{ $loop->index }}">
-                        <div class="cc-photo" aria-hidden="true"><span>Photo</span></div>
+                        @php $photo = 'images/locations/'.\Illuminate\Support\Str::slug($type).'.jpg'; @endphp
+                        <div class="cc-photo" aria-hidden="true">@if (is_file(public_path($photo)))<img src="{{ asset($photo) }}" alt="" loading="lazy" decoding="async">@else<span>Photo</span>@endif</div>
                         <h2 id="loc-{{ $loop->index }}" class="cc-loc-title">{{ \Illuminate\Support\Str::plural(\Illuminate\Support\Str::title(str_replace('_', ' ', $type))) }} <span>{{ $rows->count() }}</span></h2>
                         <ul>
                             @foreach ($rows as $m)

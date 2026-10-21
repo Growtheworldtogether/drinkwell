@@ -2,6 +2,7 @@
             <div class="cc-options">
                 @foreach ($tiers as $key => $t)
                     <article data-reveal class="cc-option" aria-labelledby="tier-{{ $key }}">
+                        <div class="cc-photo cc-option-photo" aria-hidden="true"><img src="{{ asset('images/home/'.($key === 'enterprise' ? 'machine-large' : 'machine-small').'.jpg') }}" alt="" loading="lazy" decoding="async"></div>
                         <h3 id="tier-{{ $key }}">{{ $t['label'] }}</h3>
                         <p class="cc-big">{{ $fmt($t['share']) }}</p>
                         <p class="text-af-700">your share a day, deposit back in about {{ $t['payback'] }} days</p>

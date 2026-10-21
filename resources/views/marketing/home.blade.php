@@ -13,7 +13,7 @@
         x-init="setInterval(() => { if (! stop && ! document.hidden) i = (i + 1) % 3 }, 6000)">
         <h1 class="sr-only">We Co-own the Machine and Share the Daily Payout</h1>
         <div class="cc-story-card">
-            <div class="cc-photo" aria-hidden="true"><span>Photo</span></div>
+            <div class="cc-photo cc-story-photos" aria-hidden="true"><img src="{{ asset('images/home/story-1.jpg') }}" alt="" loading="lazy" decoding="async" x-bind:class="{ 'is-on': i === 0 }" class="is-on"><img src="{{ asset('images/home/story-2.jpg') }}" alt="" loading="lazy" decoding="async" x-bind:class="{ 'is-on': i === 1 }"><img src="{{ asset('images/home/story-3.jpg') }}" alt="" loading="lazy" decoding="async" x-bind:class="{ 'is-on': i === 2 }"></div>
             <div class="cc-story-dots" x-bind:class="{ 'is-held': stop }" role="group" aria-label="Choose a story">
                 <button type="button" class="cc-story-dot" x-bind:class="{ 'is-on': i === 0 }" x-bind:aria-pressed="(i === 0).toString()" aria-label="Pairing" x-on:click="i = 0; stop = true">1</button>
                 <button type="button" class="cc-story-dot" x-bind:class="{ 'is-on': i === 1 }" x-bind:aria-pressed="(i === 1).toString()" aria-label="Deposit" x-on:click="i = 1; stop = true">2</button>
@@ -42,7 +42,7 @@
                 ] }"
                 x-init="setInterval(() => { if (! stop && ! document.hidden) i = (i + 1) % 3 }, 6000)">
                 <div class="cc-story-card">
-                    <div class="cc-photo" aria-hidden="true"><span>Photo</span></div>
+                    <div class="cc-photo cc-story-photos" aria-hidden="true"><img src="{{ asset('images/home/story-1.jpg') }}" alt="" loading="lazy" decoding="async" x-bind:class="{ 'is-on': i === 0 }" class="is-on"><img src="{{ asset('images/home/story-2.jpg') }}" alt="" loading="lazy" decoding="async" x-bind:class="{ 'is-on': i === 1 }"><img src="{{ asset('images/home/story-3.jpg') }}" alt="" loading="lazy" decoding="async" x-bind:class="{ 'is-on': i === 2 }"></div>
                     <div class="cc-story-dots" x-bind:class="{ 'is-held': stop }" role="group" aria-label="Choose a story">
                         <button type="button" class="cc-story-dot" x-bind:class="{ 'is-on': i === 0 }" x-bind:aria-pressed="(i === 0).toString()" aria-label="Pairing" x-on:click="i = 0; stop = true">1</button>
                         <button type="button" class="cc-story-dot" x-bind:class="{ 'is-on': i === 1 }" x-bind:aria-pressed="(i === 1).toString()" aria-label="Deposit" x-on:click="i = 1; stop = true">2</button>
@@ -83,9 +83,9 @@
             <h2 class="cc-huge" data-reveal><span>You don't run</span><span>the machine.</span><span>We do.</span></h2>
             <p class="cc-lead" style="margin-inline:auto" data-reveal>You never stock shelves or fix anything. Your part is the deposit, and then you watch the payouts.</p>
             <ol class="cc-cards3">
-                <li class="cc-card cc-card-1" data-reveal><div class="cc-photo" aria-hidden="true"><span>Photo</span></div><div class="cc-card-body"><h3>We place it</h3><p>Your machine stands in a busy place that hosts it, like a hospital, a train station or an airport.</p></div></li>
-                <li class="cc-card cc-card-2" data-reveal><div class="cc-photo" aria-hidden="true"><span>Photo</span></div><div class="cc-card-body"><h3>We fill and restock it</h3><p>Filling, restocking and delivery are paid from the day's sales by the bottling and logistics fee.</p></div></li>
-                <li class="cc-card cc-card-3" data-reveal><div class="cc-photo" aria-hidden="true"><span>Photo</span></div><div class="cc-card-body"><h3>You watch it earn</h3><p>Your dashboard shows the machine, your balance and every daily payout, to the cent.</p></div></li>
+                <li class="cc-card cc-card-1" data-reveal><div class="cc-photo" aria-hidden="true"><img src="{{ asset('images/home/run-place.jpg') }}" alt="" loading="lazy" decoding="async"></div><div class="cc-card-body"><h3>We place it</h3><p>Your machine stands in a busy place that hosts it, like a hospital, a train station or an airport.</p></div></li>
+                <li class="cc-card cc-card-2" data-reveal><div class="cc-photo" aria-hidden="true"><img src="{{ asset('images/home/run-restock.jpg') }}" alt="" loading="lazy" decoding="async"></div><div class="cc-card-body"><h3>We fill and restock it</h3><p>Filling, restocking and delivery are paid from the day's sales by the bottling and logistics fee.</p></div></li>
+                <li class="cc-card cc-card-3" data-reveal><div class="cc-photo" aria-hidden="true"><img src="{{ asset('images/home/run-watch.jpg') }}" alt="" loading="lazy" decoding="async"></div><div class="cc-card-body"><h3>You watch it earn</h3><p>Your dashboard shows the machine, your balance and every daily payout, to the cent.</p></div></li>
             </ol>
         </div>
     </section>
@@ -110,8 +110,8 @@
         <div class="cc-wrap">
             <h2 class="cc-huge" data-reveal><span>How you</span><span>get</span><span>paid</span></h2>
             <div class="cc-big-cards">
-                <a href="{{ route('earnings') }}#split" class="cc-big-card cc-big-link" data-reveal><div class="cc-photo" aria-hidden="true"><span>Photo</span></div><div class="cc-big-body"><h3>How your daily payout is worked out</h3><p>The machine sells out, the fee comes off, and the rest is split in half. See the numbers.</p><span class="cc-big-arrow" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div></a>
-                <a href="{{ route('earnings') }}#withdraw" class="cc-big-card cc-big-link" data-reveal><div class="cc-photo" aria-hidden="true"><span>Photo</span></div><div class="cc-big-body"><h3>Getting your money out</h3><p>Ask for {{ $fmt(config('drinkwell.withdrawal_min_cents')) }} or more, confirm with a code, and it is paid within {{ config('drinkwell.withdrawal_review_days') }} business days.</p><span class="cc-big-arrow" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div></a>
+                <a href="{{ route('earnings') }}#split" class="cc-big-card cc-big-link" data-reveal><div class="cc-photo" aria-hidden="true"><img src="{{ asset('images/home/paid-daily.jpg') }}" alt="" loading="lazy" decoding="async"></div><div class="cc-big-body"><h3>How your daily payout is worked out</h3><p>The machine sells out, the fee comes off, and the rest is split in half. See the numbers.</p><span class="cc-big-arrow" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div></a>
+                <a href="{{ route('earnings') }}#withdraw" class="cc-big-card cc-big-link" data-reveal><div class="cc-photo" aria-hidden="true"><img src="{{ asset('images/home/paid-withdraw.jpg') }}" alt="" loading="lazy" decoding="async"></div><div class="cc-big-body"><h3>Getting your money out</h3><p>Ask for {{ $fmt(config('drinkwell.withdrawal_min_cents')) }} or more, confirm with a code, and it is paid within {{ config('drinkwell.withdrawal_review_days') }} business days.</p><span class="cc-big-arrow" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div></a>
             </div>
         </div>
     </section>

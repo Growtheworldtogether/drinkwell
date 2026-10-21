@@ -1357,4 +1357,30 @@
     @media (prefers-reduced-motion: reduce) { .cc-foot-base, .cc-appfoot { animation: none; background-size: 100% 100%; background-image: linear-gradient(115deg, #fff4df, #fcb791 55%, #b5e8c8); } }
     body.cc-page { background: transparent; }
     @media (min-width: 900px) { .cc-hero .cc-display { font-size: clamp(32px, 5.2vw, 84px); } }
+    /* Explanatory content blocks: prose, timeline, day list, info tiles */
+    .cc-prose { max-width: 70ch; margin: 24px auto 0; text-align: left; }
+    .cc-prose p { margin: 0 0 18px; font-size: clamp(18px, 2vw, 21px); line-height: 1.65; }
+    .cc-tiles { display: grid; gap: 16px; grid-template-columns: minmax(0, 1fr); margin-top: 40px; text-align: left; }
+    @media (min-width: 720px) { .cc-tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); } .cc-tiles-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (min-width: 1100px) { .cc-tiles-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+    .cc-tile { min-width: 0; padding: 26px 24px; border-radius: 26px; }
+    .cc-tile.is-coral { background: linear-gradient(170deg, #fcb791, #f7723a); }
+    .cc-tile.is-mint { background: linear-gradient(170deg, #b5e8c8, #5fc29f); }
+    .cc-tile.is-amber { background: linear-gradient(170deg, #f1d49d, #f6af4e); }
+    .cc-tile.is-cream { background: linear-gradient(170deg, #fff4df, #f6e3c0); }
+    .cc-tile.is-white { background: #fff; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.06); }
+    .cc-tile h3 { margin: 0 0 8px; font-size: 24px; font-weight: 700; letter-spacing: -0.02em; }
+    .cc-tile b { display: block; font-size: clamp(36px, 5vw, 54px); font-weight: 700; line-height: 1.05; letter-spacing: -0.03em; }
+    .cc-tile p { margin: 6px 0 0; font-size: 18px; line-height: 1.5; }
+    .cc-timeline { list-style: none; counter-reset: step; display: grid; gap: 14px; margin: 40px auto 0; padding: 0; max-width: 860px; text-align: left; }
+    .cc-timeline li { counter-increment: step; position: relative; padding: 22px 22px 22px 84px; border-radius: 26px; background: #fff; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.06); }
+    .cc-timeline li::before { content: counter(step); position: absolute; left: 20px; top: 22px; display: grid; place-items: center; width: 46px; height: 46px; border-radius: 9999px; background: #000; color: #fff; font-size: 22px; font-weight: 700; }
+    .cc-timeline b { display: block; font-size: 14px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #353535; }
+    .cc-timeline h3 { margin: 4px 0 6px; font-size: 24px; font-weight: 700; letter-spacing: -0.02em; }
+    .cc-timeline p { margin: 0; font-size: 18px; }
+    @media (max-width: 479px) { .cc-timeline li { padding: 18px 18px 18px 18px; } .cc-timeline li::before { position: static; margin-bottom: 10px; } }
+    .cc-day { list-style: none; display: grid; gap: 12px; margin: 36px auto 0; padding: 0; max-width: 860px; text-align: left; }
+    .cc-day li { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 16px; align-items: baseline; padding: 18px 22px; border-radius: 22px; background: rgba(255, 255, 255, 0.78); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); font-size: 19px; }
+    .cc-day li b { font-size: 22px; font-weight: 700; }
+    @media (max-width: 559px) { .cc-day li { grid-template-columns: minmax(0, 1fr); gap: 4px; } }
 }

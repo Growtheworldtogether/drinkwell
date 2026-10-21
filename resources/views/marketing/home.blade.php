@@ -29,6 +29,35 @@
         </div>
     </section>
 
+    <section class="cc-section" data-bg="gray">
+        <div class="cc-wrap">
+            <h2 class="cc-h2 cc-center" data-reveal>What is {{ $brand->name }}?</h2>
+            <div class="cc-prose" data-reveal>
+                <p>{{ $brand->name }} lets two people own one drink vending machine together. You each pay half of the cost, you each own half of the machine, and you each receive half of what it earns, every single day.</p>
+                <p>It is made for people aged {{ config('drinkwell.min_age') }} and over who want a steady, easy to follow side income. You do not run the machine. We place it where people wait, restock it, count the sales and show you everything on your own dashboard.</p>
+                <p>Nothing is hidden. Each drink sells for {{ $fmt(config('drinkwell.unit_price_cents')) }}, a small bottling and logistics fee comes off first, and the rest is divided into two equal halves.</p>
+            </div>
+            <div class="cc-tiles cc-tiles-4">
+                <article class="cc-tile is-coral" data-reveal><b>{{ config('drinkwell.min_age') }}+</b><p>Open to co-partners aged {{ config('drinkwell.min_age') }} and over</p></article>
+                <article class="cc-tile is-mint" data-reveal><b>50/50</b><p>Equal halves, for you and your co-partner</p></article>
+                <article class="cc-tile is-amber" data-reveal><b>{{ $fmt(config('drinkwell.unit_price_cents')) }}</b><p>The price of every drink</p></article>
+                <article class="cc-tile is-cream" data-reveal><b>Daily</b><p>A payout added to your balance every day</p></article>
+            </div>
+        </div>
+    </section>
+
+    <section class="cc-section" data-bg="cream">
+        <div class="cc-wrap">
+            <h2 class="cc-h2 cc-center" data-reveal>Why people choose to co-own</h2>
+            <div class="cc-tiles">
+                <article class="cc-tile is-white" data-reveal><h3>No work on your side</h3><p>The machine is stocked, cleaned and settled for you. You only watch the numbers.</p></article>
+                <article class="cc-tile is-white" data-reveal><h3>A partner who shares the risk</h3><p>You never carry a machine alone. The cost and the earnings are split evenly.</p></article>
+                <article class="cc-tile is-white" data-reveal><h3>Every cent shown</h3><p>Sales, fee, pool and payout are listed for every day, and you can download them.</p></article>
+            </div>
+            <div class="cc-btn-row" data-reveal><a class="af-btn af-btn-black" href="{{ route('program') }}">See how it works</a><a class="af-btn cc-btn-outline" href="{{ route('questions') }}">Read the questions</a></div>
+        </div>
+    </section>
+
     <section class="cc-section cc-center" data-bg="gray">
         <div class="cc-wrap">
             <h2 class="cc-h2" data-reveal>Two machines, one 50/50 split</h2>

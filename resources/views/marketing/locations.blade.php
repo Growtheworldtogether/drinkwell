@@ -8,6 +8,15 @@
 
     <section class="cc-section" data-bg="gray">
         <div class="cc-wrap">
+            <div class="cc-prose" data-reveal>
+                <p>A drink machine earns the most where people have a few minutes to spare and a thirst to match. That is why every machine stands in a hospital, a train station or an airport.</p>
+                <p>When you are paired, your dashboard shows the exact place your machine stands, and you can find it on the map below.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="cc-section" data-bg="gray">
+        <div class="cc-wrap">
             <div class="cc-map" data-reveal>
                 <div data-map data-public-map data-src="{{ route('public.machines') }}" role="img" aria-label="Map of the places that host a machine"></div>
             </div>

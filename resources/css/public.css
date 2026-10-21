@@ -1374,7 +1374,7 @@
     }
     @media (prefers-reduced-motion: reduce) { .cc-story-dot { transition: none; } }
     /* Header takes the live page colour instead of a grey glass bar. */
-    .cc-nav::before { background: rgb(var(--cc-live-top, 245 245 245) / 0.82); border-radius: 0; box-shadow: none; }
+    .cc-nav::before { background: rgb(var(--cc-live-top, 245 245 245) / 0.82); border-radius: 0 0 24px 24px; box-shadow: none; }
     .cc-nav.is-scrolled:hover::before { background: rgb(var(--cc-live-top, 245 245 245) / 0.82); }
     .cc-nav-acct { display: none; width: 48px; height: 48px; border-radius: 9999px; background: #000; color: #fff; align-items: center; justify-content: center; }
     .cc-nav-acct:focus-visible { outline: 4px solid #000; outline-offset: 2px; }

@@ -32,19 +32,15 @@
     <section class="cc-section cc-center" data-bg="gray">
         <div class="cc-wrap">
             <h2 class="cc-huge" data-reveal><span>Why people</span><span>co-own</span></h2>
-            <article class="cc-feature" data-reveal>
-                <div class="cc-feature-photo" aria-hidden="true"><div class="cc-photo"><span>Photo</span></div></div>
-                <div><h3>No work on your side</h3><p>The machine is stocked, cleaned and settled for you. You only watch the numbers.</p><a class="cc-learn" href="{{ route('program') }}#day">See a day with your machine</a></div>
-            </article>
-            <article class="cc-feature is-flip" data-reveal>
-                <div class="cc-feature-photo" aria-hidden="true"><div class="cc-photo"><span>Photo</span></div></div>
-                <div><h3>A partner shares the risk</h3><p>You never carry a machine alone. The cost and the earnings are split evenly.</p><a class="cc-learn" href="{{ route('program') }}#split">See the daily split</a></div>
-            </article>
-            <article class="cc-feature" data-reveal>
-                <div class="cc-feature-photo" aria-hidden="true"><div class="cc-photo"><span>Photo</span></div></div>
-                <div><h3>Every cent shown</h3><p>Sales, fee, pool and payout are listed for every day, and you can download them.</p><a class="cc-learn" href="{{ route('earnings') }}">Your earnings</a></div>
-            </article>
-            <p class="cc-lead" style="margin-inline:auto" data-reveal>Open to everyone aged {{ config('drinkwell.min_age') }} and over. Each machine has exactly two owners, and each drink sells for {{ $fmt(config('drinkwell.unit_price_cents')) }}.</p>
+        </div>
+        <div class="cc-cardrow-wrap"><div class="cc-cardrow" data-drag>
+            <article data-reveal><h3>No work on your side</h3><p>The machine is stocked, cleaned and settled for you. You only watch the numbers.</p></article>
+            <article data-reveal><h3>A partner shares the risk</h3><p>You never carry a machine alone. The cost and the earnings are split evenly.</p></article>
+            <article data-reveal><h3>Every cent shown</h3><p>Sales, fee, pool and payout are listed for every day, and you can download them.</p></article>
+            <article data-reveal><h3>Open to {{ config('drinkwell.min_age') }}+</h3><p>Every co-partner is aged {{ config('drinkwell.min_age') }} or over, and each machine has exactly two owners.</p></article>
+        </div></div>
+        <div class="cc-wrap">
+            <div class="cc-btn-row" data-reveal><a class="af-btn af-btn-black" href="{{ route('program') }}">See how it works</a></div>
         </div>
     </section>
 

@@ -28,8 +28,11 @@
                     {{ $slot }}
                 </main>
                 <footer class="cc-appfoot">
+                    <div class="cc-foot-clouds" aria-hidden="true"><i></i></div>
+                    <div class="cc-foot-legal-bar">
                     <p>{{ $brand->name }} · <a href="{{ route('contact') }}">Contact us</a> · <a href="{{ route('terms') }}">Terms</a> · <a href="{{ route('privacy') }}">Privacy</a></p>
                     <x-footer-disclaimer />
+                    </div>
                 </footer>
             </div>
         </div>

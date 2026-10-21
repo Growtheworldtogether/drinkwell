@@ -33,7 +33,7 @@
 <aside class="cc-side" id="app-side" x-bind:class="{ 'is-open': nav }" aria-label="Menu">
     <div class="cc-side-top">
         <a href="{{ $user?->homeUrl() ?? url('/') }}" class="af-brand"><x-brand.logo variant="light" /></a>
-        <button type="button" class="cc-side-close" x-on:click="nav = false">Close</button>
+        <button type="button" class="cc-icon-btn cc-side-close" x-on:click="nav = false" aria-label="Close menu"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
     </div>
 
     <nav class="cc-side-nav" aria-label="{{ $mode === 'admin' ? 'Administrator' : 'Member' }}">

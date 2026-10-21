@@ -18,8 +18,9 @@
     @else
         <div class="cc-shell" x-data="{ nav: false }" x-on:keydown.escape.window="nav = false" x-effect="document.body.classList.toggle('cc-noscroll', nav)">
             <div class="cc-topbar">
+                <button type="button" class="cc-icon-btn" x-on:click="nav = true" x-bind:aria-expanded="nav.toString()" aria-controls="app-side" aria-label="Open menu"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 6.5h16M4 12h16M4 17.5h16"/></svg></button>
                 <a href="{{ auth()->user()?->homeUrl() ?? url('/') }}" class="af-brand"><x-brand.logo variant="light" /></a>
-                <button type="button" class="cc-menu-btn" x-on:click="nav = true" x-bind:aria-expanded="nav.toString()" aria-controls="app-side">Menu</button>
+                <span class="cc-icon-spacer" aria-hidden="true"></span>
             </div>
             <div class="cc-scrim" x-show="nav" x-cloak x-on:click="nav = false" aria-hidden="true"></div>
             <x-app-sidebar :mode="$mode" />

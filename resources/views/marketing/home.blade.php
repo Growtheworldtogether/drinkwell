@@ -14,7 +14,7 @@
         <h1 class="sr-only">We Co-own the Machine and Share the Daily Payout</h1>
         <div class="cc-story-card">
             <div class="cc-photo" aria-hidden="true"><span>Photo</span></div>
-            <div class="cc-story-dots" role="group" aria-label="Choose a story">
+            <div class="cc-story-dots" x-bind:class="{ 'is-held': stop }" role="group" aria-label="Choose a story">
                 <button type="button" class="cc-story-dot" x-bind:class="{ 'is-on': i === 0 }" x-bind:aria-pressed="(i === 0).toString()" aria-label="Pairing" x-on:click="i = 0; stop = true">1</button>
                 <button type="button" class="cc-story-dot" x-bind:class="{ 'is-on': i === 1 }" x-bind:aria-pressed="(i === 1).toString()" aria-label="Deposit" x-on:click="i = 1; stop = true">2</button>
                 <button type="button" class="cc-story-dot" x-bind:class="{ 'is-on': i === 2 }" x-bind:aria-pressed="(i === 2).toString()" aria-label="Payouts" x-on:click="i = 2; stop = true">3</button>
@@ -43,7 +43,7 @@
                 x-init="setInterval(() => { if (! stop && ! document.hidden) i = (i + 1) % 3 }, 6000)">
                 <div class="cc-story-card">
                     <div class="cc-photo" aria-hidden="true"><span>Photo</span></div>
-                    <div class="cc-story-dots" role="group" aria-label="Choose a story">
+                    <div class="cc-story-dots" x-bind:class="{ 'is-held': stop }" role="group" aria-label="Choose a story">
                         <button type="button" class="cc-story-dot" x-bind:class="{ 'is-on': i === 0 }" x-bind:aria-pressed="(i === 0).toString()" aria-label="Pairing" x-on:click="i = 0; stop = true">1</button>
                         <button type="button" class="cc-story-dot" x-bind:class="{ 'is-on': i === 1 }" x-bind:aria-pressed="(i === 1).toString()" aria-label="Deposit" x-on:click="i = 1; stop = true">2</button>
                         <button type="button" class="cc-story-dot" x-bind:class="{ 'is-on': i === 2 }" x-bind:aria-pressed="(i === 2).toString()" aria-label="Payouts" x-on:click="i = 2; stop = true">3</button>

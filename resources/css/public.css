@@ -1402,4 +1402,16 @@
         .cc-hero-photo .cc-story-title { margin: 0; min-height: 3.3em; font-size: clamp(26px, 2.4vw, 38px); font-weight: 600; line-height: 1.1; letter-spacing: -0.03em; text-wrap: balance; }
         .cc-hero-photo .cc-story-link { display: inline-flex; align-items: center; min-height: 44px; font-size: 18px; font-weight: 700; color: #fff; text-decoration: underline; text-underline-offset: 4px; }
     }
+    /* Story dots: the active dot shows a ring that fills over the six seconds before the next story. Once a dot is tapped the ring stays full. */
+    @keyframes cc-ring { from { --cc-ring: 0%; } to { --cc-ring: 100%; } }
+    .cc-story-dot { position: relative; }
+    .cc-story-dot.is-on::before { content: ""; position: absolute; inset: -8px; border-radius: 9999px; pointer-events: none; background: conic-gradient(#fff var(--cc-ring), rgba(255, 255, 255, 0.25) 0); -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 4px), #000 calc(100% - 4px)); mask: radial-gradient(farthest-side, transparent calc(100% - 4px), #000 calc(100% - 4px)); animation: cc-ring 6s linear forwards; }
+    .cc-story-dots.is-held .cc-story-dot.is-on::before { animation: none; --cc-ring: 100%; }
+    @media (prefers-reduced-motion: reduce) { .cc-story-dot.is-on::before { animation: none; --cc-ring: 100%; } }
+    .cc-story-dots { padding: 8px; margin: -8px; }
+    /* Wide hero headline one step smaller. */
+    @media (min-width: 900px) { .cc-hero .cc-display { font-size: clamp(32px, 5.6vw, 80px); } }
 }
+
+/* Lets the story dot ring fill smoothly. Registered outside the layer, as @property must be. */
+@property --cc-ring { syntax: "<percentage>"; inherits: false; initial-value: 0%; }

@@ -1326,9 +1326,8 @@
     }
     body.cc-noscroll.cc-page::after { display: none; }
 
-    /* Footer: plain links on top, then a thin base with a moving wave edge. Colours sweep across it from the top right corner, one after another. */
-    @keyframes cc-wave-move { from { -webkit-mask-position: 0 100%, 0 0; mask-position: 0 100%, 0 0; } to { -webkit-mask-position: 0 100%, 800px 0; mask-position: 0 100%, 800px 0; } }
-    @keyframes cc-sweep { 0% { -webkit-mask-size: 0% 0%; mask-size: 0% 0%; } 80%, 100% { -webkit-mask-size: 260% 260%; mask-size: 260% 260%; } }
+    /* Footer: plain links on top, then a colour band. A new colour rolls in as a wave from the top right and fills the band, then the next one follows. */
+    @keyframes cc-sweep { 0% { -webkit-mask-position: 1700px 0; mask-position: 1700px 0; } 80%, 100% { -webkit-mask-position: -1700px 0; mask-position: -1700px 0; } }
     @keyframes cc-sweep-hue {
         0% { background-color: #f6af4e; } 24.9% { background-color: #f6af4e; }
         25% { background-color: #5fc29f; } 49.9% { background-color: #5fc29f; }
@@ -1344,35 +1343,19 @@
     }
     .cc-foot { background: transparent; padding-bottom: 0; }
     .cc-foot-cols a, .cc-foot-cols button { color: #000; }
-    .cc-foot-base, .cc-appfoot {
-        --wave: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='800' height='40' viewBox='0 0 800 40'><path d='M0 22 C100 -4 300 -4 400 22 C500 48 700 48 800 22 V40 H0 Z'/></svg>");
-        position: relative;
-        isolation: isolate;
-        margin-top: 40px;
-        padding-block: 66px 20px;
-        background-color: #f6af4e;
-        -webkit-mask-image: linear-gradient(#000, #000), var(--wave);
-        mask-image: linear-gradient(#000, #000), var(--wave);
-        -webkit-mask-size: 100% calc(100% - 39px), 800px 40px;
-        mask-size: 100% calc(100% - 39px), 800px 40px;
-        -webkit-mask-position: 0 100%, 0 0;
-        mask-position: 0 100%, 0 0;
-        -webkit-mask-repeat: no-repeat, repeat-x;
-        mask-repeat: no-repeat, repeat-x;
-    }
+    .cc-foot-base, .cc-appfoot { position: relative; isolation: isolate; overflow: hidden; margin-top: 40px; padding-block: 36px 24px; background-color: #f6af4e; }
     .cc-foot-base::before, .cc-appfoot::before {
         content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
         background-color: #5fc29f;
-        -webkit-mask-image: radial-gradient(circle at 100% 0, #000 68%, transparent 100%);
-        mask-image: radial-gradient(circle at 100% 0, #000 68%, transparent 100%);
+        -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='5000' height='400' viewBox='0 0 5000 400' preserveAspectRatio='none'><path d='M5000 0 L1500 0 L1510 5 L1520 10 L1529 15 L1538 20 L1546 25 L1553 30 L1560 35 L1565 40 L1569 45 L1572 50 L1573 55 L1573 60 L1571 65 L1568 70 L1563 75 L1557 80 L1549 85 L1540 90 L1529 95 L1518 100 L1505 105 L1491 110 L1477 115 L1462 120 L1446 125 L1431 130 L1415 135 L1399 140 L1383 145 L1368 150 L1353 155 L1339 160 L1326 165 L1314 170 L1304 175 L1294 180 L1286 185 L1279 190 L1274 195 L1270 200 L1268 205 L1267 210 L1268 215 L1270 220 L1274 225 L1278 230 L1284 235 L1291 240 L1299 245 L1308 250 L1317 255 L1327 260 L1337 265 L1347 270 L1356 275 L1366 280 L1375 285 L1383 290 L1391 295 L1398 300 L1403 305 L1408 310 L1411 315 L1413 320 L1413 325 L1412 330 L1409 335 L1405 340 L1399 345 L1392 350 L1383 355 L1373 360 L1362 365 L1349 370 L1336 375 L1322 380 L1307 385 L1292 390 L1276 395 L1260 400 L5000 400 Z'/></svg>"); mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='5000' height='400' viewBox='0 0 5000 400' preserveAspectRatio='none'><path d='M5000 0 L1500 0 L1510 5 L1520 10 L1529 15 L1538 20 L1546 25 L1553 30 L1560 35 L1565 40 L1569 45 L1572 50 L1573 55 L1573 60 L1571 65 L1568 70 L1563 75 L1557 80 L1549 85 L1540 90 L1529 95 L1518 100 L1505 105 L1491 110 L1477 115 L1462 120 L1446 125 L1431 130 L1415 135 L1399 140 L1383 145 L1368 150 L1353 155 L1339 160 L1326 165 L1314 170 L1304 175 L1294 180 L1286 185 L1279 190 L1274 195 L1270 200 L1268 205 L1267 210 L1268 215 L1270 220 L1274 225 L1278 230 L1284 235 L1291 240 L1299 245 L1308 250 L1317 255 L1327 260 L1337 265 L1347 270 L1356 275 L1366 280 L1375 285 L1383 290 L1391 295 L1398 300 L1403 305 L1408 310 L1411 315 L1413 320 L1413 325 L1412 330 L1409 335 L1405 340 L1399 345 L1392 350 L1383 355 L1373 360 L1362 365 L1349 370 L1336 375 L1322 380 L1307 385 L1292 390 L1276 395 L1260 400 L5000 400 Z'/></svg>");
         -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
-        -webkit-mask-position: 100% 0; mask-position: 100% 0;
-        -webkit-mask-size: 0% 0%; mask-size: 0% 0%;
+        -webkit-mask-size: 5000px 100%; mask-size: 5000px 100%;
+        -webkit-mask-position: 1700px 0; mask-position: 1700px 0;
     }
     .cc-foot-base .cc-foot-legal { margin: 0; padding: 0 var(--cc-pad); border: 0; color: #000; }
-    .cc-appfoot { margin: 28px 0 0; padding: 66px clamp(16px, 3.2vw, 56px) 20px; border-radius: 0; color: #000; }
+    .cc-appfoot { margin: 28px 0 0; padding: 36px clamp(16px, 3.2vw, 56px) 24px; border-radius: 0; color: #000; }
     @media (prefers-reduced-motion: no-preference) {
-        .cc-foot-base, .cc-appfoot { animation: cc-wave-move 9s linear infinite, cc-sweep-hue 28s linear infinite; }
+        .cc-foot-base, .cc-appfoot { animation: cc-sweep-hue 28s linear infinite; }
         .cc-foot-base::before, .cc-appfoot::before { animation: cc-sweep 7s ease-in-out infinite, cc-sweep-in 28s steps(1, end) infinite; }
     }
 }

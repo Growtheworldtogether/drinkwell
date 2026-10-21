@@ -1318,8 +1318,9 @@
         .cc-display { font-size: clamp(34px, 10.5vw, 56px); }
         .cc-lead { margin-block: 20px 20px; }
     }
-    /* The page background always reaches the real bottom edge of the screen on phones. */
-    .cc-mesh { height: 100lvh; min-height: 100%; }
+    /* The colour layer runs past the bottom edge, because Safari's toolbar covers the strip a fixed layer would otherwise stop short of. */
+    .cc-mesh { height: calc(100lvh + 200px); min-height: 100%; }
+    .cc-grain { bottom: -200px; }
     html { background: #eee; }
 
     /* Footer: colour clouds drift across a band, and everything under the band is plain white. */

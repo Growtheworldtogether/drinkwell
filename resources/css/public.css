@@ -1319,9 +1319,8 @@
     }
     /* The page background always reaches the real bottom edge of the screen on phones, with a soft blur along the very bottom. */
     .cc-mesh { height: 100lvh; min-height: 100%; }
-    html { background: #f7723a; }
     @media (max-width: 899px) {
-        body.cc-page::after { content: ""; position: fixed; inset: auto 0 0 0; z-index: 29; height: calc(64px + env(safe-area-inset-bottom)); pointer-events: none; -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); -webkit-mask-image: linear-gradient(to top, #000 25%, transparent); mask-image: linear-gradient(to top, #000 25%, transparent); }
+        body.cc-page::after { content: ""; position: fixed; inset: auto 0 0 0; z-index: 29; height: calc(90px + env(safe-area-inset-bottom)); pointer-events: none; background: linear-gradient(to top, rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0.5) 45%, rgba(255, 255, 255, 0)); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); -webkit-mask-image: linear-gradient(to top, #000 55%, transparent); mask-image: linear-gradient(to top, #000 55%, transparent); }
     }
     body.cc-noscroll.cc-page::after { display: none; }
 
@@ -1375,4 +1374,6 @@
         .cc-access span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
     }
     @media (prefers-reduced-motion: reduce) { .cc-story-dot { transition: none; } }
+    /* The strip under the phone's clock and notch is plain white, like the reference. It has no height on screens without a notch. */
+    body.cc-page::before { content: ""; position: fixed; inset: 0 0 auto 0; z-index: 60; height: env(safe-area-inset-top); pointer-events: none; background: #fff; }
 }

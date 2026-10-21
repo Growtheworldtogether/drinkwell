@@ -24,8 +24,6 @@ function initMesh(calm) {
         let name = 'gray';
         sections.forEach((el) => { const r = el.getBoundingClientRect(); if (r.top <= mid && r.bottom > mid) name = el.dataset.bg; });
         target = (mesh[name] || mesh.gray).map(hexToRgb);
-        const meta = document.querySelector('meta[name="theme-color"]');
-        if (meta) meta.setAttribute('content', (mesh[name] || mesh.gray)[0]);
     };
     window.addEventListener('scroll', pick, { passive: true });
     pick();

@@ -27,7 +27,6 @@ class SiteSearch
         'program' => 'How it works',
         'earnings' => 'Your earnings',
         'locations' => 'Locations',
-        'about' => 'About',
         'home' => 'Home',
         'contact' => 'Contact us',
         'terms' => 'Terms',
@@ -102,7 +101,7 @@ class SiteSearch
     /** @return list<array{page: string, section: string, url: string, heading: string, body: string}> */
     public function index(): array
     {
-        return Cache::remember('site-search:v4:'.(auth()->check() ? 'in' : 'out'), now()->addMinutes(10), function () {
+        return Cache::remember('site-search:v5:'.(auth()->check() ? 'in' : 'out'), now()->addMinutes(10), function () {
             $blocks = [];
             foreach (self::PAGES as $route => $label) {
                 foreach ($this->blocks($this->render($route), route($route), $label) as $block) {

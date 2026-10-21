@@ -32,3 +32,13 @@ it('sends the home page search box to the real search', function () {
     machine();
     $this->get(route('home'))->assertOk()->assertSee('action="'.route('search').'"', false);
 });
+
+it('sends the old About address to How it works, which now opens with the welcome statement', function () {
+    $this->get('/about')->assertRedirect('/how-it-works')->assertStatus(301);
+    $this->get(route('program'))->assertOk()->assertSee('Made for people who want a calm, steady way to earn');
+});
+
+it('shows the bigger text tip on public pages', function () {
+    machine();
+    $this->get(route('home'))->assertOk()->assertSee('data-size-tip', false)->assertSee('Text too small?');
+});

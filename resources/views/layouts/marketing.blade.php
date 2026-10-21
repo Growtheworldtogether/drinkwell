@@ -16,6 +16,10 @@
         <x-site-footer />
     </div>
     <button type="button" class="cc-access" data-text-size aria-pressed="false"><b aria-hidden="true">Aa</b><span data-text-size-label>Bigger text</span></button>
+    <div class="cc-tip" data-size-tip role="status" hidden>
+        <p><b>Text too small?</b> Tap <b>Aa</b> to make everything on the site bigger.</p>
+        <button type="button" class="cc-tip-close" data-size-tip-close>Got it</button>
+    </div>
     @livewireScriptConfig
 </body>
 </html>

@@ -4,7 +4,6 @@
         <div class="cc-foot-cols">
             <div>
                 <h4>About us</h4>
-                <a href="{{ route('about') }}">About</a>
                 <a href="{{ route('program') }}">How it works</a>
                 <a href="{{ route('earnings') }}">Your earnings</a>
                 <a href="{{ route('locations') }}">Locations</a>

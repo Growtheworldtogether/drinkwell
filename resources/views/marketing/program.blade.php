@@ -10,6 +10,13 @@
         </div>
     </section>
 
+    <section class="cc-section cc-center" data-bg="cream">
+        <div class="cc-wrap">
+            <p class="cc-statement" data-reveal>Made for people who want a calm, steady way to earn, without running a business.</p>
+            <p class="cc-lead" style="margin-inline:auto" data-reveal>If you can read an email and press a button, you can take part. We find you a co-partner, place the machine in a busy spot, and handle the restocking, counting and paying out.</p>
+        </div>
+    </section>
+
     <section class="cc-section cc-center" data-bg="gray">
         <div class="cc-wrap">
             <h2 class="cc-huge" data-reveal><span>Start in</span><span>three steps</span></h2>

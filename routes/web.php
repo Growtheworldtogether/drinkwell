@@ -25,10 +25,11 @@ Route::controller(PagesController::class)->middleware('throttle:public')->group(
     Route::get('/your-earnings', 'earnings')->name('earnings');
     Route::get('/locations', 'locations')->name('locations');
     Route::get('/questions', 'questions')->name('questions');
-    Route::get('/about', 'about')->name('about');
     Route::get('/terms', 'terms')->name('terms');
     Route::get('/privacy', 'privacy')->name('privacy');
 });
+// The About page was merged into How it works; old links still land there.
+Route::redirect('/about', '/how-it-works', 301);
 Route::get('/search', [\App\Http\Controllers\SearchController::class, 'show'])->middleware('throttle:public')->name('search');
 Route::get('/contact', [ContactController::class, 'show'])->middleware('throttle:public')->name('contact');
 Route::post('/contact', [ContactController::class, 'send'])->middleware('throttle:6,10')->name('contact.send');

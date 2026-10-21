@@ -1534,6 +1534,17 @@
         .cc-calc-tile b { margin: 0; font-size: 24px; }
         .cc-calc-back { margin-top: 14px; font-size: 18px; }
     }
+    /* First-visit tip that points at the Bigger text button. */
+    .cc-tip { position: fixed; right: 20px; bottom: 88px; z-index: 31; width: min(320px, calc(100vw - 28px)); padding: 18px 20px; border-radius: 22px; background: #000; color: #fff; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25); animation: cc-tip-in 0.35s ease-out both; }
+    .cc-tip[hidden] { display: none; }
+    .cc-tip::after { content: ""; position: absolute; right: 34px; bottom: -8px; width: 18px; height: 18px; border-radius: 3px; background: #000; transform: rotate(45deg); }
+    .cc-tip p { margin: 0; font-size: 19px; line-height: 1.4; }
+    .cc-tip b { font-weight: 700; }
+    .cc-tip-close { margin-top: 14px; min-height: 48px; padding: 0 22px; border: 0; border-radius: 9999px; background: #fff; color: #000; font: inherit; font-size: 17px; font-weight: 700; cursor: pointer; }
+    .cc-tip-close:focus-visible { outline: 4px solid #f7723a; outline-offset: 2px; }
+    @keyframes cc-tip-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+    @media (max-width: 899px) { .cc-tip { right: 14px; bottom: 82px; } .cc-tip::after { right: 19px; } }
+    @media (prefers-reduced-motion: reduce) { .cc-tip { animation: none; } }
 }
 
 /* Lets the story dot ring fill smoothly. Registered outside the layer, as @property must be. */

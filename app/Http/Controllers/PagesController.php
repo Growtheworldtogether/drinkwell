@@ -47,10 +47,6 @@ class PagesController extends Controller
         return view('marketing.questions', ['tiers' => $this->tiers()]);
     }
 
-    public function about(): View
-    {
-        return view('marketing.about', ['tiers' => $this->tiers()]);
-    }
 
     public function terms(): View
     {

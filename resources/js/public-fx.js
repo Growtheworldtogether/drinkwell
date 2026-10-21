@@ -94,14 +94,33 @@ export function initPublicFx() {
     root.classList.add('fx');
     initMesh(calm);
 
+    // Bigger text: the choice is remembered on this device, so it stays on from page to page.
+    const store = {
+        get: (k) => { try { return localStorage.getItem(k); } catch (e) { return null; } },
+        set: (k, v) => { try { localStorage.setItem(k, v); } catch (e) { /* private mode: just not remembered */ } },
+    };
     const size = document.querySelector('[data-text-size]');
+    const tip = document.querySelector('[data-size-tip]');
+    const closeTip = () => { if (tip && ! tip.hidden) { tip.hidden = true; store.set('dw-size-tip', '1'); } };
     if (size) {
         const label = size.querySelector('[data-text-size-label]');
-        size.addEventListener('click', () => {
-            const on = root.classList.toggle('big-text');
+        const apply = (on) => {
+            root.classList.toggle('big-text', on);
             size.setAttribute('aria-pressed', String(on));
             if (label) label.textContent = on ? 'Normal text' : 'Bigger text';
+        };
+        if (store.get('dw-big-text') === '1') apply(true);
+        size.addEventListener('click', () => {
+            const on = ! root.classList.contains('big-text');
+            apply(on);
+            store.set('dw-big-text', on ? '1' : '0');
+            closeTip();
         });
+    }
+    // First visit only: a small tip next to the Aa button, a moment after the page has settled.
+    if (tip && size && store.get('dw-size-tip') !== '1') {
+        tip.querySelector('[data-size-tip-close]')?.addEventListener('click', closeTip);
+        setTimeout(() => { if (store.get('dw-size-tip') !== '1') tip.hidden = false; }, 2500);
     }
 
     // Content shows as you scroll: everything below the first screen slides in when it arrives. Images wait until near the screen.

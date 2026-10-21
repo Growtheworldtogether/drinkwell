@@ -1422,6 +1422,24 @@
     .cc-big-arrow { display: inline-flex; align-items: center; justify-content: center; width: 52px; height: 52px; border-radius: 9999px; background: #fff; color: #000; transition: transform 0.2s ease; }
     .cc-big-link:hover .cc-big-arrow { transform: translateX(4px); }
     @media (max-width: 899px) { .cc-big-card { min-height: 420px; padding: 24px; } .cc-big-body p { font-size: 18px; } }
+    /* Three steps: a number and one plain sentence on each coloured card, the label strip stays at the bottom. */
+    .cc-tab-num { position: absolute; top: 20px; left: 20px; display: inline-flex; align-items: center; justify-content: center; width: 52px; height: 52px; border-radius: 9999px; background: #000; color: #fff; font-size: 22px; font-weight: 700; }
+    .cc-tab-text { position: absolute; top: 92px; left: 20px; right: 20px; margin: 0; font-size: 21px; font-weight: 600; line-height: 1.35; color: #000; }
+    /* Search page: the same pill search bar as the home page, then plain result rows with the page name, the heading and the words that matched. */
+    .cc-search-box { padding: 40px 24px; }
+    .cc-search-box form { margin-top: 0; }
+    .cc-search-count { margin: 40px 0 0; font-size: 20px; font-weight: 600; }
+    .cc-results { display: grid; gap: 12px; margin: 20px 0 0; padding: 0; list-style: none; }
+    .cc-result { display: flex; flex-direction: column; gap: 8px; padding: 24px 28px; border-radius: 24px; background: #fff; color: #000; text-decoration: none; transition: transform 0.2s ease; }
+    .cc-result:hover { transform: translateY(-3px); }
+    .cc-result:hover .cc-result-title { text-decoration: underline; text-underline-offset: 5px; }
+    .cc-result:focus-visible { outline: 4px solid #000; outline-offset: 3px; }
+    .cc-result-page { font-size: 14px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #6b6b6b; }
+    .cc-result-title { font-size: clamp(22px, 2.2vw, 28px); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
+    .cc-result-text { font-size: 18px; line-height: 1.5; color: #353535; }
+    .cc-result-text mark { padding: 0 2px; border-radius: 4px; background: #fcd9a8; color: #000; }
+    .cc-search-empty { margin-top: 40px; text-align: center; font-size: 19px; }
+    .cc-search-empty .cc-chips a { background: #fff; }
 }
 
 /* Lets the story dot ring fill smoothly. Registered outside the layer, as @property must be. */

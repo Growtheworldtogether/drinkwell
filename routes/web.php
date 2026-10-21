@@ -29,6 +29,7 @@ Route::controller(PagesController::class)->middleware('throttle:public')->group(
     Route::get('/terms', 'terms')->name('terms');
     Route::get('/privacy', 'privacy')->name('privacy');
 });
+Route::get('/search', [\App\Http\Controllers\SearchController::class, 'show'])->middleware('throttle:public')->name('search');
 Route::get('/contact', [ContactController::class, 'show'])->middleware('throttle:public')->name('contact');
 Route::post('/contact', [ContactController::class, 'send'])->middleware('throttle:6,10')->name('contact.send');
 

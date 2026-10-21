@@ -6,8 +6,8 @@
 <x-marketing-layout title="Co-own a vending machine">
     <section class="cc-story" data-bg="coral" aria-label="{{ $brand->name }}"
         x-data="{ i: 0, stop: false, slides: [
-            { tag: 'Pairing', title: 'Co-own a machine with a partner we find for you', link: '{{ route('program') }}', label: 'How it works' },
-            { tag: 'Deposit', title: 'Pay your half straight to your co-partner', link: '{{ route('program') }}#deposit', label: 'How the deposit works' },
+            { tag: 'Ages {{ config('drinkwell.min_age') }} and over', title: 'Co-own a drink vending machine with a partner we find for you', link: '{{ route('program') }}', label: 'How it works' },
+            { tag: 'Deposit', title: 'Buy your half of the machine from your co-partner', link: '{{ route('program') }}#deposit', label: 'How the deposit works' },
             { tag: 'Payouts', title: 'Share the daily payout, with every cent shown', link: '{{ route('earnings') }}', label: 'See your earnings' }
         ] }"
         x-init="setInterval(() => { if (! stop && ! document.hidden) i = (i + 1) % 3 }, 6000)">
@@ -20,8 +20,8 @@
                 <button type="button" class="cc-story-dot" x-bind:class="{ 'is-on': i === 2 }" x-bind:aria-pressed="(i === 2).toString()" aria-label="Payouts" x-on:click="i = 2; stop = true">3</button>
             </div>
             <div class="cc-story-body">
-                <span class="cc-story-tag" x-text="slides[i].tag">Pairing</span>
-                <p class="cc-story-title" aria-live="polite" x-text="slides[i].title">Co-own a machine with a partner we find for you</p>
+                <span class="cc-story-tag" x-text="slides[i].tag">Ages {{ config('drinkwell.min_age') }} and over</span>
+                <p class="cc-story-title" aria-live="polite" x-text="slides[i].title">Co-own a drink vending machine with a partner we find for you</p>
                 @auth
                     <a class="af-btn cc-story-cta" href="{{ route('dashboard') }}">Open dashboard</a>
                 @else
@@ -36,8 +36,8 @@
         <div class="cc-wrap cc-hero-grid">
             <div class="cc-hero-photo"
                 x-data="{ i: 0, stop: false, slides: [
-                    { tag: 'Pairing', title: 'Co-own a machine with a partner we find for you', link: '{{ route('program') }}', label: 'How it works' },
-                    { tag: 'Deposit', title: 'Pay your half straight to your co-partner', link: '{{ route('program') }}#deposit', label: 'How the deposit works' },
+                    { tag: 'Ages {{ config('drinkwell.min_age') }} and over', title: 'Co-own a drink vending machine with a partner we find for you', link: '{{ route('program') }}', label: 'How it works' },
+                    { tag: 'Deposit', title: 'Buy your half of the machine from your co-partner', link: '{{ route('program') }}#deposit', label: 'How the deposit works' },
                     { tag: 'Payouts', title: 'Share the daily payout, with every cent shown', link: '{{ route('earnings') }}', label: 'See your earnings' }
                 ] }"
                 x-init="setInterval(() => { if (! stop && ! document.hidden) i = (i + 1) % 3 }, 6000)">
@@ -49,15 +49,15 @@
                         <button type="button" class="cc-story-dot" x-bind:class="{ 'is-on': i === 2 }" x-bind:aria-pressed="(i === 2).toString()" aria-label="Payouts" x-on:click="i = 2; stop = true">3</button>
                     </div>
                     <div class="cc-story-body">
-                        <span class="cc-story-tag" x-text="slides[i].tag">Pairing</span>
-                        <p class="cc-story-title" aria-live="polite" x-text="slides[i].title">Co-own a machine with a partner we find for you</p>
+                        <span class="cc-story-tag" x-text="slides[i].tag">Ages {{ config('drinkwell.min_age') }} and over</span>
+                        <p class="cc-story-title" aria-live="polite" x-text="slides[i].title">Co-own a drink vending machine with a partner we find for you</p>
                         <a class="cc-story-link" x-bind:href="slides[i].link" x-text="slides[i].label" href="{{ route('program') }}">How it works</a>
                     </div>
                 </div>
             </div>
             <div class="cc-hero-text">
                 <h1 class="cc-display"><span>We Co-own</span><span>the Machine</span><span>and Share the</span><span class="cc-word" data-words="Daily Payout|Morning Rush|Lunch Peak">Daily Payout</span></h1>
-                <p class="cc-lead">You and a partner each put in half the cost of a drink machine, and split the daily earnings.</p>
+                <p class="cc-lead">You and a partner each pay half the cost of a drink vending machine, and split what it earns every day. For people aged {{ config('drinkwell.min_age') }} and over.</p>
                 <div class="af-ctas">
                     @auth
                         <a class="af-btn af-btn-black" href="{{ route('dashboard') }}">Open dashboard</a>
@@ -75,6 +75,18 @@
             <p class="cc-statement">At {{ $brand->name }}, we are refreshing what it means to co&#8209;own: one drink, one payout at a time.</p>
             <p class="cc-lead" style="margin-inline:auto" data-reveal>You share the machine, the cost and the daily payout with one partner, and every cent is shown.</p>
             <div class="cc-btn-row" data-reveal><a class="af-btn af-btn-black" href="{{ route('program') }}">Discover how it works</a></div>
+        </div>
+    </section>
+
+    <section class="cc-section cc-center" data-bg="gray">
+        <div class="cc-wrap">
+            <h2 class="cc-huge" data-reveal><span>You don't run</span><span>the machine.</span><span>We do.</span></h2>
+            <p class="cc-lead" style="margin-inline:auto" data-reveal>You never stock shelves or fix anything. Your part is the deposit, and then you watch the payouts.</p>
+            <ol class="cc-cards3">
+                <li class="cc-card cc-card-1" data-reveal><div class="cc-photo" aria-hidden="true"><span>Photo</span></div><div class="cc-card-body"><h3>We place it</h3><p>Your machine stands in a busy place that hosts it, like a hospital, a train station or an airport.</p></div></li>
+                <li class="cc-card cc-card-2" data-reveal><div class="cc-photo" aria-hidden="true"><span>Photo</span></div><div class="cc-card-body"><h3>We fill and restock it</h3><p>Filling, restocking and delivery are paid from the day's sales by the bottling and logistics fee.</p></div></li>
+                <li class="cc-card cc-card-3" data-reveal><div class="cc-photo" aria-hidden="true"><span>Photo</span></div><div class="cc-card-body"><h3>You watch it earn</h3><p>Your dashboard shows the machine, your balance and every daily payout, to the cent.</p></div></li>
+            </ol>
         </div>
     </section>
 
@@ -112,14 +124,14 @@
                     <div class="cc-row-track">
                         @for ($n = 0; $n < 2; $n++)
                             @foreach ($row as $k => $name)
-                                <a href="{{ route('program') }}" @if ($n) aria-hidden="true" tabindex="-1" @endif><span class="cc-dot cc-dot-{{ ($k + $r) % 4 }}">{{ mb_substr($name, 0, 1) }}</span>{{ $name }}<span class="cc-explore">Explore</span></a>
+                                <a href="{{ route('locations') }}" @if ($n) aria-hidden="true" tabindex="-1" @endif><span class="cc-dot cc-dot-{{ ($k + $r) % 4 }}">{{ mb_substr($name, 0, 1) }}</span>{{ $name }}<span class="cc-explore">Explore</span></a>
                             @endforeach
                         @endfor
                     </div>
                 </div>
             @endforeach
         </div>
-        <div class="cc-btn-row"><a class="af-btn af-btn-black" href="{{ route('program') }}">Meet the rest</a></div>
+        <div class="cc-btn-row"><a class="af-btn af-btn-black" href="{{ route('locations') }}">Meet the rest</a></div>
     </section>
 
     <section class="cc-section" data-bg="gray">
@@ -127,9 +139,9 @@
             <h2 class="cc-huge" data-reveal><span>Start in</span><span>three steps</span></h2>
         </div>
         <div class="cc-tabs-row">
-            <a class="cc-tabcard" href="{{ route('register') }}"><span>Pairing</span></a>
-            <a class="cc-tabcard" href="{{ route('program') }}#deposit"><span>Deposit</span></a>
-            <a class="cc-tabcard" href="{{ route('program') }}#split"><span>Payouts</span></a>
+            <a class="cc-tabcard" href="{{ route('register') }}"><b class="cc-tab-num">1</b><p class="cc-tab-text">Sign up and we find you a co-partner, usually within 1 business day.</p><span>Pairing</span></a>
+            <a class="cc-tabcard" href="{{ route('program') }}#deposit"><b class="cc-tab-num">2</b><p class="cc-tab-text">Pay your half to your co-partner, who already owns the machine. We check your proof of payment.</p><span>Deposit</span></a>
+            <a class="cc-tabcard" href="{{ route('program') }}#split"><b class="cc-tab-num">3</b><p class="cc-tab-text">Every day the machine's earnings are split 50/50 and added to your balance.</p><span>Payouts</span></a>
         </div>
         <div class="cc-wrap cc-center">
             <p class="cc-lead" style="margin-inline:auto" data-reveal>We are a team, helping seniors earn with a share in a machine and build a steady daily income together.</p>
@@ -141,8 +153,8 @@
         <div class="cc-wrap">
             <div class="cc-help" data-reveal>
                 <h2 class="cc-h2">We're here to help</h2>
-                <form action="{{ route('program') }}" method="get" role="search">
-                    <label class="sr-only" for="help-q">Search the program</label>
+                <form action="{{ route('search') }}" method="get" role="search">
+                    <label class="sr-only" for="help-q">Search the site</label>
                     <input id="help-q" name="q" type="search" placeholder="Start typing here...">
                     <button class="af-btn af-btn-black" type="submit" aria-label="Search">Search</button>
                 </form>

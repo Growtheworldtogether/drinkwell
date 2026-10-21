@@ -71,7 +71,24 @@ function initMesh(calm) {
     requestAnimationFrame(loop);
 }
 
+// Questions get a link name from their wording, the same way the search builds its links, so a search result opens the right answer.
+function initQuestionLinks() {
+    const slug = (t) => t.toLowerCase().replace(/[^a-z0-9\s-]/g, '').trim().replace(/[\s-]+/g, '-');
+    document.querySelectorAll('details.cc-q').forEach((d) => {
+        const s = d.querySelector('summary');
+        if (s && ! d.id) d.id = `q-${slug(s.textContent)}`;
+    });
+    const open = () => {
+        const id = decodeURIComponent(location.hash.slice(1));
+        const d = id ? document.getElementById(id) : null;
+        if (d && d.tagName === 'DETAILS') { d.open = true; d.scrollIntoView({ block: 'center' }); }
+    };
+    open();
+    window.addEventListener('hashchange', open);
+}
+
 export function initPublicFx() {
+    initQuestionLinks();
     const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const root = document.documentElement;
     root.classList.add('fx');

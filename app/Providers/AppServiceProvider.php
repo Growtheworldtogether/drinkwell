@@ -36,7 +36,12 @@ class AppServiceProvider extends ServiceProvider
         Model::preventLazyLoading(! app()->isProduction());
 
         // Framework messages use the brand name (SPEC 11.6).
-        config(['app.name' => $brandService->name()]);
+        // Before the database exists (first composer install, before migrate) the stored name is not readable yet.
+        try {
+            config(['app.name' => $brandService->name()]);
+        } catch (\Throwable) {
+            // Keep the APP_NAME from .env.
+        }
 
         // One composer: layouts, mail layout, and the components that print the brand.
         View::composer(

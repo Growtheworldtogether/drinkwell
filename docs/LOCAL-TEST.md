@@ -4,12 +4,13 @@ You need: PHP 8.3 or newer, Composer, Node 20 or newer. Easiest on Windows/Mac: 
 
 ## Start it (about 5 minutes)
 1. Unzip the project and open a terminal in the folder.
-2. `composer install`
-3. `npm install` then `npm run build` (this builds the fonts, gradient, map and chart; it is the one step that has not been run anywhere yet, so tell me if it errors).
-4. `cp .env.example .env` then `php artisan key:generate`
-5. Simplest database, no MySQL needed: in `.env` set `DB_CONNECTION=sqlite`, delete the other DB_ lines, then `touch database/database.sqlite` (Windows: create an empty file with that name).
-6. `php artisan migrate --seed`  (adds the demo machines, demo member and admin)
-7. `php artisan serve` and open http://localhost:8000
+2. Make the settings file first: `cp .env.example .env` (Windows: `copy .env.example .env`).
+3. In `.env` set `DB_CONNECTION=sqlite`, delete the other lines starting with `DB_`, and set `MAIL_MAILER=log`. Create an empty file `database/database.sqlite` (Mac/Linux: `touch database/database.sqlite`).
+4. `composer install`
+5. `php artisan key:generate`
+6. `npm install` then `npm run build` (builds the fonts, gradient, map and chart; this step has not been run anywhere yet, so tell me if it errors).
+7. `php artisan migrate --seed` (adds the demo machines, demo member and admin)
+8. `php artisan serve` and open http://localhost:8000
 Emails go to the log file `storage/logs/laravel.log` (set `MAIL_MAILER=log`); the sign-in codes appear there.
 
 Logins (password `Demo-pass-123!`): member `demo.member@example.test`, admin `admin@example.test`.

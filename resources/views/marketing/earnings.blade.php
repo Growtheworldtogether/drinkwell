@@ -50,9 +50,9 @@
         <div class="cc-wrap">
             <h2 class="cc-huge" data-reveal><span>Getting your</span><span>money out</span></h2>
             <ol class="cc-cards3">
-                <li class="cc-card cc-card-1" data-reveal><div class="cc-photo" aria-hidden="true"><span>Photo</span></div><div class="cc-card-body"><h3>Ask</h3><p>Open Withdraw on your dashboard and enter an amount of at least {{ $fmt(config('drinkwell.withdrawal_min_cents')) }}.</p></div></li>
-                <li class="cc-card cc-card-2" data-reveal><div class="cc-photo" aria-hidden="true"><span>Photo</span></div><div class="cc-card-body"><h3>Confirm</h3><p>We email you a six digit code to make sure it is really you. Type it in.</p></div></li>
-                <li class="cc-card cc-card-3" data-reveal><div class="cc-photo" aria-hidden="true"><span>Photo</span></div><div class="cc-card-body"><h3>Get paid</h3><p>Our team reviews it within {{ config('drinkwell.withdrawal_review_days') }} business days, and you get an email with the payment reference.</p></div></li>
+                <li class="cc-card cc-card-1" data-reveal><div class="cc-photo" aria-hidden="true"><img src="{{ asset('images/earnings/ask.jpg') }}" alt="" loading="lazy" decoding="async"></div><div class="cc-card-body"><h3>Ask</h3><p>Open Withdraw on your dashboard and enter an amount of at least {{ $fmt(config('drinkwell.withdrawal_min_cents')) }}.</p></div></li>
+                <li class="cc-card cc-card-2" data-reveal><div class="cc-photo" aria-hidden="true"><img src="{{ asset('images/earnings/confirm.jpg') }}" alt="" loading="lazy" decoding="async"></div><div class="cc-card-body"><h3>Confirm</h3><p>We email you a six digit code to make sure it is really you. Type it in.</p></div></li>
+                <li class="cc-card cc-card-3" data-reveal><div class="cc-photo" aria-hidden="true"><img src="{{ asset('images/earnings/paid.jpg') }}" alt="" loading="lazy" decoding="async"></div><div class="cc-card-body"><h3>Get paid</h3><p>Our team reviews it within {{ config('drinkwell.withdrawal_review_days') }} business days, and you get an email with the payment reference.</p></div></li>
             </ol>
         </div>
     </section>

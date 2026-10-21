@@ -29,6 +29,9 @@ class DemoSeeder extends Seeder
             // member can always be signed in to without wiping anything.
             if ($password = env('DEMO_PASSWORD')) {
                 User::where('email', 'arthur.pendelton@example.test')->first()?->forceFill(['password' => $password])->save();
+                $this->command?->info('Demo member password set from DEMO_PASSWORD.');
+            } else {
+                $this->command?->warn('DEMO_PASSWORD is empty, so the demo member password was not changed. Or run: php artisan drinkwell:set-password arthur.pendelton@example.test "your-password"');
             }
 
             return;

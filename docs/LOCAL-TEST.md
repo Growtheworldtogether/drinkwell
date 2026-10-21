@@ -25,6 +25,8 @@ Then run `php artisan config:clear`, `php artisan db:seed --class=AdminSeeder` a
 
 - Admin: the `ADMIN_EMAIL` and `ADMIN_PASSWORD` above, opens the admin console.
 - Member: `arthur.pendelton@example.test` with `DEMO_PASSWORD`, a paired member with 20 days of payouts.
+- If a login says the credentials are wrong, set the password directly (local only):
+  `php artisan drinkwell:set-password arthur.pendelton@example.test "Demo-Pendelton-2026"`
 - A brand-new member: sign up on the site; the email code is in `storage/logs/laravel.log`. They wait in "Finding a partner" until you pair them from admin Pairings.
 
 ## What to check

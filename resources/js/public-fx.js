@@ -47,16 +47,23 @@ function initMesh(calm) {
         });
     };
     // Safari ends this fixed layer where its bottom toolbar starts, and shows the page root under the toolbar.
-    // Paint the root with the colour along the layer's bottom edge, so the colour carries on under the toolbar.
+    // Paint the root with the colour along the layer's bottom edge, so the colour carries on under the toolbar,
+    // and give the header the colour along the top edge.
     const root = document.documentElement;
     let last = '';
+    let lastHead = '';
     const paintRoot = () => {
         const w = canvas.width, h = canvas.height;
         const px = ctx.getImageData(0, h - 1, w, 1).data;
         const sum = [0, 0, 0];
         for (let i = 0; i < px.length; i += 4) { sum[0] += px[i]; sum[1] += px[i + 1]; sum[2] += px[i + 2]; }
         const rgb = `rgb(${sum.map((v) => Math.round(v / w)).join(',')})`;
+        const tp = ctx.getImageData(0, 0, w, 1).data;
+        const top = [0, 0, 0];
+        for (let i = 0; i < tp.length; i += 4) { top[0] += tp[i]; top[1] += tp[i + 1]; top[2] += tp[i + 2]; }
+        const head = top.map((v) => Math.round(v / w)).join(' ');
         if (rgb !== last) { root.style.backgroundColor = rgb; last = rgb; }
+        if (head !== lastHead) { root.style.setProperty('--cc-live-top', head); lastHead = head; }
     };
     if (calm) { current = target; draw(0); paintRoot(); window.addEventListener('scroll', () => { draw(0); paintRoot(); }, { passive: true }); return; }
     let frame = 0;

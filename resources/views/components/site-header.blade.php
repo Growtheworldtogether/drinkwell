@@ -36,5 +36,10 @@
                 <a href="{{ route('register') }}" class="af-btn af-btn-black cc-sheet-cta">Get started</a>
             @endauth
         </x-menu-sheet>
+        @auth
+            <a href="{{ route('dashboard') }}" class="cc-nav-acct" aria-label="Dashboard"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg></a>
+        @else
+            <a href="{{ route('login') }}" class="cc-nav-acct" aria-label="Sign in"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg></a>
+        @endauth
     </div>
 </header>

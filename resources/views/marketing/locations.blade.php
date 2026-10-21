@@ -6,12 +6,9 @@
         </div>
     </section>
 
-    <section class="cc-section" data-bg="gray">
+    <section class="cc-section cc-center" data-bg="cream">
         <div class="cc-wrap">
-            <div class="cc-prose" data-reveal>
-                <p>A drink machine earns the most where people have a few minutes to spare and a thirst to match. That is why every machine stands in a hospital, a train station or an airport.</p>
-                <p>When you are paired, your dashboard shows the exact place your machine stands, and you can find it on the map below.</p>
-            </div>
+            <p class="cc-statement" data-reveal>People wait in hospitals, train stations and airports, and that is where your machine stands.</p>
         </div>
     </section>
 

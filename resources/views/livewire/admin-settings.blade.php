@@ -6,7 +6,7 @@
     <div class="cc-panel"><form wire:submit="saveSender" class="cc-form">
         <h2>Email sender</h2>
         <x-cc.field name="senderName" id="set-sender-name" label="Sender name" wire:model="senderName" maxlength="60" :help="'The name people see in their inbox. Leave empty to use the platform name ('.$platform_name.'). The address ('.$sender_address.') is set on the server and does not change here.'" />
-        <div class="cc-step-nav"><button type="submit" class="af-btn af-btn-black">Save</button></div>
+        <div class="cc-step-nav cc-btns is-fit"><button type="submit" class="af-btn af-btn-black">Save</button></div>
     </form></div>
 
     <div class="cc-panel"><form wire:submit="saveNotify" class="cc-form">
@@ -21,7 +21,7 @@
                 @endif
             </div>
         @endforeach
-        <div class="cc-step-nav"><button type="submit" class="af-btn af-btn-black">Save</button></div>
+        <div class="cc-step-nav cc-btns is-fit"><button type="submit" class="af-btn af-btn-black">Save</button></div>
     </form></div>
 
     <div class="cc-panel">

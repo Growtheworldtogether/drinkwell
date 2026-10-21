@@ -39,12 +39,12 @@
                                     <div class="cc-kv"><dt>File</dt><dd>{{ $req->proof_name ?: 'No file attached' }}</dd></div>
                                 </dl>
                                 @if ($req->proof_path)
-                                    <div class="cc-step-nav"><a class="af-btn cc-btn-outline" href="{{ route('admin.pairings.proof', $req) }}" target="_blank" rel="noopener">Open the file</a></div>
+                                    <div class="cc-step-nav cc-btns is-fit"><a class="af-btn cc-btn-outline" href="{{ route('admin.pairings.proof', $req) }}" target="_blank" rel="noopener">Open the file</a></div>
                                 @endif
                             </div>
                         @endif
                         @if ($pending)
-                            <div class="cc-step-nav" style="margin-bottom:12px"><form method="POST" action="{{ route('admin.ownerships.confirm', $own) }}">@csrf<button type="submit" class="af-btn af-btn-black" style="width:auto">Confirm deposit</button></form></div>
+                            <div class="cc-step-nav cc-btns is-fit" style="margin-bottom:12px"><form method="POST" action="{{ route('admin.ownerships.confirm', $own) }}">@csrf<button type="submit" class="af-btn af-btn-black" style="width:auto">Confirm deposit</button></form></div>
                         @endif
                         @include('admin._pairing-form', ['req' => $req, 'action' => route('admin.pairings.update', $req), 'method' => 'PUT', 'submit' => 'Save changes and email the member'])
                     </details>
@@ -65,9 +65,9 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="btns">
+                    <div class="btns cc-btns">
                         <button type="submit" name="do" value="advance" class="af-btn af-btn-black">Fast-forward 24 hours</button>
-                        <button type="submit" name="do" value="burst" class="af-btn cc-btn-outline">Sales burst ({{ config('drinkwell.sales_burst_units') }} drinks)</button>
+                        <button type="submit" name="do" value="burst" class="af-btn cc-btn-outline">Sales burst</button>
                         <button type="submit" name="do" value="restock" class="af-btn cc-btn-outline">Driver restock</button>
                     </div>
                 </form>

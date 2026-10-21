@@ -1217,4 +1217,33 @@
     .cc-pactions .af-btn { white-space: normal; text-align: center; }
     @media (max-width: 479px) { .cc-pactions { width: 100%; } .cc-pactions .af-btn { flex: 1 1 140px; } }
     .cc-wmain .cc-tone { font-size: 16px; }
+
+    /* Equal-width button groups: every button in the group is the same width and height. */
+    .cc-btns { display: grid; gap: 12px; grid-template-columns: minmax(0, 1fr); align-items: stretch; width: 100%; }
+    .cc-btns > * { min-width: 0; margin: 0; }
+    .cc-btns .af-btn, .cc-btns button.af-btn { width: 100%; min-height: 56px; padding-inline: 16px; font-size: 17px; white-space: normal; text-align: center; }
+    @media (min-width: 600px) {
+        .cc-btns { grid-auto-flow: column; grid-template-columns: none; grid-auto-columns: minmax(0, 230px); justify-content: start; width: auto; }
+    }
+    .cc-pactions.cc-btns { width: auto; }
+    @media (max-width: 599px) { .cc-pactions.cc-btns { width: 100%; } }
+    .cc-demo .btns.cc-btns { display: grid; }
+    .cc-demo .btns.cc-btns .af-btn { min-height: 56px; font-size: 17px; }
+    /* Equal to the widest label in the group, never wrapping, so no button is taller or narrower than its neighbours. */
+    @media (min-width: 600px) {
+        .cc-btns, .cc-demo .btns.cc-btns, .cc-pactions.cc-btns { display: inline-grid; grid-auto-flow: column; grid-template-columns: none; grid-auto-columns: 1fr; width: max-content; max-width: 100%; justify-content: start; }
+        .cc-btns .af-btn { white-space: nowrap; padding-inline: 28px; }
+    }
+    .cc-btns .af-btn { white-space: nowrap; }
+    @media (max-width: 599px) { .cc-btns .af-btn { white-space: normal; } }
+    /* Three buttons need a wide row. Below that they stack, each the same width. */
+    @media (min-width: 600px) and (max-width: 1279px) {
+        .cc-btns:has(> :nth-child(3)), .cc-demo .btns.cc-btns:has(> :nth-child(3)) { grid-auto-flow: row; grid-auto-columns: auto; grid-template-columns: minmax(0, 300px); width: 100%; }
+    }
+    /* Buttons inside a narrow form column: same width each, wrap instead of overflowing. */
+    .cc-btns.is-fit, .cc-demo .btns.cc-btns.is-fit { display: grid; grid-auto-flow: row; grid-auto-columns: auto; grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); width: 100%; max-width: 560px; }
+    /* Money figures stay on one line and scale with the tile. */
+    .cc-kpi { container-type: inline-size; }
+    .cc-kpi b { white-space: nowrap; font-size: clamp(22px, 12cqw, 46px); }
+    .cc-hero-amount, .cc-hero b { white-space: nowrap; }
 }

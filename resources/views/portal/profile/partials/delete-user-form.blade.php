@@ -8,7 +8,7 @@
 
     <div x-show="open" x-cloak class="cc-form">
         <x-cc.field name="password" label="Your password" type="password" id="delete_password" help="Enter your password to confirm." :error="$errors->userDeletion->first('password') ?: null" autocomplete="current-password" />
-        <div class="cc-step-nav">
+        <div class="cc-step-nav cc-btns is-fit">
             <button type="submit" class="af-btn cc-bad" style="width:auto">Yes, delete my account</button>
             <button type="button" class="af-btn cc-btn-outline" style="width:auto" x-on:click="open = false">Cancel</button>
         </div>

@@ -92,7 +92,7 @@
                     <p class="cc-hint" style="margin:0"><a href="{{ route('terms') }}" target="_blank" rel="noopener" style="font-weight:700;text-decoration:underline">Terms</a> and <a href="{{ route('privacy') }}" target="_blank" rel="noopener" style="font-weight:700;text-decoration:underline">privacy</a> open in a new tab.</p>
                 @endif
 
-                <div class="cc-step-nav">
+                <div class="cc-step-nav cc-btns is-fit">
                     @if ($step > 1)
                         <button type="button" class="af-btn cc-btn-outline" wire:click="back">Back</button>
                     @endif

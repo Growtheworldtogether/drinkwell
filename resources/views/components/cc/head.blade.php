@@ -7,6 +7,6 @@
         @if ($lead)<p class="cc-plead">{{ $lead }}</p>@endif
     </div>
     @if (trim((string) $slot) !== '')
-        <div class="cc-pactions">{{ $slot }}</div>
+        <div class="cc-pactions cc-btns">{{ $slot }}</div>
     @endif
 </header>

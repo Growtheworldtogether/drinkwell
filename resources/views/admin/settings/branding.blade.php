@@ -32,7 +32,7 @@
                 <label class="cc-check"><input type="checkbox" name="remove_favicon" value="1" x-model="removeFavicon" x-on:change="if (removeFavicon) favicon = null"><span>Remove this favicon</span></label>
             </div>
 
-            <div class="cc-step-nav">
+            <div class="cc-step-nav cc-btns is-fit">
                 <button type="submit" class="af-btn af-btn-black">Save changes</button>
                 <a class="af-btn cc-btn-outline" href="{{ route('admin.settings.branding') }}">Discard</a>
             </div>
@@ -84,7 +84,7 @@
         <form method="POST" action="{{ route('admin.settings.branding.reset') }}" x-data="{ open: false }">
             @csrf
             <button type="button" class="af-btn cc-bad" style="width:auto" x-show="!open" x-on:click="open = true">Reset to defaults</button>
-            <div x-show="open" x-cloak class="cc-step-nav">
+            <div x-show="open" x-cloak class="cc-step-nav cc-btns is-fit">
                 <button type="submit" class="af-btn cc-bad">Yes, reset it</button>
                 <button type="button" class="af-btn cc-btn-outline" x-on:click="open = false">Cancel</button>
             </div>

@@ -22,7 +22,7 @@
                     <form method="POST" action="{{ route('hub.withdraw.confirm', $awaiting) }}" class="cc-form">
                         @csrf
                         <x-cc.otp name="code" label="Your code" />
-                        <div class="cc-step-nav">
+                        <div class="cc-step-nav cc-btns is-fit">
                             <button type="submit" class="af-btn af-btn-black">Confirm withdrawal</button>
                         </div>
                     </form>
@@ -42,7 +42,7 @@
                     <form method="POST" action="{{ route('hub.withdraw.request') }}" class="cc-form" x-data="{ amount: @js(old('amount', '')) }">
                         @csrf
                         <x-cc.field name="amount" label="Amount in dollars" inputmode="decimal" autocomplete="off" placeholder="{{ number_format($min / 100, 2) }}" x-model="amount" :help="'You can take out up to '.$fmt($available).'.'" />
-                        <div class="cc-step-nav">
+                        <div class="cc-btns is-fit">
                             <button type="submit" class="af-btn af-btn-black" @disabled($available < $min)>Send me a code</button>
                             <button type="button" class="af-btn cc-btn-outline" x-on:click="amount = '{{ number_format($available / 100, 2, '.', '') }}'" @disabled($available < $min)>Withdraw everything</button>
                         </div>

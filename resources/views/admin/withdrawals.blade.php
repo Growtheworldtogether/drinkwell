@@ -59,7 +59,7 @@
                 <form method="POST" action="{{ route('admin.withdrawals.toggle') }}" class="cc-demo-form">
                     @csrf
                     <input type="hidden" name="enabled" value="{{ $enabled ? 0 : 1 }}">
-                    <div class="btns">
+                    <div class="btns cc-btns is-fit">
                         <button type="submit" class="af-btn {{ $enabled ? 'cc-btn-outline' : 'af-btn-black' }}">{{ $enabled ? 'Pause new withdrawals' : 'Turn withdrawals back on' }}</button>
                     </div>
                     <span class="cc-hint">Now: {{ $enabled ? 'on' : 'paused' }}. Requests already waiting are not affected.</span>

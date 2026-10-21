@@ -25,6 +25,7 @@ class MachinesController extends Controller
 
         return view('admin.overview', [
             'waiting' => \App\Models\PairingRequest::query()->where('status', 'finding')->count(),
+            'withdrawals' => \App\Models\Withdrawal::query()->where('status', 'pending')->count(),
             'machines' => VendingMachine::query()->count(),
             'open' => VendingMachine::query()->where('assignment_status', AssignmentStatus::Open)->count(),
             'pending' => MachineOwnership::query()->with('user', 'machine')->where('settlement_status', SettlementStatus::PendingSettlement)->latest('id')->limit(10)->get(),

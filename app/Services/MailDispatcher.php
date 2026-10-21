@@ -60,6 +60,7 @@ class MailDispatcher
     public const ADMIN_TOPICS = [
         'application' => ['label' => 'New co-partner paired', 'help' => 'A senior finished onboarding and was paired with a machine.'],
         'funding' => ['label' => 'Partner reports a deposit', 'help' => 'A co-partner says they sent their deposit and it waits for confirmation.'],
+        'withdrawal' => ['label' => 'Withdrawal requested', 'help' => 'A co-partner confirmed a withdrawal and it waits for approval.'],
         'security' => ['label' => 'Administrator sign-in locked', 'help' => 'Someone kept guessing an administrator password. Keep this on.'],
     ];
 

@@ -11,6 +11,7 @@
         <x-stat-strip>
             <x-stat label="Machines" :value="$machines" :note="$open.' open'" />
             <x-stat label="Waiting for a partner" :value="$waiting" />
+            <x-stat label="Withdrawals waiting" :value="$withdrawals" />
             <x-stat label="Co-partners" :value="$partners" />
             <x-stat label="Paid out" :cents="$paid_cents" />
             <x-stat label="Simulated emails" :value="$simulated_mail" note="logged, never sent" />

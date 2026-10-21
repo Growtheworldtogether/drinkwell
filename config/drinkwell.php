@@ -30,6 +30,10 @@ return [
     'unit_price_cents' => 225,
     'min_age' => 51,
 
+    // Smallest withdrawal, in cents, and how many business days the console promises to review one in.
+    'withdrawal_min_cents' => 5_000,
+    'withdrawal_review_days' => 2,
+
     /*
     | The two products. Money is integer cents. The fee is drawn per machine and day inside the band
     | (center +/- spread), and the pool is kept even so the 50/50 split is exact.
@@ -75,6 +79,9 @@ return [
         'notify.application.email' => '',
         'notify.funding.enabled' => true,
         'notify.funding.email' => '',
+        'notify.withdrawal.enabled' => true,
+        'notify.withdrawal.email' => '',
+        'withdrawals.enabled' => true,
         'notify.security.enabled' => true,
         'notify.security.email' => '',
         'demo.pairing_delay_note' => true,

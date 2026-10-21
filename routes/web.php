@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\BrandingController;
 use App\Http\Controllers\Admin\MachinesController;
 use App\Http\Controllers\Admin\PairingsController;
 use App\Http\Controllers\Admin\RecordsController;
+use App\Http\Controllers\Admin\WithdrawalsController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\HubController;
 use App\Http\Controllers\OnboardController;
@@ -12,6 +13,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PublicFeedController;
 use App\Http\Controllers\SimulationController;
 use App\Http\Controllers\TileController;
+use App\Http\Controllers\WithdrawController;
 use App\Livewire\OnboardingWizard;
 use Illuminate\Support\Facades\Route;
 
@@ -53,6 +55,11 @@ Route::middleware(['auth', 'active', 'verified.otp', 'role:partner'])->prefix('h
     Route::get('/dashboard', [HubController::class, 'dashboard'])->name('dashboard');
     Route::get('/telemetry', [HubController::class, 'telemetry'])->middleware('throttle:telemetry')->name('telemetry');
     Route::get('/ledger.csv', [HubController::class, 'ledgerCsv'])->name('ledger.csv');
+    Route::get('/withdraw', [WithdrawController::class, 'index'])->name('withdraw');
+    Route::post('/withdraw', [WithdrawController::class, 'request'])->middleware('throttle:sim')->name('withdraw.request');
+    Route::post('/withdraw/{withdrawal}/confirm', [WithdrawController::class, 'confirm'])->name('withdraw.confirm');
+    Route::post('/withdraw/{withdrawal}/resend', [WithdrawController::class, 'resend'])->name('withdraw.resend');
+    Route::delete('/withdraw/{withdrawal}', [WithdrawController::class, 'cancel'])->name('withdraw.cancel');
 });
 
 // Simulation commands: the owner of the machine, or an administrator.
@@ -72,6 +79,10 @@ Route::middleware(['admin.ip', 'auth', 'active', 'role:admin', 'admin.idle', 'th
     Route::post('/pairings/{pairing}/assign', [PairingsController::class, 'assign'])->name('pairings.assign');
     Route::put('/pairings/{pairing}', [PairingsController::class, 'update'])->name('pairings.update');
     Route::get('/pairings/{pairing}/proof', [PairingsController::class, 'proof'])->name('pairings.proof');
+    Route::get('/withdrawals', [WithdrawalsController::class, 'index'])->name('withdrawals');
+    Route::post('/withdrawals/toggle', [WithdrawalsController::class, 'toggle'])->name('withdrawals.toggle');
+    Route::post('/withdrawals/{withdrawal}/approve', [WithdrawalsController::class, 'approve'])->name('withdrawals.approve');
+    Route::post('/withdrawals/{withdrawal}/reject', [WithdrawalsController::class, 'reject'])->name('withdrawals.reject');
     Route::post('/demo', [PairingsController::class, 'demo'])->name('demo')->middleware('throttle:sim');
     Route::post('/ownerships/{ownership}/confirm', [$m, 'confirmDeposit'])->name('ownerships.confirm');
 

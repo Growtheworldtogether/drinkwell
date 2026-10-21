@@ -3,9 +3,10 @@
     $user = auth()->user();
     $sheetLink = 'flex min-h-12 items-center text-body text-af-ink hover:underline';
     $links = $mode === 'admin'
-        ? [['admin.overview', 'Overview'], ['admin.pairings', 'Pairings'], ['admin.machines', 'Machines'], ['admin.settings', 'Settings'], ['admin.audit', 'Audit log']]
+        ? [['admin.overview', 'Overview'], ['admin.pairings', 'Pairings'], ['admin.withdrawals', 'Withdrawals'], ['admin.machines', 'Machines'], ['admin.settings', 'Settings'], ['admin.audit', 'Audit log']]
         : array_values(array_filter([
             $user?->role === \App\Enums\Role::Partner ? ['hub.dashboard', 'Dashboard'] : null,
+            $user?->role === \App\Enums\Role::Partner ? ['hub.withdraw', 'Withdraw'] : null,
             ['onboard.status', 'Pairing and deposit'],
             ['profile.edit', 'Profile'],
         ]));

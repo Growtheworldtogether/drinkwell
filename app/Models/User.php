@@ -100,6 +100,12 @@ class User extends Authenticatable
         return $this->hasMany(PayoutAccount::class);
     }
 
+    /** @return HasMany<Withdrawal, $this> */
+    public function withdrawals(): HasMany
+    {
+        return $this->hasMany(Withdrawal::class);
+    }
+
     /** @return HasMany<DailyDistribution, $this> */
     public function distributions(): HasMany
     {

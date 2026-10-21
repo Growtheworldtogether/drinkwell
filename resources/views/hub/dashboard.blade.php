@@ -21,6 +21,14 @@
                 <div class="cc-tile"><small>Machine clock</small><b data-bind="clock">{{ $snap['clock'] }}</b><span data-bind="date">{{ $snap['date'] }}</span></div>
             </div>
 
+            <div class="cc-panel cc-cash">
+                <div>
+                    <small>Available to withdraw</small>
+                    <b>{{ $fmt($available) }}</b>
+                </div>
+                <a class="af-btn af-btn-black" href="{{ route('hub.withdraw') }}">Withdraw</a>
+            </div>
+
             <div class="cc-dgrid">
                 <div class="cc-panel">
                     <h2>Live inventory</h2>

@@ -31,15 +31,15 @@
             <p>After you send your deposit, upload a photo or PDF of your receipt. It helps {{ $first }} confirm faster.</p>
         @endif
 
-        <form method="POST" action="{{ route('onboard.report') }}" enctype="multipart/form-data" class="cc-form">
+        <form method="POST" action="{{ route('onboard.report') }}" enctype="multipart/form-data" class="cc-form" x-data="{ name: '' }">
             @csrf
             <div class="cc-field">
                 <label for="proof-file">{{ $req->proof_path ? 'Replace your receipt' : 'Your receipt' }} (photo or PDF, up to 5 MB)</label>
                 <label class="cc-upload" for="proof-file">
                     <b>Choose a photo or PDF</b><span>A picture of your receipt or bank confirmation</span>
-                    <input id="proof-file" type="file" name="proof" accept="image/*,application/pdf" onchange="var o=document.getElementById('proof-name');o.hidden=!this.files[0];o.textContent=this.files[0]?'Attached: '+this.files[0].name:''">
+                    <input id="proof-file" type="file" name="proof" accept="image/*,application/pdf" x-on:change="name = $event.target.files[0]?.name ?? ''">
                 </label>
-                <div class="cc-file" id="proof-name" hidden></div>
+                <div class="cc-file" x-show="name" x-cloak x-text="'Attached: ' + name"></div>
                 @error('proof')<p class="cc-error" role="alert">{{ $message }}</p>@enderror
             </div>
             <div class="cc-two">

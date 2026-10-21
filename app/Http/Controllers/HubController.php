@@ -29,6 +29,7 @@ class HubController extends Controller
 
         return view('hub.dashboard', [
             'deposit' => $deposit,
+            'available' => app(\App\Services\WithdrawalService::class)->balance($user),
             'snap' => $this->view->snapshot($machine, $user),
             'machine' => $machine,
             'ledger' => $rows,

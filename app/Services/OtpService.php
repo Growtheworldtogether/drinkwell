@@ -7,6 +7,7 @@ use App\Exceptions\MailSendFailed;
 use App\Exceptions\OtpException;
 use App\Mail\BrandedMail;
 use App\Mail\OtpResetPassword;
+use App\Mail\OtpWithdrawal;
 use App\Mail\OtpVerifyEmail;
 use App\Models\OtpCode;
 use Illuminate\Support\Str;
@@ -188,6 +189,7 @@ class OtpService
         return match ($purpose) {
             OtpPurpose::VerifyEmail => new OtpVerifyEmail($code, self::TTL_MINUTES),
             OtpPurpose::ResetPassword => new OtpResetPassword($code, self::TTL_MINUTES),
+            OtpPurpose::Withdrawal => new OtpWithdrawal($code, (int) ($context['amount_cents'] ?? 0), self::TTL_MINUTES),
         };
     }
 }

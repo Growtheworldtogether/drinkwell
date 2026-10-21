@@ -55,8 +55,9 @@
     }
 
     /* The glass sits on a pseudo-element so the header itself never becomes a containing block for the full-screen menu. */
-    .cc-nav::before { content: ""; position: absolute; inset: 0 0 -18px 0; z-index: -1; opacity: 0; pointer-events: none; background: rgba(255, 255, 255, 0.06); -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px); -webkit-mask-image: linear-gradient(to bottom, #000 62%, transparent); mask-image: linear-gradient(to bottom, #000 62%, transparent); transition: opacity 0.4s ease; }
+    .cc-nav::before { content: ""; position: absolute; inset: 0; z-index: -1; opacity: 0; background: rgba(255, 255, 255, 0.5); -webkit-backdrop-filter: blur(32px) saturate(180%); backdrop-filter: blur(32px) saturate(180%); border-radius: 0 0 24px 24px; box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1); transition: opacity 0.4s ease, background-color 0.4s ease; pointer-events: none; }
     .cc-nav.is-scrolled::before { opacity: 1; }
+    .cc-nav.is-scrolled:hover::before { background: #f2f2f2; }
 
     .cc-nav-in {
         display: flex;
@@ -1319,10 +1320,9 @@
     }
     /* The page background always reaches the real bottom edge of the screen on phones, with a soft blur along the very bottom. */
     .cc-mesh { height: 100lvh; min-height: 100%; }
-    html { background: #f3f3f3; }
+    html { background: #f7723a; }
     @media (max-width: 899px) {
-        body.cc-page::after { content: ""; position: fixed; inset: auto 0 0 0; z-index: 29; height: calc(110px + env(safe-area-inset-bottom)); pointer-events: none; opacity: 0; transition: opacity 0.5s ease; background: linear-gradient(to top, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.3) 50%, rgba(255, 255, 255, 0)); -webkit-backdrop-filter: blur(22px) saturate(1.2) brightness(1.12); backdrop-filter: blur(22px) saturate(1.2) brightness(1.12); -webkit-mask-image: linear-gradient(to top, #000 55%, transparent); mask-image: linear-gradient(to top, #000 55%, transparent); }
-        body.cc-page.cc-scrolled::after { opacity: 1; }
+        body.cc-page::after { content: ""; position: fixed; inset: auto 0 0 0; z-index: 30; height: calc(34px + env(safe-area-inset-bottom)); pointer-events: none; background: linear-gradient(to top, rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0)); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); -webkit-mask-image: linear-gradient(to top, #000, transparent); mask-image: linear-gradient(to top, #000, transparent); }
     }
     body.cc-noscroll.cc-page::after { display: none; }
 

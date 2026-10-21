@@ -24,8 +24,6 @@ function initMesh(calm) {
         let name = 'gray';
         sections.forEach((el) => { const r = el.getBoundingClientRect(); if (r.top <= mid && r.bottom > mid) name = el.dataset.bg; });
         target = (mesh[name] || mesh.gray).map(hexToRgb);
-        const meta = document.querySelector('meta[name="theme-color"]');
-        if (meta) meta.setAttribute('content', (mesh[name] || mesh.gray)[0]);
     };
     window.addEventListener('scroll', pick, { passive: true });
     pick();
@@ -134,10 +132,7 @@ export function initPublicFx() {
     // Header: floats as a pill at the top, becomes a full-width bar once the page has scrolled.
     const bar = document.querySelector('.cc-nav');
     if (bar) {
-        const mark = () => {
-            bar.classList.toggle('is-scrolled', window.scrollY > 10);
-            document.body.classList.toggle('cc-scrolled', window.scrollY > 10);
-        };
+        const mark = () => bar.classList.toggle('is-scrolled', window.scrollY > 10);
         window.addEventListener('scroll', mark, { passive: true });
         mark();
     }

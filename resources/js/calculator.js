@@ -28,6 +28,18 @@ export default function yieldCalculator(tiers) {
         get payback() { return paybackDay(this.t.share, this.t.stake); },
         get paybackExact() { return (this.t.stake / this.t.share).toFixed(1); },
         money,
+        repeat: null,
+        get netLabel() { return this.net >= 0 ? 'Left after deposit' : 'Still to earn back'; },
+        get netShown() { return money(Math.abs(this.net)); },
+        get fill() { return ((this.days - 1) / 59) * 100; },
+        step(d) { this.days = Math.min(60, Math.max(1, Number(this.days) + d)); },
+        // Press and hold keeps counting, so 1 to 60 days does not take 59 taps.
+        hold(d) {
+            this.release();
+            this.step(d);
+            this.repeat = setTimeout(() => { this.repeat = setInterval(() => this.step(d), 90); }, 400);
+        },
+        release() { clearTimeout(this.repeat); clearInterval(this.repeat); this.repeat = null; },
         init() {
             this.$watch('tier', () => this.draw());
             this.$watch('days', () => this.draw());

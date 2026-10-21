@@ -14,11 +14,11 @@
 
         <p class="cc-calc-legend" id="calc-days-label">2. Choose the number of days</p>
         <div class="cc-calc-days">
-            <button type="button" class="cc-calc-step" aria-label="One day less" x-on:click="days = Math.max(1, days - 1)">-</button>
+            <button type="button" class="cc-calc-step" aria-label="One day less" x-on:pointerdown.prevent="hold(-1)" x-on:pointerup="release()" x-on:pointerleave="release()" x-on:pointercancel="release()" x-on:click="if ($event.detail === 0) step(-1)">-</button>
             <output aria-labelledby="calc-days-label"><b x-text="days"></b> <span>days</span></output>
-            <button type="button" class="cc-calc-step" aria-label="One day more" x-on:click="days = Math.min(60, days + 1)">+</button>
+            <button type="button" class="cc-calc-step" aria-label="One day more" x-on:pointerdown.prevent="hold(1)" x-on:pointerup="release()" x-on:pointerleave="release()" x-on:pointercancel="release()" x-on:click="if ($event.detail === 0) step(1)">+</button>
         </div>
-        <input id="calc-days" class="cc-calc-range" type="range" min="1" max="60" step="1" x-model.number="days" aria-labelledby="calc-days-label">
+        <input id="calc-days" class="cc-calc-range" type="range" min="1" max="60" step="1" x-model.number="days" x-bind:style="`--fill: ${fill}%`" aria-labelledby="calc-days-label">
         <div class="cc-calc-scale"><span>1</span><span>30</span><span>60</span></div>
     </div>
 
@@ -27,7 +27,7 @@
             <div class="cc-calc-tile is-coral"><small>Your share a day</small><b x-text="money(t.share)"></b></div>
             <div class="cc-calc-tile is-mint"><small>Earned in <span x-text="days"></span> days</small><b x-text="money(total)"></b></div>
             <div class="cc-calc-tile is-amber"><small>Your deposit</small><b x-text="money(t.stake)"></b></div>
-            <div class="cc-calc-tile is-cream"><small>Left after deposit</small><b x-text="money(net)"></b></div>
+            <div class="cc-calc-tile is-cream"><small x-text="netLabel">Left after deposit</small><b x-text="netShown"></b></div>
         </div>
         <p class="cc-calc-back">Your deposit is back in about <b x-text="paybackExact"></b> days.</p>
         <p class="cc-calc-legend">Total paid to you, day by day</p>

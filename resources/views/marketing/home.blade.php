@@ -29,18 +29,10 @@
         </div>
     </section>
 
-    <section class="cc-section cc-center" data-bg="gray">
+    <section class="cc-section cc-center" data-bg="amber">
         <div class="cc-wrap">
-            <h2 class="cc-huge" data-reveal><span>Why people</span><span>co-own</span></h2>
-        </div>
-        <div class="cc-cardrow-wrap"><div class="cc-cardrow" data-drag>
-            <article data-reveal><h3>No work on your side</h3><p>The machine is stocked, cleaned and settled for you. You only watch the numbers.</p></article>
-            <article data-reveal><h3>A partner shares the risk</h3><p>You never carry a machine alone. The cost and the earnings are split evenly.</p></article>
-            <article data-reveal><h3>Every cent shown</h3><p>Sales, fee, pool and payout are listed for every day, and you can download them.</p></article>
-            <article data-reveal><h3>Open to {{ config('drinkwell.min_age') }}+</h3><p>Every co-partner is aged {{ config('drinkwell.min_age') }} or over, and each machine has exactly two owners.</p></article>
-        </div></div>
-        <div class="cc-wrap">
-            <div class="cc-btn-row" data-reveal><a class="af-btn af-btn-black" href="{{ route('program') }}">See how it works</a></div>
+            <p class="cc-statement" data-reveal>You share the machine, the cost and the daily payout with one partner, and every cent is shown.</p>
+            <div class="cc-btn-row" data-reveal><a class="af-btn af-btn-black" href="{{ route('about') }}">Why co-own with us</a></div>
         </div>
     </section>
 

@@ -14,9 +14,9 @@
         <div class="cc-wrap">
             <h2 class="cc-huge" data-reveal><span>Start in</span><span>three steps</span></h2>
             <ol class="cc-cards3">
-                <li class="cc-card cc-card-1" data-reveal><div class="cc-photo" aria-hidden="true"><span>Photo</span></div><div class="cc-card-body"><span class="cc-num">1</span><h3>Pairing</h3><p>Sign up, verify your email and give your date of birth. Co-partners are {{ config('drinkwell.min_age') }} or older. We then find you a co-partner and a machine, usually within 1 business day.</p></div></li>
-                <li class="cc-card cc-card-2" data-reveal><div class="cc-photo" aria-hidden="true"><span>Photo</span></div><div class="cc-card-body"><span class="cc-num">2</span><h3>Deposit</h3><p>You are buying half of a machine your co-partner already owns, so you pay them directly. Upload your proof of payment and we confirm it.</p></div></li>
-                <li class="cc-card cc-card-3" data-reveal><div class="cc-photo" aria-hidden="true"><span>Photo</span></div><div class="cc-card-body"><span class="cc-num">3</span><h3>Payouts</h3><p>From then on, every day's earnings are split 50/50 and added to your balance.</p></div></li>
+                <li class="cc-card cc-card-1" data-reveal><div class="cc-photo" aria-hidden="true"><img src="{{ asset('images/how/step-1.jpg') }}" alt="" loading="lazy" decoding="async"></div><div class="cc-card-body"><span class="cc-num">1</span><h3>Pairing</h3><p>Sign up, verify your email and give your date of birth. Co-partners are {{ config('drinkwell.min_age') }} or older. We then find you a co-partner and a machine, usually within 1 business day.</p></div></li>
+                <li class="cc-card cc-card-2" data-reveal><div class="cc-photo" aria-hidden="true"><img src="{{ asset('images/how/step-2.jpg') }}" alt="" loading="lazy" decoding="async"></div><div class="cc-card-body"><span class="cc-num">2</span><h3>Deposit</h3><p>You are buying half of a machine your co-partner already owns, so you pay them directly. Upload your proof of payment and we confirm it.</p></div></li>
+                <li class="cc-card cc-card-3" data-reveal><div class="cc-photo" aria-hidden="true"><img src="{{ asset('images/how/step-3.jpg') }}" alt="" loading="lazy" decoding="async"></div><div class="cc-card-body"><span class="cc-num">3</span><h3>Payouts</h3><p>From then on, every day's earnings are split 50/50 and added to your balance.</p></div></li>
             </ol>
         </div>
     </section>
@@ -48,7 +48,7 @@
         <div class="cc-wrap">
             <h2 class="cc-huge" data-reveal><span>Paying your</span><span>co-partner</span></h2>
             <article class="cc-feature" data-reveal>
-                <div class="cc-feature-photo" aria-hidden="true"><div class="cc-photo" aria-hidden="true"><span>Photo</span></div></div>
+                <div class="cc-feature-photo" aria-hidden="true"><div class="cc-photo" aria-hidden="true"><img src="{{ asset('images/how/deposit.jpg') }}" alt="" loading="lazy" decoding="async"></div></div>
                 <div>
                     <h3>Your deposit goes to your co-partner, never to us</h3>
                     <ul class="cc-points">
@@ -67,8 +67,8 @@
             <h2 class="cc-huge" data-reveal><span>A day with</span><span>your machine</span></h2>
             <p class="cc-lead" data-reveal>Every drink is {{ $fmt(config('drinkwell.unit_price_cents')) }}, and the machine sells out every day.</p>
             <div class="cc-big-cards">
-                <article class="cc-big-card" data-reveal><div class="cc-photo" aria-hidden="true"><span>Photo</span></div><div class="cc-big-body"><h3>Restocked overnight, open at 06:00</h3><p>A driver refills it every night, so it is full again by morning.</p></div></article>
-                <article class="cc-big-card" data-reveal><div class="cc-photo" aria-hidden="true"><span>Photo</span></div><div class="cc-big-body"><h3>Sold out by midnight, settled by morning</h3><p>Sales peak at lunch. At night the sales are counted, the fee comes off, and your share is added to your balance.</p></div></article>
+                <article class="cc-big-card" data-reveal><div class="cc-photo" aria-hidden="true"><img src="{{ asset('images/how/day-morning.jpg') }}" alt="" loading="lazy" decoding="async"></div><div class="cc-big-body"><h3>Restocked overnight, open at 06:00</h3><p>A driver refills it every night, so it is full again by morning.</p></div></article>
+                <article class="cc-big-card" data-reveal><div class="cc-photo" aria-hidden="true"><img src="{{ asset('images/how/day-night.jpg') }}" alt="" loading="lazy" decoding="async"></div><div class="cc-big-body"><h3>Sold out by midnight, settled by morning</h3><p>Sales peak at lunch. At night the sales are counted, the fee comes off, and your share is added to your balance.</p></div></article>
             </div>
         </div>
     </section>
@@ -92,9 +92,9 @@
         <div class="cc-wrap">
             <h2 class="cc-huge" data-reveal><span>Then your</span><span>money starts</span><span>to move</span></h2>
             <ol class="cc-cards3">
-                <li class="cc-card cc-card-1" data-reveal><div class="cc-photo" aria-hidden="true"><span>Photo</span></div><div class="cc-card-body"><h3>Added every night</h3><p>When the day closes, your half of the pool is added to your balance.</p></div></li>
-                <li class="cc-card cc-card-2" data-reveal><div class="cc-photo" aria-hidden="true"><span>Photo</span></div><div class="cc-card-body"><h3>Every day in your ledger</h3><p>Each day shows the sales, the fee and your share, to the cent, and you can download it.</p></div></li>
-                <li class="cc-card cc-card-3" data-reveal><div class="cc-photo" aria-hidden="true"><span>Photo</span></div><div class="cc-card-body"><h3>Take it out when you like</h3><p>Ask from your dashboard for {{ $fmt(config('drinkwell.withdrawal_min_cents')) }} or more, confirm with a code we email you, and we review it within {{ config('drinkwell.withdrawal_review_days') }} business days.</p></div></li>
+                <li class="cc-card cc-card-1" data-reveal><div class="cc-photo" aria-hidden="true"><img src="{{ asset('images/how/money-1.jpg') }}" alt="" loading="lazy" decoding="async"></div><div class="cc-card-body"><h3>Added every night</h3><p>When the day closes, your half of the pool is added to your balance.</p></div></li>
+                <li class="cc-card cc-card-2" data-reveal><div class="cc-photo" aria-hidden="true"><img src="{{ asset('images/how/money-2.jpg') }}" alt="" loading="lazy" decoding="async"></div><div class="cc-card-body"><h3>Every day in your ledger</h3><p>Each day shows the sales, the fee and your share, to the cent, and you can download it.</p></div></li>
+                <li class="cc-card cc-card-3" data-reveal><div class="cc-photo" aria-hidden="true"><img src="{{ asset('images/how/money-3.jpg') }}" alt="" loading="lazy" decoding="async"></div><div class="cc-card-body"><h3>Take it out when you like</h3><p>Ask from your dashboard for {{ $fmt(config('drinkwell.withdrawal_min_cents')) }} or more, confirm with a code we email you, and we review it within {{ config('drinkwell.withdrawal_review_days') }} business days.</p></div></li>
             </ol>
         </div>
     </section>

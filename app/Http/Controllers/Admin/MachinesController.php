@@ -32,6 +32,7 @@ class MachinesController extends Controller
             'paid_cents' => (int) DailyDistribution::query()->sum('payout_cents'),
             'partners' => User::query()->partners()->count(),
             'last_check' => $last,
+            'recent' => \App\Models\AdminAuditLog::query()->with('admin')->latest('id')->limit(6)->get(),
             'mailer' => config('mail.default'),
             'simulated_mail' => MailLog::query()->where('status', 'simulated')->count(),
         ]);

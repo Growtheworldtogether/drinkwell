@@ -1,16 +1,9 @@
 @php $fmt = fn (int $c) => \App\Support\Money::format($c); @endphp
-<x-app-layout title="Withdrawals" mode="admin">
-    <section class="cc-screen cc-adm" data-bg="gray" style="padding-top:120px">
-        <div class="cc-wrap">
-            @if (session('status'))
-                <x-cc.notice>{{ session('status') }}</x-cc.notice>
-            @endif
-            <h1 class="cc-title1" style="font-size:clamp(40px,6vw,88px);margin-bottom:28px">Withdrawals</h1>
-
-            <div class="cc-tiles cc-tiles-3">
-                <div class="cc-tile"><small>Waiting</small><b>{{ $counts['pending'] ?? 0 }}</b><span>{{ $fmt($pendingCents) }} in total</span></div>
-                <div class="cc-tile"><small>Approved</small><b>{{ $counts['approved'] ?? 0 }}</b><span>paid out</span></div>
-                <div class="cc-tile"><small>Review goal</small><b>{{ $target }} days</b><span>business days</span></div>
+<x-cc.adm title="Withdrawals" lead="Approve or decline withdrawal requests.">
+            <div class="cc-kpis cc-kpis-3" style="margin-bottom:16px">
+                <div class="cc-kpi is-coral"><small>Waiting</small><b>{{ $counts['pending'] ?? 0 }}</b><span>{{ $fmt($pendingCents) }} in total</span></div>
+                <div class="cc-kpi is-mint"><small>Approved</small><b>{{ $counts['approved'] ?? 0 }}</b><span>paid out</span></div>
+                <div class="cc-kpi is-amber"><small>Review goal</small><b>{{ $target }} days</b><span>business days</span></div>
             </div>
 
             <div class="cc-panel">
@@ -72,6 +65,4 @@
                     <span class="cc-hint">Now: {{ $enabled ? 'on' : 'paused' }}. Requests already waiting are not affected.</span>
                 </form>
             </div>
-        </div>
-    </section>
-</x-app-layout>
+</x-cc.adm>

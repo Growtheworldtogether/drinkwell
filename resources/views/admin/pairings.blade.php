@@ -1,14 +1,10 @@
-<x-app-layout title="Pairings" mode="admin">
-    <section class="cc-screen cc-adm" data-bg="gray" style="padding-top:120px">
-        <div class="cc-wrap">
-            @if (session('status'))
-                <x-cc.notice>{{ session('status') }}</x-cc.notice>
-            @endif
-            @if (session('sim_error'))
-                <x-cc.notice type="error">{{ session('sim_error') }}</x-cc.notice>
-            @endif
-            <h1 class="cc-title1" style="font-size:clamp(40px,6vw,88px);margin-bottom:28px">Pairings</h1>
-
+<x-cc.adm title="Pairings" lead="Pair each waiting member with a partner and enter the payment details they will see.">
+            @php $proofs = $paired->filter(fn ($r) => $r->deposit_reported_at && ($ownerships[$r->user_id] ?? null)?->settlement_status === \App\Enums\SettlementStatus::PendingSettlement)->count(); @endphp
+            <div class="cc-kpis cc-kpis-3" style="margin-bottom:16px">
+                <div class="cc-kpi is-coral"><small>Finding a partner</small><b>{{ $waiting->count() }}</b><span>waiting to be paired</span></div>
+                <div class="cc-kpi is-amber"><small>Deposits to confirm</small><b>{{ $proofs }}</b><span>members say they sent it</span></div>
+                <div class="cc-kpi is-mint"><small>Paired</small><b>{{ $paired->count() }}</b><span>members with a partner</span></div>
+            </div>
             <div class="cc-panel">
                 <h2>Finding a partner ({{ $waiting->count() }})</h2>
                 @forelse ($waiting as $req)
@@ -76,6 +72,4 @@
                     </div>
                 </form>
             </div>
-        </div>
-    </section>
-</x-app-layout>
+</x-cc.adm>

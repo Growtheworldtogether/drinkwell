@@ -1,20 +1,18 @@
 @php
     $fmt = fn (int $c) => \App\Support\Money::format($c);
-    $tier = \App\Enums\Tier::from($req->tier);
+    $tier = $req ? \App\Enums\Tier::from($req->tier) : ($machine?->tier ?? \App\Enums\Tier::Commercial);
     $pending = $mine && $mine->settlement_status === \App\Enums\SettlementStatus::PendingSettlement;
     $stage = ! $mine ? 1 : (! $pending ? 4 : ($req?->deposit_reported_at ? 3 : 2));
     $bg = ! $mine ? 'amber' : 'mint';
 @endphp
-<x-app-layout title="Your partner and deposit">
-    <section class="cc-screen" data-bg="{{ $bg }}">
-        <div class="cc-wrap" style="max-width:900px">
+<x-app-layout title="Partner and deposit" :bg="$bg">
+    <div>
             @if (session('status'))
                 <x-cc.notice>{{ session('status') }}</x-cc.notice>
             @endif
 
             @if (! $mine)
-                <h1 class="cc-title1" style="font-size:clamp(40px,7vw,96px)">Finding a partner</h1>
-                <p class="cc-lead" style="margin-bottom:28px">We are looking for a co-partner for your {{ $tier->label() }}. This usually takes <strong>1 business day</strong>. We will email you as soon as you are paired.</p>
+                <x-cc.head title="Finding a partner" eyebrow="Your request" :lead="'We are looking for a co-partner for your '.$tier->label().'. This usually takes 1 business day. We will email you as soon as you are paired.'" />
                 @include('onboard._progress', ['stage' => 1])
                 <div class="cc-panel">
                     <h2>Your request</h2>
@@ -26,8 +24,9 @@
                     </dl>
                 </div>
             @else
-                <h1 class="cc-title1" style="font-size:clamp(40px,7vw,96px)">{{ $pending ? 'You are paired' : 'You are all set' }}</h1>
-                <p class="cc-lead" style="margin-bottom:28px">Your co-partner is <strong>{{ $partner->name }}</strong>@if ($partner->profile?->city) in {{ $partner->profile->city }}@endif.</p>
+                <x-cc.head :title="$pending ? 'You are paired' : 'You are all set'" eyebrow="Your co-partner" :lead="$partner->name.($partner->profile?->city ? ' in '.$partner->profile->city : '').' is your co-partner.'">
+                    @unless ($pending)<a class="af-btn af-btn-black" href="{{ route('hub.dashboard') }}">Open the dashboard</a>@endunless
+                </x-cc.head>
                 @include('onboard._progress', ['stage' => $stage])
                 <div class="cc-panel">
                     <h2>Your machine</h2>
@@ -42,9 +41,7 @@
                 @if ($pending)
                     @include('onboard._deposit')
                 @else
-                    <div class="cc-btn-row" style="justify-content:flex-start"><a class="af-btn af-btn-black" href="{{ route('hub.dashboard') }}">Open the dashboard</a></div>
                 @endif
             @endif
-        </div>
-    </section>
+    </div>
 </x-app-layout>

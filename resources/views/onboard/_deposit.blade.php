@@ -3,6 +3,7 @@
     $first = $partner->name;
     $sent = $req && $req->deposit_reported_at;
 @endphp
+<div class="cc-grid is-split">
 <div class="cc-panel" id="deposit">
     <h2>Send your deposit to {{ $first }}</h2>
     <p>You are buying your half of a machine {{ $first }} already owns, so the deposit goes straight to them and never to {{ config('app.name') }}. Your share starts the day they confirm it.</p>
@@ -50,3 +51,4 @@
         </form>
     </div>
 @endif
+</div>

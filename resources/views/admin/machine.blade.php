@@ -1,11 +1,10 @@
 @php $fmt = fn (int $c) => \App\Support\Money::format($c); @endphp
-<x-cc.adm :title="'Machine '.$machine->serial_no" :heading="$machine->serial_no">
-    <a class="cc-back" href="{{ route('admin.machines') }}">Back to machines</a>
-    <div class="cc-tiles">
-        <div class="cc-tile"><small>Stock</small><b>{{ $snap['stock'] }} / {{ $snap['capacity'] }}</b><span>drinks</span></div>
-        <div class="cc-tile"><small>State</small><b>{{ $snap['state_label'] }}</b><span>{{ $machine->facility_name }}</span></div>
-        <div class="cc-tile"><small>Clock</small><b>{{ $snap['clock'] }}</b><span>{{ $snap['date'] }}</span></div>
-        <div class="cc-tile"><small>Revenue today</small><b>{{ $fmt($snap['revenue_today_cents']) }}</b><span>so far</span></div>
+<x-cc.adm :title="'Machine '.$machine->serial_no" :heading="$machine->serial_no" :lead="$machine->facility_name.', '.$machine->city">
+    <div class="cc-kpis cc-kpis-4" style="margin-bottom:16px">
+        <div class="cc-kpi is-coral"><small>Stock</small><b>{{ $snap['stock'] }} / {{ $snap['capacity'] }}</b><span>drinks</span></div>
+        <div class="cc-kpi is-mint"><small>State</small><b>{{ $snap['state_label'] }}</b><span>{{ $machine->facility_name }}</span></div>
+        <div class="cc-kpi is-amber"><small>Clock</small><b>{{ $snap['clock'] }}</b><span>{{ $snap['date'] }}</span></div>
+        <div class="cc-kpi"><small>Revenue today</small><b>{{ $fmt($snap['revenue_today_cents']) }}</b><span>so far</span></div>
     </div>
 
     <div class="cc-panel">

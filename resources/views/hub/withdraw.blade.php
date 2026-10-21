@@ -1,19 +1,20 @@
 @php $fmt = fn (int $c) => \App\Support\Money::format($c); @endphp
 <x-app-layout title="Withdraw">
-    <section class="cc-screen" data-bg="gray" style="padding-top:120px">
-        <div class="cc-wrap" style="max-width:1000px">
-            <a class="cc-back" href="{{ route('hub.dashboard') }}">Back to dashboard</a>
-            @if (session('status'))
-                <x-cc.notice>{{ session('status') }}</x-cc.notice>
-            @endif
-            <h1 class="cc-title1" style="font-size:clamp(40px,6vw,88px);margin-bottom:28px">Withdraw</h1>
+    @if (session('status'))
+        <x-cc.notice>{{ session('status') }}</x-cc.notice>
+    @endif
+    <x-cc.head title="Withdraw" eyebrow="Your payouts" lead="Take your payouts out to your bank. You confirm with a code we email you.">
+        <a class="af-btn cc-btn-outline" href="{{ route('hub.dashboard') }}">Back to dashboard</a>
+    </x-cc.head>
 
-            <div class="cc-tiles cc-tiles-3">
-                <div class="cc-tile"><small>Available now</small><b>{{ $fmt($available) }}</b><span>ready to withdraw</span></div>
-                <div class="cc-tile"><small>Waiting for approval</small><b>{{ $fmt($waiting) }}</b><span>being reviewed</span></div>
-                <div class="cc-tile"><small>Paid out</small><b>{{ $fmt($paidOut) }}</b><span>sent to your bank</span></div>
-            </div>
+    <div class="cc-kpis cc-kpis-3">
+        <div class="cc-kpi is-coral"><small>Available now</small><b>{{ $fmt($available) }}</b><span>ready to withdraw</span></div>
+        <div class="cc-kpi is-amber"><small>Waiting for approval</small><b>{{ $fmt($waiting) }}</b><span>being reviewed</span></div>
+        <div class="cc-kpi is-mint"><small>Paid out</small><b>{{ $fmt($paidOut) }}</b><span>sent to your bank</span></div>
+    </div>
 
+    <div class="cc-grid is-split" style="margin-top:16px">
+        <div>
             @if ($awaiting)
                 <div class="cc-panel">
                     <h2>Enter your code</h2>
@@ -52,7 +53,8 @@
                 </div>
             @endif
 
-            <div class="cc-panel">
+        </div>
+        <div class="cc-panel">
                 <h2>Your withdrawals</h2>
                 @forelse ($history as $w)
                     <div class="cc-wrow">
@@ -73,6 +75,5 @@
                     <p>No withdrawals yet. When you ask for one, it shows up here.</p>
                 @endforelse
             </div>
-        </div>
-    </section>
+    </div>
 </x-app-layout>

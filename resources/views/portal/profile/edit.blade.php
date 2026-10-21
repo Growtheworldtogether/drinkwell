@@ -1,11 +1,12 @@
-<x-app-layout title="Profile">
-    <section class="cc-screen" data-bg="cream">
-        <div class="cc-wrap" style="max-width:900px">
-            <h1 class="cc-title1" style="font-size:clamp(40px,7vw,96px);margin-bottom:28px">Your profile</h1>
+<x-app-layout title="Profile" bg="cream">
+    <div>
+        <x-cc.head title="Your profile" eyebrow="Your account" lead="Your details, your payout account and your password." />
             @if (is_string(session('status')) && ! in_array(session('status'), ['profile-updated', 'password-updated'], true))
                 <x-cc.notice>{{ session('status') }}</x-cc.notice>
             @endif
 
+            <div class="cc-grid is-two">
+            <div>
             <div class="cc-panel">
                 <h2>Your details</h2>
                 @include('portal.profile.partials.update-profile-information-form')
@@ -22,16 +23,17 @@
                     <p class="cc-hint" style="margin-top:12px">Only the last four digits are ever shown.</p>
                 </div>
             @endif
+            </div>
 
             <div class="cc-panel">
                 <h2>Change your password</h2>
                 @include('portal.profile.partials.update-password-form')
+            </div>
             </div>
 
             <div class="cc-panel cc-danger">
                 <h2>Delete your account</h2>
                 @include('portal.profile.partials.delete-user-form')
             </div>
-        </div>
-    </section>
+    </div>
 </x-app-layout>

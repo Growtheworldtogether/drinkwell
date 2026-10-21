@@ -134,7 +134,10 @@ export function initPublicFx() {
     // Header: floats as a pill at the top, becomes a full-width bar once the page has scrolled.
     const bar = document.querySelector('.cc-nav');
     if (bar) {
-        const mark = () => bar.classList.toggle('is-scrolled', window.scrollY > 10);
+        const mark = () => {
+            bar.classList.toggle('is-scrolled', window.scrollY > 10);
+            document.body.classList.toggle('cc-scrolled', window.scrollY > 10);
+        };
         window.addEventListener('scroll', mark, { passive: true });
         mark();
     }

@@ -35,6 +35,24 @@ class WarmTilesCommand extends Command
             $this->line("{$d->facility_name}: done");
         });
 
+        // The country view the Locations map opens on: zoom 3 to 6 across the area around all machines, about 100 tiles.
+        if (! $this->option('city')) {
+            foreach (range(3, 6) as $z) {
+                $n = 2 ** $z;
+                for ($x = 0; $x < $n; $x++) {
+                    for ($y = 0; $y < $n; $y++) {
+                        if ($tiles->allowed($z, $x, $y)) {
+                            if ($tiles->get($z, $x, $y) !== null) {
+                                $count++;
+                            }
+                            usleep(150_000);
+                        }
+                    }
+                }
+            }
+            $this->line('Country view: done');
+        }
+
         if ($count === 0) {
             $this->components->error('No tile could be fetched, so the maps will be blank.');
             $this->line('Reason: '.($tiles->lastError() ?? 'no machine exists.'));

@@ -141,7 +141,7 @@ it('seeds the demo with Arthur Pendelton and twenty days of payouts', function (
     expect($arthur->name)->toBe('Arthur Pendelton')
         ->and($arthur->profile->age_at_signup)->toBe(64)
         ->and(DailyDistribution::where('user_id', $arthur->id)->count())->toBe(20)
-        ->and(\App\Models\VendingMachine::count())->toBe(20)
+        ->and(\App\Models\VendingMachine::count())->toBe(32)
         ->and(MachineOwnership::count())->toBe(12);
 
     // Every payout is inside its band and the integrity checks agree.

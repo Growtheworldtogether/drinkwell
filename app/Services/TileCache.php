@@ -12,11 +12,18 @@ use Throwable;
  * Map tiles, kept on this server's disk. The first request for a tile fetches it once from the tile source with a
  * proper identifying User-Agent; every later request, from any browser, is served from disk. That makes the map fast,
  * keeps it working when the source is slow or down (stale tiles are served), and keeps browsers from hammering the
- * free public tile server. Only tiles near an active depot are served, so this is not an open proxy.
+ * free public tile server. Street-level tiles are served only near a machine, and country views only inside the area
+ * around all machines, so this is not an open proxy.
  */
 class TileCache
 {
-    public const MIN_ZOOM = 9;
+    public const MIN_ZOOM = 3;
+
+    /** Below this zoom (country and region views) a tile is allowed when it overlaps the area around all machines. */
+    public const NEAR_ZOOM = 9;
+
+    /** Margin around the machines' outer edges for the country views, in degrees. */
+    private const AREA_MARGIN_DEG = 4.0;
 
     public const MAX_ZOOM = 17;
 
@@ -48,6 +55,10 @@ class TileCache
 
         if ($x < 0 || $y < 0 || $x >= $n || $y >= $n) {
             return false;
+        }
+
+        if ($z < self::NEAR_ZOOM) {
+            return $this->overlapsArea($z, $x, $y);
         }
 
         [$lat, $lng] = $this->centre($z, $x, $y);
@@ -118,6 +129,25 @@ class TileCache
         $brand = app(BrandService::class);
 
         return preg_replace('/\s+/', '', $brand->name()).'/1.0 (school project; +'.config('app.url').'; '.$brand->supportEmail().')';
+    }
+
+    /** Country views: does the tile overlap the box around every machine, plus a margin? */
+    private function overlapsArea(int $z, int $x, int $y): bool
+    {
+        $hubs = $this->hubs();
+        if ($hubs === []) {
+            return false;
+        }
+        $lats = array_column($hubs, 0);
+        $lngs = array_column($hubs, 1);
+        $n = 2 ** $z;
+        $west = $x / $n * 360.0 - 180.0;
+        $east = ($x + 1) / $n * 360.0 - 180.0;
+        $north = rad2deg(atan(sinh(M_PI * (1 - 2 * $y / $n))));
+        $south = rad2deg(atan(sinh(M_PI * (1 - 2 * ($y + 1) / $n))));
+
+        return $east >= min($lngs) - self::AREA_MARGIN_DEG && $west <= max($lngs) + self::AREA_MARGIN_DEG
+            && $north >= min($lats) - self::AREA_MARGIN_DEG && $south <= max($lats) + self::AREA_MARGIN_DEG;
     }
 
     /** @return array{0: float, 1: float} latitude and longitude of the tile's centre */

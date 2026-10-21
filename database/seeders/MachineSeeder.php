@@ -29,6 +29,12 @@ class MachineSeeder extends Seeder
         ['Five Points Station', 'Transit station', 'Atlanta, GA', 33.7539, -84.3915],
         ['Cleveland Clinic Main Campus', 'Hospital', 'Cleveland, OH', 41.5026, -81.6213],
         ['Northwestern Memorial Hospital', 'Hospital', 'Chicago, IL', 41.8957, -87.6217],
+        ['Jackson Memorial Hospital', 'Hospital', 'Miami, FL', 25.7905, -80.2120],
+        ['Baylor University Medical Center', 'Hospital', 'Dallas, TX', 32.7903, -96.7809],
+        ['Dallas Union Station', 'Transit station', 'Dallas, TX', 32.7761, -96.8075],
+        ['Hennepin County Medical Center', 'Hospital', 'Minneapolis, MN', 44.9725, -93.2619],
+        ['Henry Ford Hospital', 'Hospital', 'Detroit, MI', 42.3671, -83.0846],
+        ['Vanderbilt University Medical Center', 'Hospital', 'Nashville, TN', 36.1420, -86.8010],
     ];
 
     private const ENTERPRISE = [
@@ -40,21 +46,36 @@ class MachineSeeder extends Seeder
         ['Los Angeles Union Station', 'Transit hub', 'Los Angeles, CA', 34.0562, -118.2365],
         ['Ronald Reagan UCLA Medical Center', 'Hospital campus', 'Los Angeles, CA', 34.0663, -118.4467],
         ['Harborview Medical Center', 'Hospital campus', 'Seattle, WA', 47.6039, -122.3250],
+        ['Denver Union Station', 'Transit hub', 'Denver, CO', 39.7531, -105.0000],
+        ['Salesforce Transit Center', 'Transit hub', 'San Francisco, CA', 37.7897, -122.3966],
+        ['Phoenix Sky Harbor International Airport', 'Airport', 'Phoenix, AZ', 33.4342, -112.0117],
+        ['Minneapolis-Saint Paul International Airport', 'Airport', 'Minneapolis, MN', 44.8819, -93.2217],
+        ['Miami International Airport', 'Airport', 'Miami, FL', 25.7933, -80.2906],
+        ['Nashville International Airport', 'Airport', 'Nashville, TN', 36.1267, -86.6819],
     ];
 
+    /**
+     * Adds every facility in the lists that is not in the database yet, so running it again (or the update migration
+     * that calls it) only adds new places and never touches existing machines, members or ledgers.
+     */
     public function run(): void
     {
-        if (VendingMachine::query()->exists()) {
-            return;
-        }
-
+        $have = VendingMachine::query()->pluck('facility_name')->flip();
         $tz = (string) config('drinkwell.timezone');
         $now = now($tz);
         $minute = $now->hour * 60 + $now->minute;
-        $n = ['commercial' => 0, 'enterprise' => 0];
+        // Serial numbers carry on from the highest one already used for each machine size.
+        $n = [];
+        foreach ([Tier::Commercial, Tier::Enterprise] as $t) {
+            $n[$t->value] = (int) VendingMachine::query()->where('tier', $t)->pluck('serial_no')
+                ->map(fn ($s) => (int) substr((string) $s, -4))->max();
+        }
 
         foreach ([[Tier::Commercial, self::COMMERCIAL, 'C'], [Tier::Enterprise, self::ENTERPRISE, 'E']] as [$tier, $list, $letter]) {
             foreach ($list as [$facility, $type, $city, $lat, $lng]) {
+                if ($have->has($facility)) {
+                    continue;
+                }
                 $n[$tier->value]++;
                 $cap = $tier->capacity();
                 $stock = $cap - DepletionCurve::soldBy($cap, $minute);

@@ -4,6 +4,7 @@
 <x-marketing-layout title="Questions">
     <section class="cc-pagehead" data-bg="amber">
         <div class="cc-wrap">
+            <x-crumb>Questions</x-crumb>
             <h1 class="cc-title1">Questions</h1>
             <p class="cc-lead">Plain answers to what people ask us most. Select a question to read the answer.</p>
         </div>
@@ -63,4 +64,5 @@
             <div class="cc-btn-row"><a class="af-btn af-btn-black" href="{{ route('register') }}">Get started</a><a class="af-btn cc-btn-outline" href="{{ route('earnings') }}">See your earnings</a></div>
         </div>
     </section>
+    <x-related :links="[['program', 'How it works'], ['contact', 'Contact us']]" />
 </x-marketing-layout>

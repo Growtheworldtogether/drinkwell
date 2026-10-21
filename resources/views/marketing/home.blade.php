@@ -32,11 +32,18 @@
     <section class="cc-section cc-center" data-bg="gray">
         <div class="cc-wrap">
             <h2 class="cc-huge" data-reveal><span>Why people</span><span>co-own</span></h2>
-            <ol class="cc-cards3">
-                <li class="cc-card cc-card-1" data-reveal><div class="cc-photo" aria-hidden="true"><span>Photo</span></div><div class="cc-card-body"><h3>No work on your side</h3><p>The machine is stocked, cleaned and settled for you. You only watch the numbers.</p></div></li>
-                <li class="cc-card cc-card-2" data-reveal><div class="cc-photo" aria-hidden="true"><span>Photo</span></div><div class="cc-card-body"><h3>A partner shares the risk</h3><p>You never carry a machine alone. The cost and the earnings are split evenly.</p></div></li>
-                <li class="cc-card cc-card-3" data-reveal><div class="cc-photo" aria-hidden="true"><span>Photo</span></div><div class="cc-card-body"><h3>Every cent shown</h3><p>Sales, fee, pool and payout are listed for every day, and you can download them.</p></div></li>
-            </ol>
+            <article class="cc-feature" data-reveal>
+                <div class="cc-feature-photo" aria-hidden="true"><div class="cc-photo"><span>Photo</span></div></div>
+                <div><h3>No work on your side</h3><p>The machine is stocked, cleaned and settled for you. You only watch the numbers.</p><a class="cc-learn" href="{{ route('program') }}#day">See a day with your machine</a></div>
+            </article>
+            <article class="cc-feature is-flip" data-reveal>
+                <div class="cc-feature-photo" aria-hidden="true"><div class="cc-photo"><span>Photo</span></div></div>
+                <div><h3>A partner shares the risk</h3><p>You never carry a machine alone. The cost and the earnings are split evenly.</p><a class="cc-learn" href="{{ route('program') }}#split">See the daily split</a></div>
+            </article>
+            <article class="cc-feature" data-reveal>
+                <div class="cc-feature-photo" aria-hidden="true"><div class="cc-photo"><span>Photo</span></div></div>
+                <div><h3>Every cent shown</h3><p>Sales, fee, pool and payout are listed for every day, and you can download them.</p><a class="cc-learn" href="{{ route('earnings') }}">Your earnings</a></div>
+            </article>
             <p class="cc-lead" style="margin-inline:auto" data-reveal>Open to everyone aged {{ config('drinkwell.min_age') }} and over. Each machine has exactly two owners, and each drink sells for {{ $fmt(config('drinkwell.unit_price_cents')) }}.</p>
         </div>
     </section>

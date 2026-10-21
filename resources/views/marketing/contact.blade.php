@@ -1,6 +1,7 @@
 <x-marketing-layout title="Contact us">
     <section class="cc-pagehead" data-bg="amber">
         <div class="cc-wrap">
+            <x-crumb>Contact us</x-crumb>
             <h1 class="cc-title1">Contact us</h1>
             <p class="cc-lead">Write to us in your own words. We usually reply within 1 business day.</p>
         </div>
@@ -46,4 +47,5 @@
             </aside>
         </div>
     </section>
+    <x-related :links="[['questions', 'Read the questions'], ['program', 'How it works']]" />
 </x-marketing-layout>

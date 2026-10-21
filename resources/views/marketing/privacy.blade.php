@@ -9,7 +9,8 @@
 @endphp
 <x-marketing-layout title="Privacy">
     <section class="cc-pagehead" data-bg="gray">
-        <div class="cc-wrap"><h1 class="cc-title1">Privacy</h1></div>
+        <div class="cc-wrap">
+            <x-crumb>Privacy</x-crumb><h1 class="cc-title1">Privacy</h1></div>
     </section>
     <section class="cc-section" data-bg="gray">
         <div class="cc-wrap cc-prosewrap">

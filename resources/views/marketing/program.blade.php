@@ -4,6 +4,7 @@
 <x-marketing-layout title="How it works">
     <section class="cc-pagehead" data-bg="coral">
         <div class="cc-wrap">
+            <x-crumb>How it works</x-crumb>
             <h1 class="cc-title1">How it works</h1>
             <p class="cc-lead">One machine, two co-partners, one price: {{ $fmt(config('drinkwell.unit_price_cents')) }} a drink.</p>
         </div>
@@ -52,12 +53,13 @@
     <section class="cc-section cc-center" data-bg="mint">
         <div class="cc-wrap">
             <h2 class="cc-huge" data-reveal><span>Who does</span><span>what</span></h2>
-            <ol class="cc-cards3">
-                <li class="cc-card cc-card-1" data-reveal><div class="cc-photo" aria-hidden="true"><span>Photo</span></div><div class="cc-card-body"><h3>You</h3><p>Pay your half of the deposit to your co-partner, and watch your machine from your dashboard.</p></div></li>
-                <li class="cc-card cc-card-2" data-reveal><div class="cc-photo" aria-hidden="true"><span>Photo</span></div><div class="cc-card-body"><h3>Your co-partner</h3><p>Owns the other half, receives your deposit, and shares every daily payout equally with you.</p></div></li>
-                <li class="cc-card cc-card-3" data-reveal><div class="cc-photo" aria-hidden="true"><span>Photo</span></div><div class="cc-card-body"><h3>{{ $brand->name }}</h3><p>Pairs you, stocks and settles the machine, keeps the books, and reviews each withdrawal.</p></div></li>
-            </ol>
         </div>
+            <div class="cc-cardrow-wrap"><div class="cc-cardrow" data-drag>
+                <article data-reveal><h3>You</h3><p>Pay your half of the deposit to your co-partner, and watch your machine from your dashboard.</p></article>
+                <article data-reveal><h3>Your co-partner</h3><p>Owns the other half, receives your deposit, and shares every daily payout equally with you.</p></article>
+                <article data-reveal><h3>{{ $brand->name }}</h3><p>Pairs you, stocks and settles the machine, keeps the books, and reviews each withdrawal.</p></article>
+                <article data-reveal><h3>Your dashboard</h3><p>Your balance, the machine, your daily ledger and your withdrawals, all in one place.</p></article>
+            </div></div>
     </section>
 
     <section id="split" class="cc-section" data-bg="amber">
@@ -78,4 +80,5 @@
             <div class="cc-btn-row" data-reveal><a class="af-btn af-btn-black" href="{{ route('register') }}">Get started</a><a class="af-btn cc-btn-outline" href="{{ route('questions') }}">Read the questions</a></div>
         </div>
     </section>
+    <x-related :links="[['earnings', 'See what you could earn'], ['questions', 'Read the questions']]" />
 </x-marketing-layout>

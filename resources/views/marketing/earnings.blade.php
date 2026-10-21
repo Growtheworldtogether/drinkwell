@@ -4,6 +4,7 @@
 <x-marketing-layout title="Your earnings">
     <section class="cc-pagehead" data-bg="coral">
         <div class="cc-wrap">
+            <x-crumb>Your earnings</x-crumb>
             <h1 class="cc-title1">Your earnings</h1>
             <p class="cc-lead">Every drink sells at {{ $fmt(config('drinkwell.unit_price_cents')) }}. Here is exactly how one day adds up, and how fast your deposit comes back.</p>
         </div>
@@ -70,4 +71,5 @@
             @include('marketing.partials.calculator')
         </div>
     </section>
+    <x-related :links="[['program', 'How it works'], ['locations', 'Where machines stand']]" />
 </x-marketing-layout>

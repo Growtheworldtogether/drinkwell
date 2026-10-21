@@ -1491,6 +1491,33 @@
     .cc-math li.is-total { background: linear-gradient(170deg, #b5e8c8, #5fc29f); }
     .cc-math li.is-total span { color: #000; font-weight: 600; }
     @media (max-width: 639px) { .cc-math li { min-height: 0; padding: 22px 24px; } }
+    /* Who does what: one white card holding a checklist table, coloured pill headings, round black ticks. */
+    .cc-who { max-width: 1040px; margin: 40px auto 0; padding: clamp(8px, 2vw, 24px) clamp(12px, 3vw, 40px); border-radius: 28px; background: #fff; text-align: left; }
+    .cc-who table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+    .cc-who thead td { width: 46%; }
+    .cc-who thead th { padding: 18px 6px; text-align: center; font-weight: 700; }
+    .cc-who-head { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 8px 18px; border-radius: 9999px; font-size: 18px; line-height: 1.15; color: #000; }
+    .cc-who-1 { background: linear-gradient(170deg, #fcb791, #f7723a); }
+    .cc-who-2 { background: linear-gradient(170deg, #b5e8c8, #5fc29f); }
+    .cc-who-3 { background: linear-gradient(170deg, #f1d49d, #f6af4e); }
+    .cc-who-short { display: none; }
+    .cc-who-long { white-space: nowrap; }
+    .cc-who tbody th { padding: 20px 12px 20px 0; font-size: clamp(18px, 1.7vw, 22px); font-weight: 600; line-height: 1.35; text-align: left; }
+    .cc-who tbody td { padding: 12px 6px; text-align: center; }
+    .cc-who tbody tr { border-top: 1px solid #e4e4e4; }
+    .cc-tick { display: inline-grid; place-items: center; width: 40px; height: 40px; border-radius: 9999px; background: #000; color: #fff; }
+    .cc-tick-no { display: inline-block; width: 14px; height: 3px; border-radius: 2px; background: #d0d0d0; vertical-align: middle; }
+    @media (max-width: 639px) {
+        .cc-who { padding: 6px 14px; }
+        .cc-who thead td { width: 40%; }
+        .cc-who thead th { padding: 14px 2px; }
+        .cc-who-long { display: none; }
+        .cc-who-short { display: inline; }
+        .cc-who-head { display: flex; width: 100%; min-height: 34px; padding: 6px 4px; font-size: 14px; }
+        .cc-who tbody th { padding: 16px 8px 16px 0; font-size: 17px; }
+        .cc-who tbody td { padding: 10px 2px; }
+        .cc-tick { width: 32px; height: 32px; }
+    }
 }
 
 /* Lets the story dot ring fill smoothly. Registered outside the layer, as @property must be. */

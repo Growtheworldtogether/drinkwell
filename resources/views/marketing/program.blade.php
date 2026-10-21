@@ -24,11 +24,23 @@
     <section class="cc-section cc-center" data-bg="mint">
         <div class="cc-wrap">
             <h2 class="cc-huge" data-reveal><span>Who does</span><span>what</span></h2>
-            <ul class="cc-cards3 cc-roles">
-                <li class="cc-card cc-card-1" data-reveal><div class="cc-card-body"><h3>You</h3><ul><li>Pay your half to your co-partner</li><li>Watch the machine and your balance from your dashboard</li><li>Take money out when you like</li></ul></div></li>
-                <li class="cc-card cc-card-2" data-reveal><div class="cc-card-body"><h3>Your co-partner</h3><ul><li>Owns the other half of the machine</li><li>Receives your deposit and confirms it</li><li>Shares every daily payout 50/50 with you</li></ul></div></li>
-                <li class="cc-card cc-card-3" data-reveal><div class="cc-card-body"><h3>{{ $brand->name }}</h3><ul><li>Pairs you with a co-partner</li><li>Places, restocks and settles the machine</li><li>Keeps the books and reviews each withdrawal</li></ul></div></li>
-            </ul>
+            <p class="cc-lead" style="margin-inline:auto" data-reveal>You never restock or fix anything. Here is who does each job.</p>
+            <div class="cc-who" data-reveal>
+                <table>
+                    <caption class="sr-only">Who does each job</caption>
+                    <thead>
+                        <tr><td></td><th scope="col"><span class="cc-who-head cc-who-1">You</span></th><th scope="col"><span class="cc-who-head cc-who-2"><span class="cc-who-long">Co-partner</span><span class="cc-who-short">Partner</span></span></th><th scope="col"><span class="cc-who-head cc-who-3"><span class="cc-who-long">{{ $brand->name }}</span><span class="cc-who-short">Us</span></span></th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><th scope="row">Pays half of the machine</th><td><span class="cc-tick" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span class="sr-only">Yes</span></td><td><span class="cc-tick" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span class="sr-only">Yes</span></td><td><span class="cc-tick-no" aria-hidden="true"></span><span class="sr-only">No</span></td></tr>
+                        <tr><th scope="row">Receives the deposit and confirms it</th><td><span class="cc-tick-no" aria-hidden="true"></span><span class="sr-only">No</span></td><td><span class="cc-tick" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span class="sr-only">Yes</span></td><td><span class="cc-tick-no" aria-hidden="true"></span><span class="sr-only">No</span></td></tr>
+                        <tr><th scope="row">Places and restocks the machine</th><td><span class="cc-tick-no" aria-hidden="true"></span><span class="sr-only">No</span></td><td><span class="cc-tick-no" aria-hidden="true"></span><span class="sr-only">No</span></td><td><span class="cc-tick" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span class="sr-only">Yes</span></td></tr>
+                        <tr><th scope="row">Counts the sales and settles each day</th><td><span class="cc-tick-no" aria-hidden="true"></span><span class="sr-only">No</span></td><td><span class="cc-tick-no" aria-hidden="true"></span><span class="sr-only">No</span></td><td><span class="cc-tick" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span class="sr-only">Yes</span></td></tr>
+                        <tr><th scope="row">Gets half of every daily payout</th><td><span class="cc-tick" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span class="sr-only">Yes</span></td><td><span class="cc-tick" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span class="sr-only">Yes</span></td><td><span class="cc-tick-no" aria-hidden="true"></span><span class="sr-only">No</span></td></tr>
+                        <tr><th scope="row">Reviews each withdrawal</th><td><span class="cc-tick-no" aria-hidden="true"></span><span class="sr-only">No</span></td><td><span class="cc-tick-no" aria-hidden="true"></span><span class="sr-only">No</span></td><td><span class="cc-tick" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span class="sr-only">Yes</span></td></tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </section>
 

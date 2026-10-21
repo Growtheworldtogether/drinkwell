@@ -1545,11 +1545,7 @@
     @keyframes cc-tip-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
     @media (max-width: 899px) { .cc-tip { right: 14px; bottom: 82px; } .cc-tip::after { right: 19px; } }
     @media (prefers-reduced-motion: reduce) { .cc-tip { animation: none; } }
-    /* Signed-in top bar on phones and tablets: the same round outlined menu icon as the public pages, name centred. */
-    @media (max-width: 1023px) {
-        .cc-topbar { display: grid; grid-template-columns: 48px 1fr 48px; }
-        .cc-topbar .af-brand { justify-self: center; margin-inline: auto; }
-    }
+    /* Signed-in top bar on phones and tablets: name on the left, the round outlined menu icon from the public pages on the right. */
     @media (min-width: 1024px) { .cc-icon-btn.cc-side-close { display: none; } }
     .cc-icon-btn { display: inline-grid; place-items: center; width: 48px; height: 48px; min-height: 48px; padding: 0; border: 2px solid #000; border-radius: 9999px; background: transparent; color: #000; cursor: pointer; touch-action: manipulation; }
     .cc-icon-btn:focus-visible { outline: 4px solid #f7723a; outline-offset: 2px; }

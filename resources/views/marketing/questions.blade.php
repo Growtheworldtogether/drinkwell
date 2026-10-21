@@ -13,7 +13,7 @@
     <section class="cc-section" data-bg="gray">
         <div class="cc-wrap">
             <div class="cc-faq-split">
-            <div class="cc-faq-photo"><div class="cc-photo tall" aria-hidden="true"><span>Photo</span></div></div>
+            <div class="cc-faq-photo"><div class="cc-photo tall" aria-hidden="true"><img src="{{ asset('images/questions/faq.jpg') }}" alt="" loading="lazy" decoding="async"></div></div>
             <div class="cc-faq">
                 <details class="cc-q" data-reveal>
                     <summary>Who can join?</summary>

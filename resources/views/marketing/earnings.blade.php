@@ -16,7 +16,7 @@
         </div>
     </section>
 
-    <section class="cc-section cc-center" data-bg="gray">
+    <section id="split" class="cc-section cc-center" data-bg="gray">
         <div class="cc-wrap">
             <h2 class="cc-h2" data-reveal>The daily split</h2>
             <p class="cc-lead" style="margin-inline:auto" data-reveal>Sales come in, the bottling and logistics fee comes off, and the rest is split equally between you and your co-partner.</p>
@@ -46,7 +46,7 @@
         </div>
     </section>
 
-    <section class="cc-section cc-center" data-bg="gray">
+    <section id="withdraw" class="cc-section cc-center" data-bg="gray">
         <div class="cc-wrap">
             <h2 class="cc-huge" data-reveal><span>Getting your</span><span>money out</span></h2>
             <ol class="cc-cards3">

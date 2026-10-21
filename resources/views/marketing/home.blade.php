@@ -98,8 +98,8 @@
         <div class="cc-wrap">
             <h2 class="cc-huge" data-reveal><span>How you</span><span>get</span><span>paid</span></h2>
             <div class="cc-big-cards">
-                <article class="cc-big-card" data-reveal><div class="cc-photo" aria-hidden="true"><span>Photo</span></div><h3>What makes a co-partnership work</h3></article>
-                <article class="cc-big-card" data-reveal><div class="cc-photo" aria-hidden="true"><span>Photo</span></div><h3>Learn more about the program</h3></article>
+                <a href="{{ route('earnings') }}#split" class="cc-big-card cc-big-link" data-reveal><div class="cc-photo" aria-hidden="true"><span>Photo</span></div><div class="cc-big-body"><h3>How your daily payout is worked out</h3><p>The machine sells out, the fee comes off, and the rest is split in half. See the numbers.</p><span class="cc-big-arrow" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div></a>
+                <a href="{{ route('earnings') }}#withdraw" class="cc-big-card cc-big-link" data-reveal><div class="cc-photo" aria-hidden="true"><span>Photo</span></div><div class="cc-big-body"><h3>Getting your money out</h3><p>Ask for {{ $fmt(config('drinkwell.withdrawal_min_cents')) }} or more, confirm with a code, and it is paid within {{ config('drinkwell.withdrawal_review_days') }} business days.</p><span class="cc-big-arrow" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div></a>
             </div>
         </div>
     </section>

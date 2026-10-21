@@ -1411,6 +1411,17 @@
     .cc-story-dots { padding: 8px; margin: -8px; }
     /* Wide hero headline one step smaller. */
     @media (min-width: 900px) { .cc-hero .cc-display { font-size: clamp(32px, 5.6vw, 80px); } }
+    /* Big photo cards: the words sit above the photo and the dark wash, so they always show. Linked cards get a round arrow. */
+    .cc-big-card > h3, .cc-big-card > .cc-big-body { position: relative; z-index: 1; }
+    .cc-big-body { display: flex; flex-direction: column; align-items: flex-start; gap: 14px; max-width: 30rem; }
+    .cc-big-body h3 { margin: 0; }
+    .cc-big-body p { margin: 0; font-size: 19px; line-height: 1.45; color: #fff; }
+    .cc-big-link { color: #fff; text-decoration: none; }
+    .cc-big-link:hover h3 { text-decoration: underline; text-underline-offset: 6px; }
+    .cc-big-link:focus-visible { outline: 4px solid #000; outline-offset: 4px; }
+    .cc-big-arrow { display: inline-flex; align-items: center; justify-content: center; width: 52px; height: 52px; border-radius: 9999px; background: #fff; color: #000; transition: transform 0.2s ease; }
+    .cc-big-link:hover .cc-big-arrow { transform: translateX(4px); }
+    @media (max-width: 899px) { .cc-big-card { min-height: 420px; padding: 24px; } .cc-big-body p { font-size: 18px; } }
 }
 
 /* Lets the story dot ring fill smoothly. Registered outside the layer, as @property must be. */

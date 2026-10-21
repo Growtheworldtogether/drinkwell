@@ -1251,4 +1251,17 @@
         .cc-btns, .cc-btns.is-fit, .cc-demo .btns.cc-btns, .cc-pactions.cc-btns, .cc-btns:has(> :nth-child(3)), .cc-demo .btns.cc-btns:has(> :nth-child(3)) { display: flex; flex-wrap: wrap; gap: 12px; width: auto; max-width: 100%; grid-template-columns: none; }
         .cc-btns .af-btn, .cc-btns button.af-btn { width: auto; }
     }
+    /* Footer colour change: a slow drifting gradient that cycles through the brand tints, on every screen. */
+    @keyframes cc-foot-drift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+    .cc-foot, .cc-appfoot {
+        background-color: #fff4df;
+        background-image: linear-gradient(115deg, #fff4df 0%, #fcb791 18%, #f7723a 32%, #f6af4e 48%, #b5e8c8 66%, #5fc29f 80%, #fff4df 100%);
+        background-size: 400% 400%;
+        animation: cc-foot-drift 24s ease-in-out infinite;
+    }
+    .cc-foot { margin-top: 0; }
+    .cc-foot-legal { border-top-color: rgba(0, 0, 0, 0.25); color: #000; }
+    .cc-foot h4 { color: #000; }
+    .cc-appfoot { margin: 24px clamp(8px, 1.6vw, 24px) clamp(8px, 1.6vw, 24px); padding: 22px clamp(16px, 2.4vw, 36px); border-radius: 28px; color: #000; }
+    @media (prefers-reduced-motion: reduce) { .cc-foot, .cc-appfoot { animation: none; background-size: 100% 100%; background-image: linear-gradient(115deg, #fff4df, #fcb791 55%, #b5e8c8); } }
 }

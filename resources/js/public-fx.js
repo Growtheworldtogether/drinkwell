@@ -128,6 +128,8 @@ export function initPublicFx() {
     document.querySelectorAll(auto).forEach((el) => {
         if (el.closest('.cc-hero') || el.closest('.cc-nav') || el.closest('[wire\\:id]') || el.matches('script, style, template')) return;
         if (el.querySelector('[data-reveal]') || el.closest('[data-reveal]')) return;
+        // A block taller than the screen (a whole dashboard, say) is left alone: it would wait to be mostly in view.
+        if (el.getBoundingClientRect().height > window.innerHeight) return;
         el.setAttribute('data-reveal', '');
     });
     document.querySelectorAll('img').forEach((img) => { if (! img.closest('.cc-hero, .cc-nav')) { img.loading = 'lazy'; img.decoding = 'async'; } });
@@ -142,7 +144,8 @@ export function initPublicFx() {
                 entry.target.classList.add('is-in');
                 seen.unobserve(entry.target);
             });
-        }, { threshold: 0.15 });
+            // Any part on screen is enough, so even a very tall block can never stay hidden.
+        }, { threshold: 0, rootMargin: '0px 0px -8% 0px' });
         reveals.forEach((el, i) => {
             el.style.transitionDelay = `${(i % 4) * 80}ms`;
             seen.observe(el);

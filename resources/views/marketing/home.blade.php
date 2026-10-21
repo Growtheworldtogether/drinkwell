@@ -4,6 +4,34 @@
     $calc = collect($tiers)->map(fn ($t) => ['label' => $t['label'], 'stake' => $t['stake'], 'share' => $t['share'], 'capacity' => $t['capacity']])->all();
 @endphp
 <x-marketing-layout title="Co-own a vending machine">
+    <section class="cc-story" data-bg="coral" aria-label="{{ $brand->name }}"
+        x-data="{ i: 0, stop: false, slides: [
+            { tag: 'Pairing', title: 'Co-own a machine with a partner we find for you', link: '{{ route('program') }}', label: 'How it works' },
+            { tag: 'Deposit', title: 'Pay your half straight to your co-partner', link: '{{ route('program') }}#deposit', label: 'How the deposit works' },
+            { tag: 'Payouts', title: 'Share the daily payout, with every cent shown', link: '{{ route('earnings') }}', label: 'See your earnings' }
+        ] }"
+        x-init="setInterval(() => { if (! stop && ! document.hidden) i = (i + 1) % 3 }, 6000)">
+        <h1 class="sr-only">We Co-own the Machine and Share the Daily Payout</h1>
+        <div class="cc-story-card">
+            <div class="cc-photo" aria-hidden="true"><span>Photo</span></div>
+            <div class="cc-story-dots" role="group" aria-label="Choose a story">
+                <button type="button" class="cc-story-dot" x-bind:class="{ 'is-on': i === 0 }" x-bind:aria-pressed="(i === 0).toString()" aria-label="Pairing" x-on:click="i = 0; stop = true">1</button>
+                <button type="button" class="cc-story-dot" x-bind:class="{ 'is-on': i === 1 }" x-bind:aria-pressed="(i === 1).toString()" aria-label="Deposit" x-on:click="i = 1; stop = true">2</button>
+                <button type="button" class="cc-story-dot" x-bind:class="{ 'is-on': i === 2 }" x-bind:aria-pressed="(i === 2).toString()" aria-label="Payouts" x-on:click="i = 2; stop = true">3</button>
+            </div>
+            <div class="cc-story-body">
+                <span class="cc-story-tag" x-text="slides[i].tag">Pairing</span>
+                <p class="cc-story-title" aria-live="polite" x-text="slides[i].title">Co-own a machine with a partner we find for you</p>
+                @auth
+                    <a class="af-btn cc-story-cta" href="{{ route('dashboard') }}">Open dashboard</a>
+                @else
+                    <a class="af-btn cc-story-cta" href="{{ route('register') }}">Get started</a>
+                @endauth
+                <a class="cc-story-link" x-bind:href="slides[i].link" x-text="slides[i].label" href="{{ route('program') }}">How it works</a>
+            </div>
+        </div>
+    </section>
+
     <section class="cc-hero" data-bg="coral">
         <div class="cc-wrap cc-hero-grid">
             <div class="cc-hero-photo" aria-hidden="true"><div class="cc-photo"><span>Photo</span></div></div>
@@ -22,9 +50,9 @@
         </div>
     </section>
 
-    <section class="cc-section cc-center" data-bg="mint">
+    <section class="cc-section cc-center cc-phone-left" data-bg="mint">
         <div class="cc-wrap">
-            <p class="cc-statement" data-reveal>At {{ $brand->name }}, we are refreshing what it means to co&#8209;own: one drink, one payout at a time.</p>
+            <p class="cc-statement">At {{ $brand->name }}, we are refreshing what it means to co&#8209;own: one drink, one payout at a time.</p>
             <p class="cc-lead" style="margin-inline:auto" data-reveal>You share the machine, the cost and the daily payout with one partner, and every cent is shown.</p>
             <div class="cc-btn-row" data-reveal><a class="af-btn af-btn-black" href="{{ route('program') }}">Discover how it works</a></div>
         </div>

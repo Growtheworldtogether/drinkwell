@@ -1347,4 +1347,33 @@
         .cc-foot-clouds i { animation: cc-cloud 24s ease-in-out -16s infinite; }
     }
     @media (prefers-reduced-motion: reduce) { .cc-foot-clouds::before { opacity: 1; } }
+    /* Phone home: the first screen is one tall story card, like the reference. The long headline moves out of it. */
+    .cc-story { display: none; }
+    @media (max-width: 899px) {
+        .cc-hero { display: none; }
+        .cc-story { display: block; padding: 84px 16px 0; }
+        .cc-story-card { position: relative; display: flex; flex-direction: column; justify-content: flex-end; height: clamp(440px, calc(100svh - 84px - 150px), 720px); overflow: hidden; border-radius: 30px; color: #fff; background: #d4d4d4; }
+        .cc-story-card .cc-photo { position: absolute; inset: 0; width: 100%; height: 100%; aspect-ratio: auto; border-radius: 0; }
+        .cc-story-card::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(to top, rgba(0, 0, 0, 0.82), rgba(0, 0, 0, 0.1) 62%, rgba(0, 0, 0, 0.25)); }
+        .cc-story-card .cc-photo span { display: none; }
+        .cc-story + .cc-section { padding-top: 28px; }
+        .cc-story-dots { position: absolute; z-index: 2; top: 16px; left: 16px; right: 16px; display: flex; gap: 12px; }
+        .cc-story-dot { flex: none; width: 56px; height: 56px; padding: 0; border: 3px solid rgba(255, 255, 255, 0.55); border-radius: 9999px; background: rgba(0, 0, 0, 0.35); color: #fff; font: inherit; font-size: 20px; font-weight: 700; cursor: pointer; -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); transition: transform 0.25s ease, border-color 0.25s ease, background-color 0.25s ease; }
+        .cc-story-dot.is-on { border-color: #fff; background: #000; transform: scale(1.08); }
+        .cc-story-dot:focus-visible { outline: 4px solid #fff; outline-offset: 3px; }
+        .cc-story-body { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: flex-start; gap: 14px; padding: 20px 20px 22px; }
+        .cc-story-tag { display: inline-block; padding: 8px 16px; border-radius: 9999px; background: #000; font-size: 16px; font-weight: 700; }
+        .cc-story-title { margin: 0; min-height: 3.3em; font-size: clamp(28px, 8vw, 40px); font-weight: 600; line-height: 1.1; letter-spacing: -0.03em; text-wrap: balance; }
+        .cc-story-cta { width: 100%; min-height: 60px; border: 2px solid #fff; background: rgba(255, 255, 255, 0.14); color: #fff; font-size: 19px; -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+        .cc-story-link { align-self: center; display: inline-flex; align-items: center; min-height: 44px; font-size: 18px; font-weight: 700; color: #fff; text-decoration: underline; text-underline-offset: 4px; }
+        /* The statement under it is phone sized and left aligned. */
+        .cc-phone-left .cc-statement { font-size: clamp(26px, 7.4vw, 36px); line-height: 1.2; text-align: left; }
+        .cc-phone-left .cc-lead { text-align: left; margin-inline: 0 !important; }
+        .cc-phone-left .cc-btn-row { justify-content: stretch; }
+        .cc-phone-left .cc-btn-row .af-btn { width: 100%; }
+        /* Bigger text becomes a small round button so it never covers content. */
+        .cc-access { width: 56px; height: 56px; min-height: 0; padding: 0; justify-content: center; right: 14px; bottom: 14px; }
+        .cc-access span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+    }
+    @media (prefers-reduced-motion: reduce) { .cc-story-dot { transition: none; } }
 }

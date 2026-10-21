@@ -5,16 +5,19 @@
 @endphp
 <x-marketing-layout title="Co-own a vending machine">
     <section class="cc-hero" data-bg="coral">
-        <div class="cc-wrap">
-            <h1 class="cc-display"><span>We Co-own</span><span>the Machine</span><span>and Share the</span><span class="cc-word" data-words="Daily Payout|Morning Rush|Lunch Peak">Daily Payout</span></h1>
-            <p class="cc-lead">You and a partner each put in half the cost of a drink machine, and split the daily earnings.</p>
-            <div class="af-ctas">
-                @auth
-                    <a class="af-btn af-btn-black" href="{{ route('dashboard') }}">Open dashboard</a>
-                @else
-                    <a class="af-btn af-btn-black" href="{{ route('register') }}">Get started</a>
-                @endauth
-                <a class="af-btn cc-btn-outline" href="{{ route('program') }}">How it works</a>
+        <div class="cc-wrap cc-hero-grid">
+            <div class="cc-hero-photo" aria-hidden="true"><div class="cc-photo"><span>Photo</span></div></div>
+            <div class="cc-hero-text">
+                <h1 class="cc-display"><span>We Co-own</span><span>the Machine</span><span>and Share the</span><span class="cc-word" data-words="Daily Payout|Morning Rush|Lunch Peak">Daily Payout</span></h1>
+                <p class="cc-lead">You and a partner each put in half the cost of a drink machine, and split the daily earnings.</p>
+                <div class="af-ctas">
+                    @auth
+                        <a class="af-btn af-btn-black" href="{{ route('dashboard') }}">Open dashboard</a>
+                    @else
+                        <a class="af-btn af-btn-black" href="{{ route('register') }}">Get started</a>
+                    @endauth
+                    <a class="af-btn cc-btn-outline" href="{{ route('program') }}">How it works</a>
+                </div>
             </div>
         </div>
     </section>

@@ -50,21 +50,14 @@
         color: #000;
         background: transparent;
         border-radius: 0;
-        animation: cc-drop-in 0.8s ease-in-out both;
-        transition: background-color 0.5s ease-in-out, box-shadow 0.4s ease, border-radius 0.4s ease;
+        animation: cc-drop-in 0.8s ease-in-out backwards;
+        
     }
 
-    .cc-nav.is-scrolled {
-        background: rgba(255, 255, 255, 0.5);
-        -webkit-backdrop-filter: blur(32px) saturate(180%);
-        backdrop-filter: blur(32px) saturate(180%);
-        border-radius: 0 0 24px 24px;
-        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
-    }
-
-    .cc-nav.is-scrolled:hover {
-        background: #f2f2f2;
-    }
+    /* The glass sits on a pseudo-element so the header itself never becomes a containing block for the full-screen menu. */
+    .cc-nav::before { content: ""; position: absolute; inset: 0; z-index: -1; opacity: 0; background: rgba(255, 255, 255, 0.5); -webkit-backdrop-filter: blur(32px) saturate(180%); backdrop-filter: blur(32px) saturate(180%); border-radius: 0 0 24px 24px; box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1); transition: opacity 0.4s ease, background-color 0.4s ease; pointer-events: none; }
+    .cc-nav.is-scrolled::before { opacity: 1; }
+    .cc-nav.is-scrolled:hover::before { background: #f2f2f2; }
 
     .cc-nav-in {
         display: flex;
@@ -1251,17 +1244,117 @@
         .cc-btns, .cc-btns.is-fit, .cc-demo .btns.cc-btns, .cc-pactions.cc-btns, .cc-btns:has(> :nth-child(3)), .cc-demo .btns.cc-btns:has(> :nth-child(3)) { display: flex; flex-wrap: wrap; gap: 12px; width: auto; max-width: 100%; grid-template-columns: none; }
         .cc-btns .af-btn, .cc-btns button.af-btn { width: auto; }
     }
-    /* Footer colour change: a slow drifting gradient that cycles through the brand tints, on every screen. */
+    /* Mobile menu sheet: full screen, owned by this file so it never depends on utility classes. */
+    .cc-sheet-wrap { margin-left: auto; }
+    @media (min-width: 1024px) { .cc-sheet-wrap { display: none; } }
+    .cc-sheet { position: fixed; inset: 0; z-index: 90; display: flex; flex-direction: column; overflow-y: auto; background: #fff; color: #000; padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left); }
+    .cc-sheet[x-cloak] { display: none; }
+    .cc-sheet-top { display: flex; align-items: center; justify-content: space-between; gap: 16px; height: 72px; flex: none; padding-inline: 16px; }
+    .cc-sheet-nav { display: flex; flex-direction: column; gap: 4px; padding: 16px; }
+    .cc-sheet-link { display: flex; align-items: center; width: 100%; min-height: 60px; padding: 0; font: inherit; font-size: 26px; font-weight: 700; letter-spacing: -0.02em; color: #000; text-align: left; text-decoration: none; background: none; border: 0; border-bottom: 1px solid #e4e4e4; cursor: pointer; }
+    .cc-sheet-cta { margin-top: 24px; width: 100%; min-height: 60px; font-size: 19px; }
+    [x-cloak] { display: none !important; }
+    body.cc-noscroll [data-text-size] { display: none; }
+    /* Yield calculator */
+    .cc-calc { display: grid; gap: 16px; grid-template-columns: minmax(0, 1fr); margin-top: 40px; text-align: left; }
+    @media (min-width: 1024px) { .cc-calc { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    .cc-calc-panel { min-width: 0; padding: clamp(20px, 3vw, 36px); border-radius: 28px; background: #fff; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.06); }
+    .cc-calc-tiers { display: grid; gap: 12px; margin: 0; padding: 0; border: 0; min-width: 0; }
+    .cc-calc-legend, .cc-calc-tiers legend { display: block; margin: 0 0 12px; padding: 0; font-size: 14px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #353535; }
+    .cc-calc-panel .cc-calc-legend:not(:first-child) { margin-top: 28px; }
+    .cc-calc-tier { position: relative; display: block; padding: 18px 20px; border: 3px solid transparent; border-radius: 22px; cursor: pointer; background: linear-gradient(170deg, #fcb791, #f7723a); }
+    .cc-calc-tier:nth-of-type(2) { background: linear-gradient(170deg, #b5e8c8, #5fc29f); }
+    .cc-calc-tier input { position: absolute; opacity: 0; inset: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; }
+    .cc-calc-tier-name { display: block; font-size: 22px; font-weight: 700; letter-spacing: -0.02em; }
+    .cc-calc-tier-sub { display: block; margin-top: 2px; font-size: 17px; font-weight: 600; }
+    .cc-calc-tier:has(input:checked) { border-color: #000; box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18); }
+    .cc-calc-tier:has(input:focus-visible) { outline: 4px solid #000; outline-offset: 3px; }
+    .cc-calc-days { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .cc-calc-days output { flex: 1; text-align: center; font-size: 20px; font-weight: 600; }
+    .cc-calc-days output b { font-size: clamp(40px, 8vw, 56px); font-weight: 700; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+    .cc-calc-step { flex: none; width: 64px; height: 64px; border: 0; border-radius: 9999px; background: #000; color: #fff; font: inherit; font-size: 34px; font-weight: 700; line-height: 1; cursor: pointer; }
+    .cc-calc-step:active { transform: scale(0.94); }
+    .cc-calc-range { display: block; width: 100%; height: 44px; margin: 14px 0 0; accent-color: #000; cursor: pointer; touch-action: pan-y; }
+    .cc-calc-scale { display: flex; justify-content: space-between; font-size: 15px; font-weight: 600; color: #353535; }
+    .cc-calc-tiles { display: grid; gap: 12px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    @media (max-width: 420px) { .cc-calc-tiles { grid-template-columns: minmax(0, 1fr); } }
+    .cc-calc-tile { min-width: 0; padding: 18px 20px; border-radius: 22px; container-type: inline-size; }
+    .cc-calc-tile.is-coral { background: linear-gradient(170deg, #fcb791, #f7723a); }
+    .cc-calc-tile.is-mint { background: linear-gradient(170deg, #b5e8c8, #5fc29f); }
+    .cc-calc-tile.is-amber { background: linear-gradient(170deg, #f1d49d, #f6af4e); }
+    .cc-calc-tile.is-cream { background: linear-gradient(170deg, #fff4df, #f6e3c0); }
+    .cc-calc-tile small { display: block; font-size: 14px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+    .cc-calc-tile b { display: block; margin-top: 6px; white-space: nowrap; font-size: clamp(22px, 13cqw, 40px); font-weight: 700; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+    .cc-calc-back { margin: 18px 0 0; font-size: 19px; font-weight: 600; }
+    .cc-calc-chart { position: relative; height: 260px; }
+    .cc-calc-note { margin: 20px auto 0; max-width: 60ch; font-size: 17px; color: #353535; text-align: center; }
+    /* Daily split cards (replace the sideways-scrolling table) */
+    .cc-splits { display: grid; gap: 16px; grid-template-columns: minmax(0, 1fr); margin-top: 40px; text-align: left; }
+    @media (min-width: 768px) { .cc-splits { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    .cc-split { min-width: 0; padding: clamp(20px, 3vw, 32px); border-radius: 28px; background: #fff; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.06); }
+    .cc-split h3 { margin: 0 0 12px; font-size: clamp(24px, 3vw, 30px); font-weight: 700; letter-spacing: -0.03em; }
+    .cc-split dl { margin: 0; }
+    .cc-split dl > div { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding: 14px 0; border-top: 1px solid #e4e4e4; font-size: 18px; }
+    .cc-split dt { color: #353535; }
+    .cc-split dd { margin: 0; font-weight: 700; text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .cc-split dl > div.is-total { margin-block: 4px; padding: 18px 16px; border: 0; border-radius: 18px; background: linear-gradient(170deg, #b5e8c8, #5fc29f); font-size: 21px; }
+    .cc-split dl > div.is-total dt { color: #000; font-weight: 700; }
+    /* Code boxes: the shared field padding must not squeeze the digit out of a narrow box. */
+    .cc-field .cc-otp input[type=text] { min-width: 0; padding: 0; text-align: center; }
+    @media (max-width: 400px) { .cc-otp { gap: 6px; } }
+    @media (max-width: 480px) { .cc-otp input, .cc-field .cc-otp input[type=text] { min-height: 52px; border-radius: 12px; font-size: 24px; } }
+    /* Hero: photo first on phones, side by side on wide screens. */
+    .cc-hero { align-items: flex-start; padding-block: 96px 48px; min-height: 0; }
+    .cc-hero-grid { display: grid; gap: 28px; grid-template-columns: minmax(0, 1fr); align-items: center; }
+    .cc-hero-photo .cc-photo { aspect-ratio: 16 / 10; border-radius: 28px; }
+    @media (min-width: 900px) {
+        .cc-hero { align-items: center; min-height: 100vh; min-height: 100dvh; padding-block: 120px 72px; }
+        .cc-hero-grid { grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: 48px; }
+        .cc-hero-photo { order: 2; }
+        .cc-hero-photo .cc-photo { aspect-ratio: 4 / 5; }
+    }
+    @media (max-width: 639px) {
+        .cc-display span:nth-child(2), .cc-display span:nth-child(3) { padding-left: 0; }
+        .cc-display { font-size: clamp(34px, 10.5vw, 56px); }
+        .cc-lead { margin-block: 20px 20px; }
+    }
+    /* The page background always reaches the real bottom edge of the screen on phones, with a soft blur along the very bottom. */
+    .cc-mesh { height: 100lvh; min-height: 100%; }
+    html { background: #f7723a; }
+    @media (max-width: 899px) {
+        body.cc-page::after { content: ""; position: fixed; inset: auto 0 0 0; z-index: 30; height: calc(34px + env(safe-area-inset-bottom)); pointer-events: none; background: linear-gradient(to top, rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0)); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); -webkit-mask-image: linear-gradient(to top, #000, transparent); mask-image: linear-gradient(to top, #000, transparent); }
+    }
+    body.cc-noscroll.cc-page::after { display: none; }
+
+    /* Footer: plain links on top, then only the base is a colour-changing gradient with a moving wave edge. */
     @keyframes cc-foot-drift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-    .cc-foot, .cc-appfoot {
+    @keyframes cc-wave-move { from { -webkit-mask-position: 0 100%, 0 0; mask-position: 0 100%, 0 0; } to { -webkit-mask-position: 0 100%, 1200px 0; mask-position: 0 100%, 1200px 0; } }
+    .cc-foot { background: transparent; padding-bottom: 0; }
+    .cc-foot-cols a, .cc-foot-cols button { color: #000; }
+    .cc-foot-base, .cc-appfoot {
+        --wave: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1200' height='40' viewBox='0 0 1200 40'><path d='M0 20 C200 0 400 0 600 20 C800 40 1000 40 1200 20 V40 H0 Z'/></svg>");
+        position: relative;
+        margin-top: 56px;
+        padding-block: 84px 28px;
         background-color: #fff4df;
         background-image: linear-gradient(115deg, #fff4df 0%, #fcb791 18%, #f7723a 32%, #f6af4e 48%, #b5e8c8 66%, #5fc29f 80%, #fff4df 100%);
         background-size: 400% 400%;
         animation: cc-foot-drift 24s ease-in-out infinite;
+        -webkit-mask-image: linear-gradient(#000, #000), var(--wave);
+        mask-image: linear-gradient(#000, #000), var(--wave);
+        -webkit-mask-size: 100% calc(100% - 39px), 1200px 40px;
+        mask-size: 100% calc(100% - 39px), 1200px 40px;
+        -webkit-mask-position: 0 100%, 0 0;
+        mask-position: 0 100%, 0 0;
+        -webkit-mask-repeat: no-repeat, repeat-x;
+        mask-repeat: no-repeat, repeat-x;
     }
-    .cc-foot { margin-top: 0; }
-    .cc-foot-legal { border-top-color: rgba(0, 0, 0, 0.25); color: #000; }
-    .cc-foot h4 { color: #000; }
-    .cc-appfoot { margin: 24px clamp(8px, 1.6vw, 24px) clamp(8px, 1.6vw, 24px); padding: 22px clamp(16px, 2.4vw, 36px); border-radius: 28px; color: #000; }
-    @media (prefers-reduced-motion: reduce) { .cc-foot, .cc-appfoot { animation: none; background-size: 100% 100%; background-image: linear-gradient(115deg, #fff4df, #fcb791 55%, #b5e8c8); } }
+    .cc-foot-base .cc-foot-legal { margin: 0; padding: 0 var(--cc-pad); border: 0; color: #000; }
+    .cc-appfoot { margin: 32px 0 0; padding: 84px clamp(16px, 3.2vw, 56px) 24px; border-radius: 0; color: #000; }
+    @media (prefers-reduced-motion: no-preference) {
+        .cc-foot-base, .cc-appfoot { animation: cc-foot-drift 24s ease-in-out infinite, cc-wave-move 14s linear infinite; }
+    }
+    @media (prefers-reduced-motion: reduce) { .cc-foot-base, .cc-appfoot { animation: none; background-size: 100% 100%; background-image: linear-gradient(115deg, #fff4df, #fcb791 55%, #b5e8c8); } }
+    body.cc-page { background: transparent; }
+    @media (min-width: 900px) { .cc-hero .cc-display { font-size: clamp(32px, 5.2vw, 84px); } }
 }

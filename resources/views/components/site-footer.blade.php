@@ -28,7 +28,9 @@
                 @endauth
             </div>
         </div>
-        <div class="cc-foot-legal">
+    </div>
+    <div class="cc-foot-base">
+        <div class="cc-wrap cc-foot-legal">
             <p>{{ $brand->name }}</p>
             <x-footer-disclaimer />
         </div>

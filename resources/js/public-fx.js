@@ -67,6 +67,15 @@ export function initPublicFx() {
         });
     }
 
+    // Content shows as you scroll: everything below the first screen slides in when it arrives. Images wait until near the screen.
+    const auto = '.cc-section .cc-wrap > *, .cc-pagehead .cc-wrap > *, .cc-content > *, .cc-split, .cc-calc-panel, .cc-panel, .cc-kpi, .cc-big-card, .cc-card, .cc-foot-cols > div';
+    document.querySelectorAll(auto).forEach((el) => {
+        if (el.closest('.cc-hero') || el.closest('.cc-nav') || el.closest('[wire\\:id]') || el.matches('script, style, template')) return;
+        if (el.querySelector('[data-reveal]') || el.closest('[data-reveal]')) return;
+        el.setAttribute('data-reveal', '');
+    });
+    document.querySelectorAll('img').forEach((img) => { if (! img.closest('.cc-hero, .cc-nav')) { img.loading = 'lazy'; img.decoding = 'async'; } });
+
     const reveals = document.querySelectorAll('[data-reveal]');
     if (calm || !('IntersectionObserver' in window)) {
         reveals.forEach((el) => el.classList.add('is-in'));

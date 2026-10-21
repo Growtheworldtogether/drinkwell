@@ -10,7 +10,7 @@ export const colors = {
     200: '#E2E2E2',
     100: '#F2F2F2',
     white: '#FFFFFF',
-    accent: '#3E6AE1',
+    accent: '#F7723A',
     'accent-ink': '#2F55BF',
     ok: '#1F7A3D',
     warn: '#9A6700',

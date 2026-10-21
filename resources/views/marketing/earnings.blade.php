@@ -19,18 +19,20 @@
         <div class="cc-wrap">
             <h2 class="cc-h2" data-reveal>The daily split</h2>
             <p class="cc-lead" style="margin-inline:auto" data-reveal>Sales come in, the bottling and logistics fee comes off, and the rest is split equally between you and your co-partner.</p>
-            <div class="cc-scroll" data-reveal>
-                <table class="cc-table">
-                    <caption class="sr-only">Daily figures by machine</caption>
-                    <thead><tr><th>Machine</th><th>Drinks</th><th>Sales</th><th>Fee</th><th>Pool</th><th>Your share</th><th>Usual range</th></tr></thead>
-                    <tbody>
-                        @foreach ($tiers as $t)
-                            <tr>
-                                <td>{{ $t['label'] }}</td><td>{{ $t['capacity'] }}</td><td>{{ $fmt($t['gross']) }}</td><td>{{ $fmt($t['fee']) }}</td><td>{{ $fmt($t['pool']) }}</td><td>{{ $fmt($t['share']) }}</td><td>{{ $fmt($t['band_min']) }} to {{ $fmt($t['band_max']) }}</td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+            <div class="cc-splits">
+                @foreach ($tiers as $t)
+                    <article class="cc-split" data-reveal aria-label="{{ $t['label'] }}">
+                        <h3>{{ $t['label'] }}</h3>
+                        <dl>
+                            <div><dt>Drinks sold</dt><dd>{{ $t['capacity'] }}</dd></div>
+                            <div><dt>Sales</dt><dd>{{ $fmt($t['gross']) }}</dd></div>
+                            <div><dt>Bottling and logistics fee</dt><dd>- {{ $fmt($t['fee']) }}</dd></div>
+                            <div><dt>Pool to split</dt><dd>{{ $fmt($t['pool']) }}</dd></div>
+                            <div class="is-total"><dt>Your share (half)</dt><dd>{{ $fmt($t['share']) }}</dd></div>
+                            <div><dt>Usual range</dt><dd>{{ $fmt($t['band_min']) }} to {{ $fmt($t['band_max']) }}</dd></div>
+                        </dl>
+                    </article>
+                @endforeach
             </div>
         </div>
     </section>

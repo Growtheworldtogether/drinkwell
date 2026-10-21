@@ -1323,17 +1323,17 @@
 
     /* Footer: colour clouds drift across a band, and everything under the band is plain white. */
     @keyframes cc-cloud { 0% { opacity: 0; transform: translateX(30%); } 14% { opacity: 1; } 30% { opacity: 1; } 46% { opacity: 0; transform: translateX(-30%); } 100% { opacity: 0; transform: translateX(-30%); } }
-    .cc-foot { background: transparent; padding-bottom: 0; }
+    .cc-foot { background: #fdfdfd; padding-bottom: 0; }
     .cc-foot-cols a, .cc-foot-cols button { color: #000; }
-    .cc-foot-base, .cc-appfoot { position: relative; margin-top: 24px; padding: 0; background: #fff; color: #000; overflow: hidden; }
-    .cc-foot-clouds { position: relative; height: 130px; overflow: hidden; pointer-events: none; }
+    .cc-foot-base, .cc-appfoot { position: relative; margin-top: 24px; padding: 150px 0 0; background: #fdfdfd; color: #000; overflow: hidden; }
+    .cc-foot-clouds { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
     .cc-foot-clouds::before, .cc-foot-clouds::after, .cc-foot-clouds i { content: ""; position: absolute; left: -90%; right: -90%; top: 0; bottom: 0; opacity: 0; }
-    .cc-foot-clouds::before { background: radial-gradient(ellipse 46% 85% at 50% 118%, rgba(248, 190, 96, 0.75), rgba(248, 190, 96, 0) 100%); }
-    .cc-foot-clouds::after { background: radial-gradient(ellipse 46% 85% at 50% 118%, rgba(120, 205, 205, 0.7), rgba(120, 205, 205, 0) 100%); }
-    .cc-foot-clouds i { background: radial-gradient(ellipse 46% 85% at 50% 118%, rgba(246, 120, 120, 0.7), rgba(246, 120, 120, 0) 100%); }
-    .cc-foot-legal-bar { border-top: 1px solid rgba(0, 0, 0, 0.14); background: #fff; padding: 22px 0; }
+    .cc-foot-clouds::before { background: radial-gradient(ellipse 50% 100% at 50% 100%, rgba(248, 190, 96, 0.75), rgba(248, 190, 96, 0) 100%); }
+    .cc-foot-clouds::after { background: radial-gradient(ellipse 50% 100% at 50% 100%, rgba(120, 205, 205, 0.7), rgba(120, 205, 205, 0) 100%); }
+    .cc-foot-clouds i { background: radial-gradient(ellipse 50% 100% at 50% 100%, rgba(246, 120, 120, 0.7), rgba(246, 120, 120, 0) 100%); }
+    .cc-foot-legal-bar { position: relative; z-index: 1; border-top: 1px solid rgba(0, 0, 0, 0.14); background: transparent; padding: 22px 0; }
     .cc-foot-base .cc-foot-legal { margin: 0; padding-block: 0; border: 0; color: #000; }
-    .cc-appfoot { margin: 28px 0 0; }
+    .cc-appfoot { margin: 28px 0 0; padding-top: 90px; }
     .cc-appfoot .cc-foot-legal-bar { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; padding: 20px clamp(16px, 3.2vw, 56px) 24px; font-size: 15px; }
     .cc-appfoot p { margin: 0; }
     @media (prefers-reduced-motion: no-preference) {

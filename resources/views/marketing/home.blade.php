@@ -25,14 +25,8 @@
     <section class="cc-section cc-center" data-bg="mint">
         <div class="cc-wrap">
             <p class="cc-statement" data-reveal>At {{ $brand->name }}, we are refreshing what it means to co&#8209;own: one drink, one payout at a time.</p>
+            <p class="cc-lead" style="margin-inline:auto" data-reveal>You share the machine, the cost and the daily payout with one partner, and every cent is shown.</p>
             <div class="cc-btn-row" data-reveal><a class="af-btn af-btn-black" href="{{ route('program') }}">Discover how it works</a></div>
-        </div>
-    </section>
-
-    <section class="cc-section cc-center" data-bg="amber">
-        <div class="cc-wrap">
-            <p class="cc-statement" data-reveal>You share the machine, the cost and the daily payout with one partner, and every cent is shown.</p>
-            <div class="cc-btn-row" data-reveal><a class="af-btn af-btn-black" href="{{ route('about') }}">Why co-own with us</a></div>
         </div>
     </section>
 

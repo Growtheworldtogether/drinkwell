@@ -1449,6 +1449,48 @@
     .cc-option-photo { aspect-ratio: 16 / 10; margin-bottom: 12px; border-radius: 16px; }
     .cc-option-photo > img { object-position: center 62%; }
     @media (prefers-reduced-motion: reduce) { .cc-story-photos > img { transition: none; } }
+    /* Restored: breadcrumbs, zig-zag feature rows and the draggable card row (lost by accident in an earlier footer change). */
+    .cc-crumbs { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 0 0 24px; font-size: 16px; font-weight: 600; }
+    .cc-crumbs a { color: inherit; text-decoration: none; }
+    .cc-crumbs a:hover { text-decoration: underline; }
+    .cc-crumbs b { font-weight: 700; }
+    .cc-feature { display: grid; gap: 24px; grid-template-columns: minmax(0, 1fr); align-items: center; margin-top: 56px; text-align: left; }
+    .cc-feature .cc-photo { aspect-ratio: 4 / 3; border-radius: 28px; }
+    .cc-feature h3 { margin: 0; font-size: clamp(30px, 3.6vw, 54px); font-weight: 600; line-height: 1.08; letter-spacing: -0.03em; text-wrap: balance; }
+    .cc-feature p { margin: 16px 0 0; max-width: 36ch; font-size: 20px; font-weight: 500; line-height: 1.5; }
+    .cc-feature .cc-learn { display: inline-flex; align-items: center; min-height: 48px; margin-top: 18px; font-size: 18px; font-weight: 700; color: #000; text-decoration: underline; text-underline-offset: 4px; }
+    @media (min-width: 900px) {
+        .cc-feature { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 56px; }
+        .cc-feature.is-flip .cc-feature-photo { order: 2; }
+    }
+    .cc-cardrow-wrap { position: relative; margin-top: 48px; }
+    .cc-cardrow { display: flex; gap: 16px; padding: 0 var(--cc-pad) 16px; overflow-x: auto; scroll-snap-type: x proximity; scrollbar-width: none; text-align: left; cursor: grab; }
+    .cc-cardrow::-webkit-scrollbar { display: none; }
+    .cc-cardrow.is-drag { cursor: grabbing; scroll-snap-type: none; }
+    .cc-cardrow > article { flex: 0 0 min(80vw, 340px); min-height: 360px; display: flex; flex-direction: column; justify-content: flex-end; padding: 28px; border-radius: 28px; scroll-snap-align: start; background: linear-gradient(170deg, #f1d49d, #f6af4e); user-select: none; }
+    .cc-cardrow > article:nth-child(4n+1) { background: linear-gradient(170deg, #fcb791, #f7723a); }
+    .cc-cardrow > article:nth-child(4n+2) { background: linear-gradient(170deg, #b5e8c8, #5fc29f); }
+    .cc-cardrow > article:nth-child(4n+4) { background: linear-gradient(170deg, #fff4df, #f6e3c0); }
+    .cc-cardrow h3 { margin: 0; font-size: clamp(28px, 2.6vw, 38px); font-weight: 700; line-height: 1.1; letter-spacing: -0.025em; }
+    .cc-cardrow p { margin: 12px 0 0; font-size: 18px; line-height: 1.5; }
+    /* How it works: role cards with short lists, the deposit points, and the worked daily split. */
+    .cc-roles .cc-card-body { padding: 32px 28px 36px; }
+    .cc-roles ul, .cc-points { margin: 16px 0 0; padding: 0; list-style: none; }
+    .cc-roles ul li, .cc-points li { position: relative; padding-left: 30px; font-size: 19px; line-height: 1.45; color: #111; }
+    .cc-roles ul li + li, .cc-points li + li { margin-top: 12px; }
+    .cc-roles ul li::before, .cc-points li::before { content: ""; position: absolute; left: 4px; top: 0.5em; width: 10px; height: 10px; border-radius: 9999px; background: #000; }
+    .cc-points li { font-size: 20px; }
+    .cc-feature .cc-points { max-width: 40ch; }
+    .cc-btn-row.cc-btn-left { justify-content: flex-start; margin-top: 28px; }
+    .cc-math { display: grid; gap: 12px; grid-template-columns: minmax(0, 1fr); margin: 40px 0 0; padding: 0; list-style: none; }
+    @media (min-width: 640px) { .cc-math { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (min-width: 1100px) { .cc-math { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+    .cc-math li { display: flex; flex-direction: column; justify-content: flex-end; gap: 10px; min-height: 180px; padding: 28px; border-radius: 24px; background: #fff; container-type: inline-size; }
+    .cc-math b { font-size: clamp(30px, 17cqi, 48px); font-weight: 700; line-height: 1; letter-spacing: -0.03em; white-space: nowrap; font-variant-numeric: tabular-nums; }
+    .cc-math span { font-size: 18px; line-height: 1.4; color: #353535; }
+    .cc-math li.is-total { background: linear-gradient(170deg, #b5e8c8, #5fc29f); }
+    .cc-math li.is-total span { color: #000; font-weight: 600; }
+    @media (max-width: 639px) { .cc-math li { min-height: 0; padding: 22px 24px; } }
 }
 
 /* Lets the story dot ring fill smoothly. Registered outside the layer, as @property must be. */

@@ -14,17 +14,65 @@
         <div class="cc-wrap">
             <h2 class="cc-huge" data-reveal><span>Start in</span><span>three steps</span></h2>
             <ol class="cc-cards3">
-                <li class="cc-card cc-card-1" data-reveal><div class="cc-photo" aria-hidden="true"><span>Photo</span></div><div class="cc-card-body"><span class="cc-num">1</span><h3>Tell us about you</h3><p>Sign up, verify your email, and give your date of birth. Co-partners are {{ config('drinkwell.min_age') }} or older.</p></div></li>
-                <li class="cc-card cc-card-2" data-reveal><div class="cc-photo" aria-hidden="true"><span>Photo</span></div><div class="cc-card-body"><span class="cc-num">2</span><h3>Get a partner</h3><p>We find you a co-partner and a machine, usually within 1 business day. Your email and your dashboard then show every detail.</p></div></li>
-                <li class="cc-card cc-card-3" data-reveal><div class="cc-photo" aria-hidden="true"><span>Photo</span></div><div class="cc-card-body"><span class="cc-num">3</span><h3>Pay your co-partner</h3><p>You are buying half of a machine they already own, so you pay them directly. Once they confirm it, daily payouts begin.</p></div></li>
+                <li class="cc-card cc-card-1" data-reveal><div class="cc-photo" aria-hidden="true"><span>Photo</span></div><div class="cc-card-body"><span class="cc-num">1</span><h3>Pairing</h3><p>Sign up, verify your email and give your date of birth. Co-partners are {{ config('drinkwell.min_age') }} or older. We then find you a co-partner and a machine, usually within 1 business day.</p></div></li>
+                <li class="cc-card cc-card-2" data-reveal><div class="cc-photo" aria-hidden="true"><span>Photo</span></div><div class="cc-card-body"><span class="cc-num">2</span><h3>Deposit</h3><p>You are buying half of a machine your co-partner already owns, so you pay them directly. Upload your proof of payment and we confirm it.</p></div></li>
+                <li class="cc-card cc-card-3" data-reveal><div class="cc-photo" aria-hidden="true"><span>Photo</span></div><div class="cc-card-body"><span class="cc-num">3</span><h3>Payouts</h3><p>From then on, every day's earnings are split 50/50 and added to your balance.</p></div></li>
             </ol>
         </div>
     </section>
 
-    <section id="day" class="cc-section cc-center" data-bg="mint">
+    <section class="cc-section cc-center" data-bg="mint">
         <div class="cc-wrap">
-            <p class="cc-statement" data-reveal>Sales start at 06:00, peak at lunch, and every drink is sold by midnight.</p>
-            <p class="cc-lead" style="margin-inline:auto" data-reveal>A driver restocks the machine overnight, so it is full again by morning.</p>
+            <h2 class="cc-huge" data-reveal><span>Who does</span><span>what</span></h2>
+            <ul class="cc-cards3 cc-roles">
+                <li class="cc-card cc-card-1" data-reveal><div class="cc-card-body"><h3>You</h3><ul><li>Pay your half to your co-partner</li><li>Watch the machine and your balance from your dashboard</li><li>Take money out when you like</li></ul></div></li>
+                <li class="cc-card cc-card-2" data-reveal><div class="cc-card-body"><h3>Your co-partner</h3><ul><li>Owns the other half of the machine</li><li>Receives your deposit and confirms it</li><li>Shares every daily payout 50/50 with you</li></ul></div></li>
+                <li class="cc-card cc-card-3" data-reveal><div class="cc-card-body"><h3>{{ $brand->name }}</h3><ul><li>Pairs you with a co-partner</li><li>Places, restocks and settles the machine</li><li>Keeps the books and reviews each withdrawal</li></ul></div></li>
+            </ul>
+        </div>
+    </section>
+
+    <section id="deposit" class="cc-section" data-bg="cream">
+        <div class="cc-wrap">
+            <h2 class="cc-huge" data-reveal><span>Paying your</span><span>co-partner</span></h2>
+            <article class="cc-feature" data-reveal>
+                <div class="cc-feature-photo" aria-hidden="true"><div class="cc-photo" aria-hidden="true"><span>Photo</span></div></div>
+                <div>
+                    <h3>Your deposit goes to your co-partner, never to us</h3>
+                    <ul class="cc-points">
+                        <li>There is no card form on this site, and nothing is paid to {{ $brand->name }}.</li>
+                        <li>You are buying your half of a machine your co-partner already owns, so you pay them directly. Their name and payment details come by email and show on your dashboard.</li>
+                        <li>Upload your proof of payment. Once it is confirmed, your share of the daily payouts starts.</li>
+                    </ul>
+                    <div class="cc-btn-row cc-btn-left"><a class="af-btn af-btn-black" href="{{ route('register') }}">Get started</a><a class="af-btn cc-btn-outline" href="{{ route('questions') }}">Read the questions</a></div>
+                </div>
+            </article>
+        </div>
+    </section>
+
+    <section id="day" class="cc-section" data-bg="coral">
+        <div class="cc-wrap">
+            <h2 class="cc-huge" data-reveal><span>A day with</span><span>your machine</span></h2>
+            <p class="cc-lead" data-reveal>Every drink is {{ $fmt(config('drinkwell.unit_price_cents')) }}, and the machine sells out every day.</p>
+            <div class="cc-big-cards">
+                <article class="cc-big-card" data-reveal><div class="cc-photo" aria-hidden="true"><span>Photo</span></div><div class="cc-big-body"><h3>Restocked overnight, open at 06:00</h3><p>A driver refills it every night, so it is full again by morning.</p></div></article>
+                <article class="cc-big-card" data-reveal><div class="cc-photo" aria-hidden="true"><span>Photo</span></div><div class="cc-big-body"><h3>Sold out by midnight, settled by morning</h3><p>Sales peak at lunch. At night the sales are counted, the fee comes off, and your share is added to your balance.</p></div></article>
+            </div>
+        </div>
+    </section>
+
+    <section id="split" class="cc-section" data-bg="amber">
+        <div class="cc-wrap">
+            @php $c = $tiers['commercial']; $e = $tiers['enterprise']; @endphp
+            <h2 class="cc-huge" data-reveal><span>The daily</span><span>split</span></h2>
+            <p class="cc-lead" data-reveal>One day with the {{ $c['label'] }}, worked out.</p>
+            <ol class="cc-math" aria-label="One day of the {{ $c['label'] }}">
+                <li data-reveal><b>{{ $fmt($c['gross']) }}</b><span>{{ $c['capacity'] }} drinks sold at {{ $fmt(config('drinkwell.unit_price_cents')) }}</span></li>
+                <li data-reveal><b>- {{ $fmt($c['fee']) }}</b><span>Bottling and logistics fee</span></li>
+                <li data-reveal><b>{{ $fmt($c['pool']) }}</b><span>Left to split</span></li>
+                <li class="is-total" data-reveal><b>{{ $fmt($c['share']) }}</b><span>To you, and the same to your co-partner</span></li>
+            </ol>
+            <p class="cc-lead cc-after" data-reveal>The {{ $e['label'] }} works the same way: {{ $e['capacity'] }} drinks and {{ $fmt($e['share']) }} each. The fee moves a little from day to day, so your share stays between {{ $fmt($c['band_min']) }} and {{ $fmt($c['band_max']) }} on the {{ $c['label'] }}. See every figure on <a href="{{ route('earnings') }}">Your earnings</a>.</p>
         </div>
     </section>
 
@@ -32,52 +80,10 @@
         <div class="cc-wrap">
             <h2 class="cc-huge" data-reveal><span>Then your</span><span>money starts</span><span>to move</span></h2>
             <ol class="cc-cards3">
-                <li class="cc-card cc-card-1" data-reveal><div class="cc-photo" aria-hidden="true"><span>Photo</span></div><div class="cc-card-body"><h3>Your deposit is confirmed</h3><p>Our team checks your proof of payment and confirms it. You get an email, and your machine is yours to share.</p></div></li>
-                <li class="cc-card cc-card-2" data-reveal><div class="cc-photo" aria-hidden="true"><span>Photo</span></div><div class="cc-card-body"><h3>Payouts every night</h3><p>When the day closes your half of the pool is added to your balance, and the day appears in your ledger.</p></div></li>
-                <li class="cc-card cc-card-3" data-reveal><div class="cc-photo" aria-hidden="true"><span>Photo</span></div><div class="cc-card-body"><h3>Take it out when you like</h3><p>Ask from your dashboard, confirm with a code we email you, and we review it within {{ config('drinkwell.withdrawal_review_days') }} business days.</p></div></li>
+                <li class="cc-card cc-card-1" data-reveal><div class="cc-photo" aria-hidden="true"><span>Photo</span></div><div class="cc-card-body"><h3>Added every night</h3><p>When the day closes, your half of the pool is added to your balance.</p></div></li>
+                <li class="cc-card cc-card-2" data-reveal><div class="cc-photo" aria-hidden="true"><span>Photo</span></div><div class="cc-card-body"><h3>Every day in your ledger</h3><p>Each day shows the sales, the fee and your share, to the cent, and you can download it.</p></div></li>
+                <li class="cc-card cc-card-3" data-reveal><div class="cc-photo" aria-hidden="true"><span>Photo</span></div><div class="cc-card-body"><h3>Take it out when you like</h3><p>Ask from your dashboard for {{ $fmt(config('drinkwell.withdrawal_min_cents')) }} or more, confirm with a code we email you, and we review it within {{ config('drinkwell.withdrawal_review_days') }} business days.</p></div></li>
             </ol>
-        </div>
-    </section>
-
-    <section class="cc-section" data-bg="coral">
-        <div class="cc-wrap">
-            <h2 class="cc-huge" data-reveal><span>A day with</span><span>your machine</span></h2>
-            <div class="cc-big-cards">
-                <article class="cc-big-card" data-reveal><div class="cc-photo" aria-hidden="true"><span>Photo</span></div><h3>Restocked overnight, open at 06:00</h3></article>
-                <article class="cc-big-card" data-reveal><div class="cc-photo" aria-hidden="true"><span>Photo</span></div><h3>Sold out by midnight, settled by morning</h3></article>
-            </div>
-            <p class="cc-lead cc-after" data-reveal>Every drink is {{ $fmt(config('drinkwell.unit_price_cents')) }}. The busiest hours are at lunch, and by midnight the machine has sold out. At night the sales are counted, the fee comes off, and your share is added to your balance.</p>
-        </div>
-    </section>
-
-    <section class="cc-section cc-center" data-bg="mint">
-        <div class="cc-wrap">
-            <h2 class="cc-huge" data-reveal><span>Who does</span><span>what</span></h2>
-        </div>
-            <div class="cc-cardrow-wrap"><div class="cc-cardrow" data-drag>
-                <article data-reveal><h3>You</h3><p>Pay your half of the deposit to your co-partner, and watch your machine from your dashboard.</p></article>
-                <article data-reveal><h3>Your co-partner</h3><p>Owns the other half, receives your deposit, and shares every daily payout equally with you.</p></article>
-                <article data-reveal><h3>{{ $brand->name }}</h3><p>Pairs you, stocks and settles the machine, keeps the books, and reviews each withdrawal.</p></article>
-                <article data-reveal><h3>Your dashboard</h3><p>Your balance, the machine, your daily ledger and your withdrawals, all in one place.</p></article>
-            </div></div>
-    </section>
-
-    <section id="split" class="cc-section" data-bg="amber">
-        <div class="cc-wrap">
-            <h2 class="cc-huge" data-reveal><span>The daily</span><span>split</span></h2>
-            <div class="cc-big-cards">
-                <article class="cc-big-card" data-reveal><div class="cc-photo" aria-hidden="true"><span>Photo</span></div><h3>Sales, minus the fee</h3></article>
-                <article class="cc-big-card" data-reveal><div class="cc-photo" aria-hidden="true"><span>Photo</span></div><h3>Half to you, half to your co-partner</h3></article>
-            </div>
-            <p class="cc-lead cc-after" data-reveal>A bottling and logistics fee comes off first. The pool that is left is divided equally. See every figure on <a href="{{ route('earnings') }}">Your earnings</a>.</p>
-        </div>
-    </section>
-
-    <section id="deposit" class="cc-section cc-center" data-bg="cream">
-        <div class="cc-wrap">
-            <h2 class="cc-h2" data-reveal>Paying your co-partner</h2>
-            <p class="cc-lead" style="margin-inline:auto" data-reveal>There is no card form on this site. When you are paired, we email you your co-partner's name and payment details, and the same details show on your dashboard. You are buying your half of a machine they already own, so the deposit goes straight to them and never to us. Your share starts the day they confirm it.</p>
-            <div class="cc-btn-row" data-reveal><a class="af-btn af-btn-black" href="{{ route('register') }}">Get started</a><a class="af-btn cc-btn-outline" href="{{ route('questions') }}">Read the questions</a></div>
         </div>
     </section>
     <x-related :links="[['earnings', 'See what you could earn'], ['questions', 'Read the questions']]" />

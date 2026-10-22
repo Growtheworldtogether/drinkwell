@@ -3,6 +3,10 @@
 return [
 
     // Brand defaults. The settings table overrides them (Admin, Settings, Branding).
+    // Testing only: show each one-time code on the page where it is typed, so testers do not need the email.
+    // Leave this off for real users.
+    'show_codes' => (bool) env('DEMO_SHOW_CODES', false),
+
     'brand' => [
         'name' => 'DRinkWeLL',
         'tagline' => 'Senior co-partner vending platform.',

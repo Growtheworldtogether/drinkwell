@@ -28,6 +28,12 @@
     }"
     x-on:paste="paste($event)"
 >
+    @if (config('drinkwell.show_codes') && session('demo_code'))
+        <div class="cc-democode" role="note">
+            <span>Test mode: your code is <b>{{ session('demo_code') }}</b></span>
+            <button type="button" class="cc-edit" x-on:click="digits = '{{ session('demo_code') }}'.split(''); digits.forEach((d, i) => { $refs['box' + i].value = d; })">Fill it in</button>
+        </div>
+    @endif
     <label for="{{ $name }}-0">{{ $label }}</label>
     <input type="hidden" name="{{ $name }}" x-bind:value="digits.join('')">
     <div class="cc-otp" role="group" aria-label="{{ $label }}, six digits">

@@ -1570,6 +1570,12 @@
     .cc-field input[type=date]::-webkit-date-and-time-value { margin: 0; text-align: left; }
     .cc-field input[type=date]::-webkit-datetime-edit { padding: 0; }
     .cc-field, .cc-two > * { min-width: 0; max-width: 100%; }
+    /* Test mode only: the code shown above the code boxes. */
+    .cc-democode { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 16px; margin-bottom: 14px; padding: 14px 18px; border: 2px dashed #000; border-radius: 16px; background: #fff4df; font-size: 18px; }
+    .cc-democode b { font-size: 22px; letter-spacing: 0.12em; font-variant-numeric: tabular-nums; }
+    /* Long email addresses (in notices and on the code page) wrap instead of pushing the card wider than the phone. */
+    .cc-auth-card { min-width: 0; max-width: 100%; }
+    .cc-auth-card, .cc-notice, .cc-sub, .cc-kv dd { overflow-wrap: anywhere; }
 }
 
 /* Lets the story dot ring fill smoothly. Registered outside the layer, as @property must be. */

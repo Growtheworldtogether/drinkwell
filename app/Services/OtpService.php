@@ -69,6 +69,10 @@ class OtpService
             throw $e;
         }
 
+        if (config('drinkwell.show_codes')) {
+            session(['demo_code' => $code]);
+        }
+
         // Only now are older unconsumed codes for this email and purpose invalidated.
         OtpCode::query()
             ->where('email', $email)

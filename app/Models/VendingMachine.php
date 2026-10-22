@@ -15,6 +15,18 @@ class VendingMachine extends Model
         'stock', 'temp_c', 'hardware_state', 'assignment_status', 'operating_date', 'day_minute', 'clock_synced_at',
     ];
 
+    /**
+     * Fleet serial number, for example DW-C-21486. The numbers are spread out and uneven, the way a fleet that has
+     * been running for years looks. The n-th machine of a size always gets the same number, and no two can clash
+     * because the steps (263) are wider than the unevenness (under 211).
+     */
+    public static function serialFor(Tier $tier, int $n, string $facility): string
+    {
+        $base = $tier === Tier::Commercial ? 21000 : 48000;
+
+        return sprintf('DW-%s-%05d', $tier === Tier::Commercial ? 'C' : 'E', $base + $n * 263 + crc32($facility) % 211);
+    }
+
     protected function casts(): array
     {
         return [

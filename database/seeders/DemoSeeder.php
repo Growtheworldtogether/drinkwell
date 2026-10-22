@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Enums\AssignmentStatus;
 use App\Enums\Role;
 use App\Enums\SettlementStatus;
+use App\Enums\Tier;
 use App\Enums\UserStatus;
 use App\Models\MachineOwnership;
 use App\Models\PartnerProfile;
@@ -63,7 +64,10 @@ class DemoSeeder extends Seeder
             'routing_number' => '100000001', 'account_number' => '0000004821', 'last4' => '4821', 'is_default' => true,
         ]);
 
-        $machines = VendingMachine::query()->whereIn('serial_no', ['DW-C-0001', 'DW-C-0002', 'DW-C-0003', 'DW-C-0004', 'DW-E-0001', 'DW-E-0002'])->orderBy('id')->get();
+        // The first four Commercial and the first two Enterprise machines.
+        $machines = VendingMachine::query()->where('tier', Tier::Commercial)->orderBy('id')->limit(4)->get()
+            ->concat(VendingMachine::query()->where('tier', Tier::Enterprise)->orderBy('id')->limit(2)->get())
+            ->sortBy('id')->values();
         $n = 1;
 
         foreach ($machines as $i => $machine) {

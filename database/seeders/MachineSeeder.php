@@ -64,11 +64,10 @@ class MachineSeeder extends Seeder
         $tz = (string) config('drinkwell.timezone');
         $now = now($tz);
         $minute = $now->hour * 60 + $now->minute;
-        // Serial numbers carry on from the highest one already used for each machine size.
+        // New machines carry on from how many of each size already exist.
         $n = [];
         foreach ([Tier::Commercial, Tier::Enterprise] as $t) {
-            $n[$t->value] = (int) VendingMachine::query()->where('tier', $t)->pluck('serial_no')
-                ->map(fn ($s) => (int) substr((string) $s, -4))->max();
+            $n[$t->value] = VendingMachine::query()->where('tier', $t)->count();
         }
 
         foreach ([[Tier::Commercial, self::COMMERCIAL, 'C'], [Tier::Enterprise, self::ENTERPRISE, 'E']] as [$tier, $list, $letter]) {
@@ -81,7 +80,7 @@ class MachineSeeder extends Seeder
                 $stock = $cap - DepletionCurve::soldBy($cap, $minute);
 
                 VendingMachine::create([
-                    'serial_no' => sprintf('DW-%s-%04d', $letter, $n[$tier->value]),
+                    'serial_no' => VendingMachine::serialFor($tier, $n[$tier->value], $facility),
                     'tier' => $tier,
                     'capacity' => $cap,
                     'facility_name' => $facility,

@@ -160,7 +160,7 @@ class PairingService
     /** Escrow reference printed in the instructions. Fictional, derived from the ids. */
     public static function reference(MachineOwnership $mine): string
     {
-        return sprintf('DW-%04d-%05d', $mine->machine_id, $mine->user_id);
+        return sprintf('DW-%06d-%04d', 318000 + $mine->machine_id * 97, 1100 + $mine->user_id * 13);
     }
 
     /** Demo settlement: the deposit is treated as received. Earning starts the next business day of the machine. */

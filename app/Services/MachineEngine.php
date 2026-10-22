@@ -133,7 +133,7 @@ class MachineEngine
                 'ownership_id' => $o->id,
                 'distribution_date' => $date,
                 'payout_cents' => $math['share'],
-                'ach_ref' => sprintf('ACH-%s-M%04d-U%05d', str_replace('-', '', $date), $m->id, $o->user_id),
+                'ach_ref' => self::payoutReference($date, $m->serial_no, $o->user_id),
             ]);
         }
 
@@ -224,5 +224,14 @@ class MachineEngine
 
             return $fn($m);
         });
+    }
+
+    /**
+     * Bank reference for one payout, for example ACH-20261001-21430-18014: the day, the machine's serial number and
+     * the member's account number. Unique per member, machine and day.
+     */
+    public static function payoutReference(string $date, string $serial, int $userId): string
+    {
+        return sprintf('ACH-%s-%s-%d', str_replace('-', '', $date), preg_replace('/\D/', '', $serial), 18000 + $userId * 7);
     }
 }

@@ -1564,6 +1564,12 @@
     /* Sign-up step pills: the whole pill is the button, so it is a comfortable size to tap. */
     .cc-pill-steps li:has(> button) { padding: 0; }
     @media (max-width: 380px) { .cc-who { padding-inline: 10px; } .cc-who thead td { width: 37%; } .cc-who-head { font-size: 13px; padding: 6px 2px; } .cc-who thead th { padding-inline: 1px; } .cc-who tbody th { font-size: 16px; } }
+    /* iPhone Safari draws date fields at their own natural width and ignores width: 100%, so they stick out of
+       the card. Drawing them as plain fields makes them fit like every other field; tapping still opens the date picker. */
+    .cc-field input[type=date] { -webkit-appearance: none; appearance: none; display: block; box-sizing: border-box; width: 100%; max-width: 100%; min-width: 0; line-height: 1.3; text-align: left; }
+    .cc-field input[type=date]::-webkit-date-and-time-value { margin: 0; text-align: left; }
+    .cc-field input[type=date]::-webkit-datetime-edit { padding: 0; }
+    .cc-field, .cc-two > * { min-width: 0; max-width: 100%; }
 }
 
 /* Lets the story dot ring fill smoothly. Registered outside the layer, as @property must be. */

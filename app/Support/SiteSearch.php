@@ -101,7 +101,7 @@ class SiteSearch
     /** @return list<array{page: string, section: string, url: string, heading: string, body: string}> */
     public function index(): array
     {
-        return Cache::remember('site-search:v5:'.(auth()->check() ? 'in' : 'out'), now()->addMinutes(10), function () {
+        return Cache::remember('site-search:v5:'.md5(app(\App\Services\BrandService::class)->name().'|'.app(\App\Services\BrandService::class)->supportEmail()).':'.(auth()->check() ? 'in' : 'out'), now()->addMinutes(10), function () {
             $blocks = [];
             foreach (self::PAGES as $route => $label) {
                 foreach ($this->blocks($this->render($route), route($route), $label) as $block) {

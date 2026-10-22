@@ -139,7 +139,7 @@ class OnboardingWizard extends Component
             'phone' => ['required', 'regex:/^[0-9 ()+\-.]{7,20}$/'],
             'city' => ['nullable', 'string', 'max:80'],
         ], [
-            'dob.before_or_equal' => 'DRinkWeLL co-partners must be '.config('drinkwell.min_age').' or older.',
+            'dob.before_or_equal' => app(\App\Services\BrandService::class)->name().' co-partners must be '.config('drinkwell.min_age').' or older.',
             'phone.regex' => 'Enter a phone number with digits, spaces, dashes or brackets.',
         ], ['dob' => 'date of birth']);
     }

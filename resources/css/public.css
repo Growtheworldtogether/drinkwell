@@ -1550,6 +1550,13 @@
     .cc-icon-btn { display: inline-grid; place-items: center; width: 48px; height: 48px; min-height: 48px; padding: 0; border: 2px solid #000; border-radius: 9999px; background: transparent; color: #000; cursor: pointer; touch-action: manipulation; }
     .cc-icon-btn:focus-visible { outline: 4px solid #f7723a; outline-offset: 2px; }
     .cc-icon-spacer { width: 48px; height: 48px; }
+    /* Proof upload: the real file input covers the dashed box invisibly, so the whole box is tappable and nothing sticks out past the screen. */
+    .cc-upload { position: relative; overflow: hidden; }
+    .cc-upload b, .cc-upload span { display: block; }
+    .cc-upload span { margin-top: 6px; font-weight: 500; }
+    .cc-upload input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; font-size: 16px; }
+    /* A panel followed by a row of panels (or the reverse) keeps the same gap as panels in a row. */
+    .cc-panel + .cc-grid, .cc-grid + .cc-panel, .cc-grid + .cc-grid { margin-top: 16px; }
 }
 
 /* Lets the story dot ring fill smoothly. Registered outside the layer, as @property must be. */

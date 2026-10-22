@@ -6,7 +6,7 @@
         <ol class="cc-pill-steps" style="margin-top:32px" aria-label="Sign-up steps">
             @foreach ($steps as $number => $label)
                 <li @class(['is-done' => $number < $step, 'is-now' => $number === $step]) @if ($number === $step) aria-current="step" @endif>
-                    <button type="button" wire:click="goTo({{ $number }})" @disabled($number >= $step) style="all:unset;display:flex;align-items:center;gap:10px;cursor:{{ $number < $step ? 'pointer' : 'default' }}" aria-label="Step {{ $number }}, {{ $label }}"><span>{{ $number }}</span>{{ $label }}</button>
+                    <button type="button" wire:click="goTo({{ $number }})" @disabled($number >= $step) style="all:unset;display:flex;align-items:center;gap:10px;box-sizing:border-box;min-height:50px;padding:8px 20px 8px 8px;cursor:{{ $number < $step ? 'pointer' : 'default' }}" aria-label="Step {{ $number }}, {{ $label }}"><span>{{ $number }}</span>{{ $label }}</button>
                 </li>
             @endforeach
         </ol>

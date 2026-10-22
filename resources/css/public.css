@@ -1506,6 +1506,10 @@
     .cc-who tbody tr { border-top: 1px solid #e4e4e4; }
     .cc-tick { display: inline-grid; place-items: center; width: 40px; height: 40px; border-radius: 9999px; background: #000; color: #fff; }
     .cc-tick-no { display: inline-block; width: 14px; height: 3px; border-radius: 2px; background: #d0d0d0; vertical-align: middle; }
+    @media (max-width: 899px) {
+        .cc-who-long { display: none; }
+        .cc-who-short { display: inline; }
+    }
     @media (max-width: 639px) {
         .cc-who { padding: 6px 14px; }
         .cc-who thead td { width: 40%; }
@@ -1557,6 +1561,9 @@
     .cc-upload input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; font-size: 16px; }
     /* A panel followed by a row of panels (or the reverse) keeps the same gap as panels in a row. */
     .cc-panel + .cc-grid, .cc-grid + .cc-panel, .cc-grid + .cc-grid { margin-top: 16px; }
+    /* Sign-up step pills: the whole pill is the button, so it is a comfortable size to tap. */
+    .cc-pill-steps li:has(> button) { padding: 0; }
+    @media (max-width: 380px) { .cc-who { padding-inline: 10px; } .cc-who thead td { width: 37%; } .cc-who-head { font-size: 13px; padding: 6px 2px; } .cc-who thead th { padding-inline: 1px; } .cc-who tbody th { font-size: 16px; } }
 }
 
 /* Lets the story dot ring fill smoothly. Registered outside the layer, as @property must be. */

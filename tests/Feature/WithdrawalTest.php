@@ -138,7 +138,8 @@ it('keeps withdrawals for the right roles', function () {
     $this->post(route('admin.withdrawals.approve', $w), ['paid_reference' => 'x'])->assertForbidden();
 
     auth()->logout();
-    $this->actingAs(User::factory()->role(Role::Applicant)->create())->get(route('hub.withdraw'))->assertForbidden();
+    $this->actingAs(User::factory()->role(Role::Applicant)->create())->get(route('hub.withdraw'))->assertRedirect(route('onboard.status'));
+    $this->post(route('hub.withdraw.request'), ['amount' => '60'])->assertForbidden();
 });
 
 it('stops new requests while the switch is off, and leaves waiting ones alone', function () {

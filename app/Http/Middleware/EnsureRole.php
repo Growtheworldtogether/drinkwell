@@ -16,6 +16,12 @@ class EnsureRole
     {
         $user = $request->user();
 
+        // A member whose deposit is not confirmed yet who opens a dashboard page is taken to their progress page.
+        if ($user && $user->role === \App\Enums\Role::Applicant && in_array('partner', $roles, true)
+            && ! in_array('applicant', $roles, true) && $request->isMethod('GET') && ! $request->expectsJson()) {
+            return redirect()->route('onboard.status');
+        }
+
         abort_unless($user && in_array($user->role->value, $roles, true), 403);
 
         return $next($request);

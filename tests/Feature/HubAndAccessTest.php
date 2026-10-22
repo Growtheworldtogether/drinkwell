@@ -40,7 +40,8 @@ it('keeps the hub for partners only', function () {
     $this->get(route('hub.dashboard'))->assertRedirect(route('login'));
 
     signedIn(Role::Applicant);
-    $this->get(route('hub.dashboard'))->assertForbidden();
+    $this->get(route('hub.dashboard'))->assertRedirect(route('onboard.status'));
+    $this->getJson(route('hub.telemetry'))->assertForbidden();
 });
 
 it('shows a partner their own dashboard with the toolbar and the ledger', function () {

@@ -23,7 +23,7 @@
         $mine = array_values(array_filter([
             $isPartner ? ['hub.dashboard', 'Dashboard', 'hub.dashboard', null] : null,
             $isPartner ? ['hub.withdraw', 'Withdraw', 'hub.withdraw*', null] : null,
-            ['onboard.status', 'Partner and deposit', 'onboard.status', null],
+            $isPartner ? null : ['onboard.status', 'Your progress', 'onboard.status', null],
             ['profile.edit', 'Profile', 'profile.*', null],
         ]));
         $groups = ['Your account' => $mine, 'Help' => [['contact', 'Contact us', 'contact', null], ['questions', 'Questions', 'questions', null]]];

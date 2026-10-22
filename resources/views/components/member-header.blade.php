@@ -7,7 +7,7 @@
         : array_values(array_filter([
             $user?->role === \App\Enums\Role::Partner ? ['hub.dashboard', 'Dashboard'] : null,
             $user?->role === \App\Enums\Role::Partner ? ['hub.withdraw', 'Withdraw'] : null,
-            ['onboard.status', 'Pairing and deposit'],
+            $user?->role === \App\Enums\Role::Partner ? null : ['onboard.status', 'Your progress'],
             ['profile.edit', 'Profile'],
         ]));
 @endphp

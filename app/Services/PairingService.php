@@ -67,8 +67,8 @@ class PairingService
                 'settled_at' => now(),
             ]);
 
+            // The member stays an applicant until the deposit is confirmed; settle() opens the dashboard.
             $machine->update(['assignment_status' => AssignmentStatus::Paired]);
-            $user->forceFill(['role' => Role::Partner])->save();
 
             app(MachineEngine::class)->log($machine, 'pairing', "Paired with {$partner->name}.");
 
@@ -179,6 +179,8 @@ class PairingService
                 'earning_from' => $machine->operating_date->copy()->addDay(),
             ]);
             $machine->update(['assignment_status' => AssignmentStatus::Active]);
+            // Deposit confirmed: the member becomes a co-partner and the dashboard opens for them.
+            User::query()->whereKey($row->user_id)->where('role', Role::Applicant)->update(['role' => Role::Partner]);
             app(MachineEngine::class)->log($machine, 'settlement_confirmed', 'Deposit confirmed. Payouts start the next day.');
         });
     }

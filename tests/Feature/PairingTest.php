@@ -25,7 +25,7 @@ it('pairs a new senior with a machine and a simulated co-partner at once', funct
         ->and($mine->settlement_status)->toBe(SettlementStatus::PendingSettlement)
         ->and($mine->capital_cents)->toBe(500_000)
         ->and($m->fresh()->assignment_status)->toBe(AssignmentStatus::Paired)
-        ->and($user->fresh()->role)->toBe(Role::Partner);
+        ->and($user->fresh()->role)->toBe(Role::Applicant);
 
     $other = MachineOwnership::where('machine_id', $m->id)->where('slot_no', 2)->first();
     $partner = $other->user;

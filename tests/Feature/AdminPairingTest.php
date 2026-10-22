@@ -47,7 +47,7 @@ it('lets an administrator pair a waiting member, and emails and shows the detail
         ->and($req->account_last4)->toBe('4567')
         ->and($req->reference)->toBe(PairingService::reference(MachineOwnership::where('user_id', $req->user_id)->first()))
         ->and($m->fresh()->assignment_status)->toBe(AssignmentStatus::Paired)
-        ->and($req->user->fresh()->role)->toBe(Role::Partner);
+        ->and($req->user->fresh()->role)->toBe(Role::Applicant);
 
     $partner = app(PairingService::class)->partnerOf(MachineOwnership::where('user_id', $req->user_id)->first());
     expect($partner->name)->toBe('Margaret Whitfield');
@@ -56,7 +56,9 @@ it('lets an administrator pair a waiting member, and emails and shows the detail
 
     $this->actingAs($req->user->fresh())->get(route('onboard.status'))->assertOk()
         ->assertSee('Margaret Whitfield')->assertSee('55501234567')->assertSee('Harbor Federal Credit Union')->assertSee('Please send within 2 days.');
-    $this->get(route('hub.dashboard'))->assertOk()->assertSee('55501234567');
+    // No dashboard until the deposit is confirmed.
+    $this->get(route('hub.dashboard'))->assertRedirect(route('onboard.status'));
+    $this->get(route('hub.withdraw'))->assertRedirect(route('onboard.status'));
 });
 
 it('stores the account number encrypted', function () {
@@ -121,7 +123,11 @@ it('records "I sent my deposit" once, and the administrator confirms it', functi
     $this->actingAs($admin)->get(route('admin.pairings'))->assertOk()->assertSee('Member says it was sent');
     $own = MachineOwnership::where('user_id', $req->user_id)->first();
     $this->post(route('admin.ownerships.confirm', $own))->assertRedirect();
-    expect($own->fresh()->settlement_status)->toBe(SettlementStatus::Settled);
+    expect($own->fresh()->settlement_status)->toBe(SettlementStatus::Settled)
+        ->and($own->user->fresh()->role)->toBe(Role::Partner);
+
+    // Confirmed: the dashboard opens and shows the co-partner; the progress page leaves the menu.
+    $this->actingAs($own->user->fresh())->get(route('hub.dashboard'))->assertOk()->assertSee('Your co-partner')->assertDontSee('Your progress');
 });
 
 it('no longer has a demo shortcut for members to confirm their own deposit', function () {

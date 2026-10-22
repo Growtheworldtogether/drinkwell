@@ -27,8 +27,16 @@ class HubController extends Controller
             ? ['req' => $user->pairingRequest, 'mine' => $mine, 'partner' => app(\App\Services\PairingService::class)->partnerOf($mine), 'reference' => $user->pairingRequest?->reference ?: \App\Services\PairingService::reference($mine)]
             : null;
 
+        // The partnership card: who the co-partner is and the deposit that was confirmed.
+        $partnership = $mine ? [
+            'partner' => app(\App\Services\PairingService::class)->partnerOf($mine),
+            'deposit' => $mine->capital_cents,
+            'confirmed' => $mine->settled_at,
+        ] : null;
+
         return view('hub.dashboard', [
             'deposit' => $deposit,
+            'partnership' => $partnership,
             'available' => app(\App\Services\WithdrawalService::class)->balance($user),
             'snap' => $this->view->snapshot($machine, $user),
             'machine' => $machine,

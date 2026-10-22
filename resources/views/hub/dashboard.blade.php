@@ -65,6 +65,16 @@
                 <h2>Your machine</h2>
                 <div class="dw-map" data-facility-map data-lat="{{ $snap['lat'] }}" data-lng="{{ $snap['lng'] }}" data-name="{{ $snap['facility'] }}" role="img" aria-label="Map of the facility"></div>
                 <p style="margin-top:12px"><strong>{{ $snap['facility'] }}</strong>, {{ $snap['city'] }} ({{ $snap['serial'] }})</p>
+                @if ($partnership)
+                    <dl class="cc-dl" style="margin-top:16px">
+                        <div class="cc-kv"><dt>Your co-partner</dt><dd>{{ $partnership['partner']->name }}{{ $partnership['partner']->profile?->city ? ', '.$partnership['partner']->profile->city : '' }}</dd></div>
+                        <div class="cc-kv"><dt>Your deposit</dt><dd>{{ $fmt($partnership['deposit']) }}</dd></div>
+                        @if ($partnership['confirmed'])
+                            <div class="cc-kv"><dt>Confirmed</dt><dd>{{ $partnership['confirmed']->format('M j, Y') }}</dd></div>
+                        @endif
+                    </dl>
+                    <p style="margin-top:12px"><a class="cc-link" href="{{ route('onboard.status') }}">See deposit details</a></p>
+                @endif
             </div>
 
             <div class="cc-panel">

@@ -24,8 +24,9 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(BrandService $brandService): void
     {
-        // Production only speaks HTTPS (SPEC 17.2).
-        if (app()->isProduction()) {
+        // Production only speaks HTTPS (SPEC 17.2). So does any site whose APP_URL is https, such as a test tunnel,
+        // even when the proxy in front of it is not listed in TRUSTED_PROXIES.
+        if (app()->isProduction() || str_starts_with((string) config('app.url'), 'https://')) {
             URL::forceScheme('https');
         }
 

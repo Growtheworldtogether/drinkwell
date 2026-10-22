@@ -64,3 +64,10 @@ it('links styles over https behind a trusted tunnel, and ignores the forwarded s
     config(['security.trusted_proxies' => '*']);
     expect($this->get('/', $headers)->getContent())->toContain('https://demo.trycloudflare.com/build');
 });
+
+it('writes https links whenever APP_URL is https, even without a trusted proxy', function () {
+    machine();
+    config(['app.url' => 'https://demo.trycloudflare.com', 'security.trusted_proxies' => '']);
+    \Illuminate\Support\Facades\URL::forceScheme('https');
+    expect($this->get('/')->getContent())->not->toContain('href="http://');
+});

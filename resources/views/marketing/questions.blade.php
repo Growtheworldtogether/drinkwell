@@ -17,7 +17,15 @@
             <div class="cc-faq">
                 <details class="cc-q" data-reveal>
                     <summary>Who can join?</summary>
-                    <p>Anyone aged {{ config('drinkwell.min_age') }} or older. You confirm your date of birth when you sign up.</p>
+                    <p>Anyone aged {{ config('drinkwell.min_age') }} or older who lives in the United States or Canada and has a reference code from us. You confirm your date of birth when you sign up.</p>
+                </details>
+                <details class="cc-q" data-reveal>
+                    <summary>Can I join from Canada?</summary>
+                    <p>Yes. Machines stand in Canadian cities too, and your payouts can go to a Canadian bank account. You enter your transit and institution numbers instead of a routing number. Amounts are shown in US dollars.</p>
+                </details>
+                <details class="cc-q" data-reveal>
+                    <summary>Where do I get a reference code?</summary>
+                    <p>You need one to sign up. Ask the person who told you about us, or write to us from the Contact page.</p>
                 </details>
                 <details class="cc-q" data-reveal>
                     <summary>How much do I put in?</summary>
@@ -45,7 +53,7 @@
                 </details>
                 <details class="cc-q" data-reveal>
                     <summary>How do I pay my deposit?</summary>
-                    <p>You send it straight to your co-partner, because you are buying your half of a machine they already own. It never goes to us. The account details and reference are in your pairing email and on your dashboard. There is no card payment on this site.</p>
+                    <p>You send it straight to your co-partner, because you are buying half of a machine they already own. It never goes to us. The account details and reference are in your pairing email and on your dashboard. There is no card payment on this site.</p>
                 </details>
                 <details class="cc-q" data-reveal>
                     <summary>Can I see my history?</summary>

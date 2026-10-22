@@ -44,13 +44,14 @@ it('shows the bigger text tip on public pages', function () {
 });
 
 it('shows the one-time code on the code page only when test mode is on', function () {
+    $code = \App\Models\InviteCode::create(['code' => \App\Models\InviteCode::generate(), 'max_uses' => 5]);
     config(['drinkwell.show_codes' => false]);
-    $this->post(route('register'), ['name' => 'Ada Test', 'email' => 'ada@example.com', 'password' => 'Ada-Test-2026x', 'password_confirmation' => 'Ada-Test-2026x']);
+    $this->post(route('register'), ['reference_code' => $code->code, 'name' => 'Ada Test', 'email' => 'ada@example.com', 'password' => 'Ada-Test-2026x', 'password_confirmation' => 'Ada-Test-2026x']);
     $this->get(route('verification.notice'))->assertOk()->assertDontSee('Test mode: your code is');
 
     auth()->logout();
     config(['drinkwell.show_codes' => true]);
-    $this->post(route('register'), ['name' => 'Bea Test', 'email' => 'bea@example.com', 'password' => 'Bea-Test-2026x', 'password_confirmation' => 'Bea-Test-2026x']);
+    $this->post(route('register'), ['reference_code' => $code->code, 'name' => 'Bea Test', 'email' => 'bea@example.com', 'password' => 'Bea-Test-2026x', 'password_confirmation' => 'Bea-Test-2026x']);
     $this->get(route('verification.notice'))->assertOk()->assertSee('Test mode: your code is');
 });
 

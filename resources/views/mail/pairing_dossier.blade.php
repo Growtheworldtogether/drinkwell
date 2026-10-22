@@ -18,7 +18,7 @@ You are paired with a co-partner on one machine. **Demo: the people and amounts 
 **Your co-partner**
 {{ $partner->name }}@if ($partner->profile?->city), {{ $partner->profile->city }}@endif
 
-**Send your deposit to your co-partner.** You are buying your half of a machine they already own, so the deposit goes straight to them and never to {{ $brand->name }}.
+**Send your deposit to your co-partner.** You are buying half of a machine they already own, so the deposit goes straight to them and never to {{ $brand->name }}.
 
 @if ($request)
 <x-mail::panel>

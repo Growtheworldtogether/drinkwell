@@ -92,6 +92,12 @@ Route::middleware(['admin.ip', 'auth', 'active', 'role:admin', 'admin.idle', 'th
     Route::post('/ownerships/{ownership}/confirm', [$m, 'confirmDeposit'])->name('ownerships.confirm');
 
     Route::view('/settings', 'admin.settings.general')->name('settings');
+    $su = \App\Http\Controllers\Admin\SignupSettingsController::class;
+    Route::get('/settings/reference-codes', [$su, 'codes'])->name('settings.codes');
+    Route::post('/settings/reference-codes', [$su, 'createCodes'])->name('settings.codes.create');
+    Route::post('/settings/reference-codes/{code}/off', [$su, 'revoke'])->name('settings.codes.revoke');
+    Route::get('/settings/deposit-details', [$su, 'deposit'])->name('settings.deposit');
+    Route::put('/settings/deposit-details', [$su, 'saveDeposit'])->name('settings.deposit.save');
     $brd = BrandingController::class;
     Route::get('/settings/branding', [$brd, 'show'])->name('settings.branding');
     Route::put('/settings/branding', [$brd, 'update'])->name('settings.branding.update');

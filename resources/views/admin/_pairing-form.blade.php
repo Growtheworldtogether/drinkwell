@@ -1,7 +1,9 @@
 @php
     $bag = $errors->getBag('p'.$req->id);
     $mine = old('_pid') == $req->id;
-    $v = fn (string $k, $fallback = null) => $mine ? old($k) : $fallback;
+    // A member not paired yet starts from the default deposit details set in Settings.
+    $defaults = $req->status === \App\Models\PairingRequest::FINDING ? \App\Http\Controllers\Admin\SignupSettingsController::depositDefaults() : [];
+    $v = fn (string $k, $fallback = null) => $mine ? old($k) : ($fallback ?? (($defaults[$k] ?? '') !== '' ? $defaults[$k] : null));
     $f = fn (string $k) => 'p'.$req->id.'-'.$k;
 @endphp
 <form method="POST" action="{{ $action }}" class="cc-form">

@@ -35,7 +35,12 @@ class RegisteredUserController extends Controller
             'name' => ['required', 'string', 'max:120'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:190'],
             'password' => ['required', 'confirmed', PasswordRules::for()],
-        ]);
+            'reference_code' => ['required', 'string', 'max:40', function (string $attribute, mixed $value, \Closure $fail) {
+                if (! \App\Models\InviteCode::findUsable((string) $value)) {
+                    $fail('That reference code is not valid. Check it with the person who gave it to you.');
+                }
+            }],
+        ], ['reference_code.required' => 'Enter the reference code you were given.']);
 
         // A bot, or an address that already has an account, gets the same quiet answer (SPEC 17.2, no enumeration).
         if (! FormGuard::request($request, 'register')) {
@@ -49,7 +54,14 @@ class RegisteredUserController extends Controller
             return $this->checkEmail($data['email']);
         }
 
+        $invite = \App\Models\InviteCode::findUsable($data['reference_code']);
+        if (! $invite || ! $invite->consume()) {
+            return back()->withInput($request->except('password', 'password_confirmation'))
+                ->withErrors(['reference_code' => 'That reference code has just been used up. Ask for a new one.']);
+        }
+
         $user = $accounts->registerApplicant($data['name'], $data['email'], $data['password']);
+        $user->forceFill(['invite_code_id' => $invite->id])->save();
 
         Auth::login($user);
         $request->session()->regenerate();

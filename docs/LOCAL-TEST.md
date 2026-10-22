@@ -27,6 +27,7 @@ Then run `php artisan config:clear`, `php artisan db:seed --class=AdminSeeder` a
 - Member: `arthur.pendelton@example.test` with `DEMO_PASSWORD`, a paired member with 20 days of payouts.
 - If a login says the credentials are wrong, set the password directly (local only):
   `php artisan drinkwell:set-password arthur.pendelton@example.test "Demo-Pendelton-2026"`
+- Sign-up now needs a reference code: as admin, open Settings > Reference codes and make one. Send testers the link `/register?code=THE-CODE` so the code is filled in.
 - A brand-new member: sign up on the site; the email code is in `storage/logs/laravel.log`. They wait in "Finding a partner" until you pair them from admin Pairings.
 
 ## What to check

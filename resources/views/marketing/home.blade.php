@@ -7,7 +7,7 @@
     <section class="cc-story" data-bg="coral" aria-label="{{ $brand->name }}"
         x-data="{ i: 0, stop: false, slides: [
             { tag: 'Ages {{ config('drinkwell.min_age') }} and over', title: 'Co-own a drink vending machine with a partner we find for you', link: '{{ route('program') }}', label: 'How it works' },
-            { tag: 'Deposit', title: 'Buy your half of the machine from your co-partner', link: '{{ route('program') }}#deposit', label: 'How the deposit works' },
+            { tag: 'Deposit', title: 'Buy half of the machine from your co-partner', link: '{{ route('program') }}#deposit', label: 'How the deposit works' },
             { tag: 'Payouts', title: 'Share the daily payout, with every cent shown', link: '{{ route('earnings') }}', label: 'See your earnings' }
         ] }"
         x-init="setInterval(() => { if (! stop && ! document.hidden) i = (i + 1) % 3 }, 6000)">
@@ -37,7 +37,7 @@
             <div class="cc-hero-photo"
                 x-data="{ i: 0, stop: false, slides: [
                     { tag: 'Ages {{ config('drinkwell.min_age') }} and over', title: 'Co-own a drink vending machine with a partner we find for you', link: '{{ route('program') }}', label: 'How it works' },
-                    { tag: 'Deposit', title: 'Buy your half of the machine from your co-partner', link: '{{ route('program') }}#deposit', label: 'How the deposit works' },
+                    { tag: 'Deposit', title: 'Buy half of the machine from your co-partner', link: '{{ route('program') }}#deposit', label: 'How the deposit works' },
                     { tag: 'Payouts', title: 'Share the daily payout, with every cent shown', link: '{{ route('earnings') }}', label: 'See your earnings' }
                 ] }"
                 x-init="setInterval(() => { if (! stop && ! document.hidden) i = (i + 1) % 3 }, 6000)">
@@ -117,7 +117,7 @@
     </section>
 
     <section class="cc-section cc-center" data-bg="cream">
-        <div class="cc-wrap"><h2 class="cc-h2" data-reveal>Where your machine stands</h2></div>
+        <div class="cc-wrap"><h2 class="cc-h2" data-reveal>Where your machine stands</h2><p class="cc-lead" style="margin-inline:auto" data-reveal>Hospitals, stations and airports across the United States and Canada.</p></div>
         <div class="cc-rows" aria-label="Facilities that host a machine">
             @foreach ([$facilities->take(ceil($facilities->count() / 2)), $facilities->slice(ceil($facilities->count() / 2))] as $r => $row)
                 <div class="cc-row {{ $r ? 'cc-row-right' : '' }}">

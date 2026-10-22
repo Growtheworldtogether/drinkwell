@@ -142,12 +142,12 @@ it('seeds the demo with Arthur Pendelton and twenty days of payouts', function (
     expect($arthur->name)->toBe('Arthur Pendelton')
         ->and($arthur->profile->age_at_signup)->toBe(64)
         ->and(DailyDistribution::where('user_id', $arthur->id)->count())->toBe(20)
-        ->and(\App\Models\VendingMachine::count())->toBe(32)
+        ->and(\App\Models\VendingMachine::count())->toBe(35)
         ->and(MachineOwnership::count())->toBe(12);
 
     // Every payout is inside its band and the integrity checks agree.
     expect(array_filter(app(\App\Services\Invariants::class)->run()))->toBe([]);
 
-    // Every pin has plausible US coordinates.
-    \App\Models\VendingMachine::all()->each(fn ($m) => expect($m->latitude)->toBeBetween(25, 49)->and($m->longitude)->toBeBetween(-125, -66));
+    // Every pin has plausible US or southern Canada coordinates.
+    \App\Models\VendingMachine::all()->each(fn ($m) => expect($m->latitude)->toBeBetween(25, 50)->and($m->longitude)->toBeBetween(-125, -66));
 });

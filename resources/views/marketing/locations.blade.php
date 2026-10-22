@@ -3,7 +3,7 @@
         <div class="cc-wrap">
             <x-crumb>Locations</x-crumb>
             <h1 class="cc-title1">Where your machine stands</h1>
-            <p class="cc-lead">{{ $total }} machines in {{ $cities }} cities, placed where people wait: hospitals, train stations and airports.</p>
+            <p class="cc-lead">{{ $total }} machines in {{ $cities }} cities across the United States and Canada, placed where people wait: hospitals, train stations and airports.</p>
         </div>
     </section>
 

@@ -6,7 +6,7 @@
 <div class="cc-grid is-split">
 <div class="cc-panel" id="deposit">
     <h2>Send your deposit to {{ $first }}</h2>
-    <p>You are buying your half of a machine {{ $first }} already owns, so the deposit goes straight to them and never to {{ config('app.name') }}. Your share starts the day they confirm it.</p>
+    <p>You are buying half of a machine {{ $first }} already owns, so the deposit goes straight to them and never to {{ app(\App\Services\BrandService::class)->name() }}. Your share starts the day they confirm it.</p>
     @if ($req && $req->isPaired())
         <dl class="cc-dl">
             <div class="cc-kv"><dt>Account holder</dt><dd>{{ $req->account_holder }}</dd></div>

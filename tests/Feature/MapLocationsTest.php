@@ -9,10 +9,10 @@ it('adds only missing facilities when the machine list is seeded again', functio
     $first = VendingMachine::count();
     (new MachineSeeder)->run();
 
-    expect($first)->toBe(32)
-        ->and(VendingMachine::count())->toBe(32)
-        ->and(VendingMachine::distinct()->count('city'))->toBe(19)
-        ->and(VendingMachine::pluck('serial_no')->unique()->count())->toBe(32);
+    expect($first)->toBe(35)
+        ->and(VendingMachine::count())->toBe(35)
+        ->and(VendingMachine::distinct()->count('city'))->toBe(21)
+        ->and(VendingMachine::pluck('serial_no')->unique()->count())->toBe(35);
 });
 
 it('serves country view tiles only around the machines', function () {

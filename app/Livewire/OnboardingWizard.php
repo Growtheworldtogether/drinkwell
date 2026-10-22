@@ -40,6 +40,13 @@ class OnboardingWizard extends Component
 
     public string $routingNumber = '';
 
+    /** US or CA. Canadian banks use a transit number and an institution number instead of a routing number. */
+    public string $bankCountry = 'US';
+
+    public string $transitNumber = '';
+
+    public string $institutionNumber = '';
+
     public string $accountNumber = '';
 
     public string $accountNumberConfirmation = '';
@@ -146,16 +153,22 @@ class OnboardingWizard extends Component
 
     private function validateBank(): void
     {
+        $canada = $this->bankCountry === 'CA';
         $this->validate([
+            'bankCountry' => ['required', 'in:US,CA'],
             'holderName' => ['required', 'string', 'max:120'],
             'bankName' => ['required', 'string', 'max:120'],
-            'routingNumber' => ['required', 'string', new AbaRoutingNumber],
-            'accountNumber' => ['required', 'string', 'regex:/^\d{4,17}$/'],
+            'routingNumber' => $canada ? ['nullable'] : ['required', 'string', new AbaRoutingNumber],
+            'transitNumber' => $canada ? ['required', 'regex:/^\d{5}$/'] : ['nullable'],
+            'institutionNumber' => $canada ? ['required', 'regex:/^\d{3}$/'] : ['nullable'],
+            'accountNumber' => ['required', 'string', $canada ? 'regex:/^\d{7,12}$/' : 'regex:/^\d{4,17}$/'],
             'accountNumberConfirmation' => ['required', 'same:accountNumber'],
         ], [
-            'accountNumber.regex' => 'The account number is 4 to 17 digits.',
+            'transitNumber.regex' => 'The transit number is 5 digits.',
+            'institutionNumber.regex' => 'The institution number is 3 digits, for example 004.',
+            'accountNumber.regex' => $canada ? 'A Canadian account number is 7 to 12 digits.' : 'The account number is 4 to 17 digits.',
             'accountNumberConfirmation.same' => 'The two account numbers do not match.',
-        ], ['holderName' => 'account holder name', 'bankName' => 'bank name', 'routingNumber' => 'routing number', 'accountNumber' => 'account number', 'accountNumberConfirmation' => 'account number confirmation']);
+        ], ['holderName' => 'account holder name', 'bankName' => 'bank name', 'routingNumber' => 'routing number', 'transitNumber' => 'transit number', 'institutionNumber' => 'institution number', 'accountNumber' => 'account number', 'accountNumberConfirmation' => 'account number confirmation']);
     }
 
     /** Stored the same way as the earlier platform: routing and account number encrypted, only the last four readable. */
@@ -166,14 +179,16 @@ class OnboardingWizard extends Component
         PayoutAccount::query()->where('user_id', $userId)->delete();
         PayoutAccount::create([
             'user_id' => $userId,
+            'country' => $this->bankCountry === 'CA' ? 'CA' : 'US',
             'holder_name' => trim($this->holderName),
             'bank_name' => trim($this->bankName),
-            'routing_number' => trim($this->routingNumber),
+            // Canadian accounts keep transit and institution together, as printed on a cheque: 12345-004.
+            'routing_number' => $this->bankCountry === 'CA' ? trim($this->transitNumber).'-'.trim($this->institutionNumber) : trim($this->routingNumber),
             'account_number' => $number,
             'last4' => substr($number, -4),
             'is_default' => true,
         ]);
-        $this->accountNumber = $this->accountNumberConfirmation = $this->routingNumber = '';
+        $this->accountNumber = $this->accountNumberConfirmation = $this->routingNumber = $this->transitNumber = $this->institutionNumber = '';
     }
 
     public function render(): View

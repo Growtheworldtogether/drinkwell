@@ -3,6 +3,7 @@
         @csrf
         <x-form.guard />
 
+        <x-cc.field name="reference_code" label="Reference code" :value="old('reference_code', request('code'))" required autocomplete="off" placeholder="DW-XXXX-XXXX" help="You need a reference code to join. Ask the person who invited you." />
         <x-cc.field name="name" label="Full name" :value="old('name')" required autofocus autocomplete="name" />
         <x-cc.field name="email" label="Email" type="email" :value="old('email')" required autocomplete="username" placeholder="you@example.com" />
         <x-cc.field name="password" label="Password" type="password" required autocomplete="new-password" help="At least 10 characters, with letters and numbers." />

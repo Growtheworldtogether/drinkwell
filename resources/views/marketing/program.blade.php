@@ -60,7 +60,7 @@
                     <h3>Your deposit goes to your co-partner, never to us</h3>
                     <ul class="cc-points">
                         <li>There is no card form on this site, and nothing is paid to {{ $brand->name }}.</li>
-                        <li>You are buying your half of a machine your co-partner already owns, so you pay them directly. Their name and payment details come by email and show on your dashboard.</li>
+                        <li>You are buying half of a machine your co-partner already owns, so you pay them directly. Their name and payment details come by email and show on your dashboard.</li>
                         <li>Upload your proof of payment. Once it is confirmed, your share of the daily payouts starts.</li>
                     </ul>
                     <div class="cc-btn-row cc-btn-left"><a class="af-btn af-btn-black" href="{{ route('register') }}">Get started</a><a class="af-btn cc-btn-outline" href="{{ route('questions') }}">Read the questions</a></div>

@@ -35,6 +35,7 @@ class MachineSeeder extends Seeder
         ['Hennepin County Medical Center', 'Hospital', 'Minneapolis, MN', 44.9725, -93.2619],
         ['Henry Ford Hospital', 'Hospital', 'Detroit, MI', 42.3671, -83.0846],
         ['Vanderbilt University Medical Center', 'Hospital', 'Nashville, TN', 36.1420, -86.8010],
+        ['Toronto General Hospital', 'Hospital', 'Toronto, ON', 43.6590, -79.3881],
     ];
 
     private const ENTERPRISE = [
@@ -52,6 +53,8 @@ class MachineSeeder extends Seeder
         ['Minneapolis-Saint Paul International Airport', 'Airport', 'Minneapolis, MN', 44.8819, -93.2217],
         ['Miami International Airport', 'Airport', 'Miami, FL', 25.7933, -80.2906],
         ['Nashville International Airport', 'Airport', 'Nashville, TN', 36.1267, -86.6819],
+        ['Toronto Union Station', 'Transit hub', 'Toronto, ON', 43.6444, -79.3803],
+        ['Vancouver International Airport', 'Airport', 'Vancouver, BC', 49.1947, -123.1825],
     ];
 
     /**

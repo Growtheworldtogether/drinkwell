@@ -13,7 +13,7 @@ class PayoutAccount extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id', 'holder_name', 'bank_name', 'routing_number', 'account_number', 'last4', 'is_default',
+        'user_id', 'country', 'holder_name', 'bank_name', 'routing_number', 'account_number', 'last4', 'is_default',
     ];
 
     protected function casts(): array

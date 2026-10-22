@@ -76,6 +76,12 @@ class User extends Authenticatable
         return $route ? route($route, absolute: false) : null;
     }
 
+    /** The reference code this person signed up with. @return \Illuminate\Database\Eloquent\Relations\BelongsTo<InviteCode, $this> */
+    public function inviteCode(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(InviteCode::class);
+    }
+
     /** @return HasOne<PartnerProfile, $this> */
     public function profile(): HasOne
     {

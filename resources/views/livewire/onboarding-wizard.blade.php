@@ -47,11 +47,21 @@
                     @error('tier')<p class="cc-err" role="alert">{{ $message }}</p>@enderror
                 @elseif ($step === 3)
                     <h2>Where should payouts go?</h2>
-                    <p>Payouts go to this US bank account. Your routing and account numbers are stored encrypted, and only the last four digits are shown back to you.</p>
+                    <p>Payouts go to this bank account in the United States or Canada. Your bank numbers are stored encrypted, and only the last four digits are shown back to you.</p>
+                    <fieldset class="cc-country" role="radiogroup">
+                        <legend>Where is your bank?</legend>
+                        <label class="cc-check"><input type="radio" name="bankCountry" value="US" wire:model.live="bankCountry"><span>United States</span></label>
+                        <label class="cc-check"><input type="radio" name="bankCountry" value="CA" wire:model.live="bankCountry"><span>Canada</span></label>
+                    </fieldset>
                     <div class="cc-two">
                         <x-cc.field name="holderName" label="Account holder" wire:model="holderName" autocomplete="off" />
                         <x-cc.field name="bankName" label="Bank name" wire:model="bankName" autocomplete="off" />
-                        <x-cc.field name="routingNumber" label="Routing number" wire:model="routingNumber" autocomplete="off" inputmode="numeric" maxlength="9" help="Nine digits, as printed on a check." />
+                        @if ($bankCountry === 'CA')
+                            <x-cc.field name="transitNumber" label="Transit number" wire:model="transitNumber" autocomplete="off" inputmode="numeric" maxlength="5" help="5 digits, on your cheque or in your banking app." />
+                            <x-cc.field name="institutionNumber" label="Institution number" wire:model="institutionNumber" autocomplete="off" inputmode="numeric" maxlength="3" help="3 digits, for example 004." />
+                        @else
+                            <x-cc.field name="routingNumber" label="Routing number" wire:model="routingNumber" autocomplete="off" inputmode="numeric" maxlength="9" help="Nine digits, as printed on a check." />
+                        @endif
                         <x-cc.field name="accountNumber" label="Account number" wire:model="accountNumber" autocomplete="off" inputmode="numeric" maxlength="17" />
                         <x-cc.field name="accountNumberConfirmation" label="Confirm account number" wire:model="accountNumberConfirmation" autocomplete="off" inputmode="numeric" maxlength="17" />
                     </div>
@@ -78,7 +88,7 @@
                     <div class="cc-panel is-flat">
                         <h2 style="font-size:22px">Where payouts go <button type="button" class="cc-edit" wire:click="goTo(3)">Change</button></h2>
                         <dl class="cc-dl">
-                            <div class="cc-kv"><dt>Bank</dt><dd>{{ $bankName }}</dd></div>
+                            <div class="cc-kv"><dt>Bank</dt><dd>{{ $bankName }} ({{ $bankCountry === 'CA' ? 'Canada' : 'United States' }})</dd></div>
                             <div class="cc-kv"><dt>Account holder</dt><dd>{{ $holderName }}</dd></div>
                         </dl>
                     </div>

@@ -1,6 +1,5 @@
 @php
     $sections = [
-        ['Demo', 'This site is a demo. Do not send real money because of anything on it.'],
         ['Eligibility', 'Members must be '.config('drinkwell.min_age').' or older and live in the United States or Canada. Joining needs a reference code from us.'],
         ['Your deposit', 'You pay your deposit directly to your co-partner, never to us. We confirm it before your share of the payouts starts.'],
         ['Your half belongs to you', 'Your share of the machine is fixed at one half. It cannot be reduced, moved to another person or changed without your written agreement.'],

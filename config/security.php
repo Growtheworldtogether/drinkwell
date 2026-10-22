@@ -4,6 +4,9 @@
 | Security settings (SPEC 17). Everything here has a safe default; the .env keys are optional.
 */
 return [
+    // Proxies in front of the site: their addresses, comma separated, or * for the one in front of you (a tunnel, Cloudflare).
+    'trusted_proxies' => env('TRUSTED_PROXIES', ''),
+
 
     // Start in report-only mode, watch the browser console for violations, then set this to true.
     'csp_enforce' => (bool) env('CSP_ENFORCE', false),

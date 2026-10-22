@@ -53,3 +53,14 @@ it('shows the one-time code on the code page only when test mode is on', functio
     $this->post(route('register'), ['name' => 'Bea Test', 'email' => 'bea@example.com', 'password' => 'Bea-Test-2026x', 'password_confirmation' => 'Bea-Test-2026x']);
     $this->get(route('verification.notice'))->assertOk()->assertSee('Test mode: your code is');
 });
+
+it('links styles over https behind a trusted tunnel, and ignores the forwarded scheme otherwise', function () {
+    machine();
+    $headers = ['X-Forwarded-Proto' => 'https', 'X-Forwarded-Host' => 'demo.trycloudflare.com'];
+
+    config(['security.trusted_proxies' => '']);
+    expect($this->get('/', $headers)->getContent())->not->toContain('https://demo.trycloudflare.com/build');
+
+    config(['security.trusted_proxies' => '*']);
+    expect($this->get('/', $headers)->getContent())->toContain('https://demo.trycloudflare.com/build');
+});

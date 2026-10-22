@@ -28,7 +28,8 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
 
         // Load balancers and CDNs: list their addresses in TRUSTED_PROXIES, or * to trust the one in front of you.
-        $middleware->trustProxies(at: env('TRUSTED_PROXIES') === '*' ? '*' : array_filter(array_map('trim', explode(',', (string) env('TRUSTED_PROXIES', '')))));
+        // Read at request time from config (see the middleware); reading env() here runs before .env is loaded.
+        $middleware->replace(\Illuminate\Http\Middleware\TrustProxies::class, \App\Http\Middleware\TrustProxiesFromConfig::class);
 
         // Every response, including a 404 that matched no route, carries the security headers.
         $middleware->append(SecurityHeaders::class);

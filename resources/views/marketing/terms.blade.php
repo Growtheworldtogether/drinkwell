@@ -1,9 +1,8 @@
 @php
     $sections = [
-        ['What this is', 'This site is a classroom project. It shows how a shared vending machine platform could work. It is not an offer to buy or sell anything, and no real money moves.'],
-        ['Eligibility', 'The simulation asks for a date of birth and only lets in people aged '.config('drinkwell.min_age').' or older who live in the United States or Canada, to match the story it tells. Joining needs a reference code from the platform.'],
-        ['Deposits and payouts', 'Deposits and payouts shown here are made-up figures. Settlement instructions are an example of an off-platform process. Never send real money because of anything on this site.'],
-        ['Simulated people', 'Your co-partner is set up by the platform. Their name and account details are fictional.'],
+        ['Demo', 'This site is a demo. Do not send real money because of anything on it.'],
+        ['Eligibility', 'Members must be '.config('drinkwell.min_age').' or older and live in the United States or Canada. Joining needs a reference code from us.'],
+        ['Your deposit', 'You pay your deposit directly to your co-partner, never to us. We confirm it before your share of the payouts starts.'],
         ['Your half belongs to you', 'Your share of the machine is fixed at one half. It cannot be reduced, moved to another person or changed without your written agreement.'],
         ['No hidden fees', 'The only charge is the bottling and logistics fee taken from each day\'s sales, shown line by line in your ledger. There is no sign-up fee, no monthly fee and no fee to take money out.'],
         ['Change of mind', 'You can cancel at no cost at any time before your deposit is confirmed. If you change your mind within 14 days after it is confirmed, we arrange for your half to be bought back for your full deposit, less any payouts already paid to you.'],

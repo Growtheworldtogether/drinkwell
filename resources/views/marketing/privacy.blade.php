@@ -2,9 +2,9 @@
     $sections = [
         ['What is collected', 'Name, email address, phone number, date of birth and city that you type in, and a record of what you do on the site.'],
         ['Bank details', 'The bank numbers you enter (a routing number in the United States, or transit and institution numbers in Canada) and your account number are stored encrypted and only the last four digits are shown. No money is ever moved from the account.'],
-        ['Identity check', 'The identity check is simulated. No document or photo is collected.'],
-        ['Email', 'The platform sends a one-time code, and a message with your pairing details. Messages addressed to simulated co-partners are only written to a log and are never sent.'],
-        ['Keeping and deleting', 'Your data stays in this project\'s database. Ask the administrator to remove your account when the course ends.'],
+        ['Age check', 'We confirm you are old enough to join from your date of birth. No document or photo is collected.'],
+        ['Email', 'We send you a one-time code when you sign in for the first time, reset your password or take money out, and a message with your pairing details.'],
+        ['Keeping and deleting', 'Your details are kept for as long as you are a member. Ask us at any time to close your account and remove them.'],
     ];
 @endphp
 <x-marketing-layout title="Privacy">

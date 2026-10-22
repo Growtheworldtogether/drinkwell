@@ -30,7 +30,7 @@ Then run `php artisan config:clear`, `php artisan db:seed --class=AdminSeeder` a
 - A brand-new member: sign up on the site; the email code is in `storage/logs/laravel.log`. They wait in "Finding a partner" until you pair them from admin Pairings.
 
 ## What to check
-Public: home (colour changing background, footer gradient), How it works, Your earnings (calculator), Locations (map), Questions, About, Contact (send a message, check admin Email log), Terms, Privacy, "Bigger text" button.
+Public: home (colour changing background, footer gradient), How it works, Your earnings (calculator), Locations (map), Questions, Search, Contact (send a message, check admin Email log), Terms, Privacy, "Bigger text" button.
 Sign up: all steps, age 51+ rule, email code (from the log), choose commercial and enterprise tier.
 Member: dashboard, sidebar menu, Partner and deposit (upload a proof file), Withdraw (request, enter code, cancel), Profile, Sign out.
 Admin: Overview, Pairings (enter partner payment details, confirm deposit, demo tools), Withdrawals (approve with reference, decline with reason, on/off switch), Machines, Settings (general, branding), Audit log, Email log, Integrity.

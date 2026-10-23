@@ -58,4 +58,4 @@
         <div class="cc-kv"><dt>Your deposit</dt><dd>{{ $fmt($tier->stakeCents()) }}</dd></div>
     </dl>
 </div>
-@include('onboard._progress', ['stage' => 1])
+<div style="margin-top:24px">@include('onboard._progress', ['stage' => 1])</div>

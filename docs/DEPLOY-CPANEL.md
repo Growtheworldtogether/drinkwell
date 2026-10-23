@@ -24,16 +24,21 @@ cPanel > **MySQL Database Wizard**:
 Keep the full database name, user name and password for step 7.
 
 ## 4. Upload and extract
-cPanel > **File Manager**, open your home folder (the one that holds `public_html`, not inside it).
-1. Create a folder `drinkwell`.
-2. Open it, **Upload** `drinkwell-release.zip`.
-3. Right-click the zip > **Extract** into `/home/youruser/drinkwell`. Then delete the zip.
+There are two zips. Pick the one that fits your domain:
 
-You should now see `app`, `public`, `vendor`, `artisan` and so on inside `drinkwell`.
+**A. Your domain must use `public_html` (most main domains)** — use `drinkwell-release-public_html.zip`.
+1. cPanel > **File Manager**, open `public_html` and delete what the host put there (`index.html`, `default.html` and the like; leave `cgi-bin` and `.well-known` alone).
+2. Go up to your home folder (`/home/youruser`, the one that holds `public_html`).
+3. **Upload** `drinkwell-release-public_html.zip` there, right-click it > **Extract** into `/home/youruser`. Then delete the zip.
 
-## 5. Point the domain at the public folder
-- Subdomain or addon domain: cPanel > **Domains** > Manage > set the **Document Root** to `drinkwell/public`.
-- Main domain: if cPanel does not let you change its document root, ask your host's support: "Please set the document root of yourdomain.com to /home/youruser/drinkwell/public". It is a routine request.
+You now have `public_html` (the site's public files) and a `drinkwell` folder next to it with the rest. `drinkwell` is outside `public_html`, so it has no web address: the site opens at `https://yourdomain.com` and nothing is reachable at `yourdomain.com/drinkwell`. Skip step 5.
+
+**B. You can set the document root (subdomains and addon domains)** — use `drinkwell-release.zip`.
+1. In your home folder create a folder `drinkwell`, upload the zip into it and **Extract** there. Then delete the zip.
+2. Do step 5.
+
+## 5. Point the domain at the public folder (zip B only)
+cPanel > **Domains** > Manage > set the **Document Root** to `drinkwell/public`.
 
 ## 6. Turn on HTTPS
 cPanel > **SSL/TLS Status** > select the domain > **Run AutoSSL**. Wait until it shows a green lock. Sign-in only works over https.
@@ -41,7 +46,7 @@ cPanel > **SSL/TLS Status** > select the domain > **Run AutoSSL**. Wait until it
 ## 7. Run the setup wizard
 1. Open `https://yourdomain.com/install.php`.
 2. The first page checks your server. Fix anything red (usually the PHP version or an extension from step 2), then reload.
-3. It asks for a setup key. In File Manager open `drinkwell/storage/app/install-key.txt` and copy the code into the page. This makes sure only you can run the setup.
+3. It asks for a setup key. In File Manager open `drinkwell/storage/app/install-key.txt` (in your home folder, not in public_html) and copy the code into the page. This makes sure only you can run the setup.
 4. Fill in the pages:
    - **Site**: name, `https://yourdomain.com`, support email, time zone.
    - **Database**: host `localhost`, and the name, user and password from step 3. It tests the connection before moving on.
@@ -49,7 +54,7 @@ cPanel > **SSL/TLS Status** > select the domain > **Run AutoSSL**. Wait until it
    - **Admin**: your name, email and password (12+ characters with upper and lower case and a number). Leave "Add the demo member" ticked if you want Arthur Pendelton's sample dashboard to show people. Leave "Testing only: show one-time codes on the screen" off for real members.
 5. Press **Install now**. When it says **Your site is ready**, copy the cron command and the first reference code from that page.
 
-The installer then locks itself and tries to delete itself. If `public/install.php` is still there, delete it in File Manager.
+The installer then locks itself and tries to delete itself. If `install.php` is still there (in `public_html`, or in `drinkwell/public`), delete it in File Manager.
 
 ## 8. Add the cron job (the clock)
 cPanel > **Cron Jobs** > Common settings: **Once Per Minute** (`* * * * *`). Command: paste the line from the success page, which looks like:
@@ -66,9 +71,9 @@ Sign in as admin, open **Settings > System**. Every line should say **Good**. An
 Then give members the sign-up link with the reference code. Make more codes in **Settings > Reference codes**.
 
 ## Updating the site later
-1. On your PC, run `scripts\make-release.bat` again.
-2. Upload the new zip into `drinkwell` and extract it, choosing to overwrite. Your `.env`, database and uploaded files are not touched (they are not in the zip).
-3. Delete `public/install.php` if it came back. It is locked anyway after the first install.
+1. Get a new zip: on GitHub open **Actions** > **Build release zip** > **Run workflow**; after about 3 minutes both zips are on the **Releases** page. (Or run `scripts\make-release.bat`, or `php scripts/make-release.php --public-html`, on your PC.)
+2. Upload the same kind of zip as the first time to the same place and extract it, choosing to overwrite. Your `.env`, database and uploaded files are not touched (they are not in the zip).
+3. Delete `install.php` if it came back. It is locked anyway after the first install.
 4. Sign in as admin > **Settings > System** > **Install updates**. This applies database changes and clears old caches.
 
 ## Connecting or changing email later

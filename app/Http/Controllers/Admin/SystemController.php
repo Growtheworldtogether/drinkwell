@@ -88,7 +88,7 @@ class SystemController extends Controller
             ['label' => 'Database is up to date', 'ok' => $this->pending() === [] ? true : false,
                 'note' => 'New files were uploaded. Press Install updates below.'],
             ['label' => 'The installer is removed', 'ok' => is_file(public_path('install.php')) ? null : true,
-                'note' => 'Delete public/install.php in File Manager. It is locked, but it is safer gone.'],
+                'note' => 'Delete install.php in File Manager (in public_html, or drinkwell/public). It is locked, but it is safer gone.'],
         ];
     }
 }

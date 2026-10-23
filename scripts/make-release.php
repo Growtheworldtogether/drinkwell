@@ -16,7 +16,18 @@ if (! class_exists(ZipArchive::class)) {
 }
 
 $root = realpath(__DIR__.'/..');
-$out = $root.DIRECTORY_SEPARATOR.'drinkwell-release.zip';
+
+// --public-html: for hosts where the domain must use public_html. The zip then holds two folders to extract in
+// the home folder: public_html (the public files) and drinkwell (everything else, out of reach of the web).
+$publicHtml = in_array('--public-html', $argv, true);
+$out = $root.DIRECTORY_SEPARATOR.($publicHtml ? 'drinkwell-release-public_html.zip' : 'drinkwell-release.zip');
+$place = function (string $rel) use ($publicHtml): string {
+    if (! $publicHtml) {
+        return $rel;
+    }
+
+    return $rel === 'public' ? 'public_html' : (str_starts_with($rel, 'public/') ? 'public_html/'.substr($rel, 7) : 'drinkwell/'.$rel);
+};
 
 foreach (['vendor/autoload.php' => 'composer install --no-dev', 'public/build/manifest.json' => 'npm run build'] as $file => $fix) {
     if (! is_file($root.'/'.$file)) {
@@ -36,7 +47,7 @@ $skipDirs = [
     'storage/framework/cache/data', 'storage/framework/testing', 'storage/framework/route-bake', 'public/storage', 'public/hot',
 ];
 $skipFiles = [
-    '#^\.env$#', '#^\.env\.(?!example$|production\.example$)#', '#\.sqlite(-journal)?$#', '#^drinkwell-release\.zip$#',
+    '#^\.env$#', '#^\.env\.(?!example$|production\.example$)#', '#\.sqlite(-journal)?$#', '#^drinkwell-release(-public_html)?\.zip$#',
     '#^storage/logs/.+\.log$#', '#^storage/framework/(sessions|views)/(?!\.gitignore$)#',
     '#^storage/app/(installed\.lock|install-key\.txt)$#', '#^bootstrap/cache/(?!\.gitignore$).+\.php$#',
     '#(^|/)(Thumbs\.db|\.DS_Store)$#', '#^\.phpunit#', '#^phpunit\.xml$#',
@@ -64,7 +75,7 @@ $it = new RecursiveIteratorIterator(
 foreach ($it as $f) {
     $rel = str_replace('\\', '/', substr($f->getPathname(), strlen($root) + 1));
     if ($f->isDir()) {
-        $zip->addEmptyDir($rel);
+        $zip->addEmptyDir($place($rel));
 
         continue;
     }
@@ -73,12 +84,12 @@ foreach ($it as $f) {
             continue 2;
         }
     }
-    $zip->addFile($f->getPathname(), $rel);
+    $zip->addFile($f->getPathname(), $place($rel));
     $files++;
 }
 // Empty folders the site needs to write into.
 foreach (['storage/app/private', 'storage/app/public', 'storage/framework/cache/data', 'storage/logs', 'storage/framework/sessions', 'storage/framework/views', 'bootstrap/cache'] as $dir) {
-    $zip->addEmptyDir($dir);
+    $zip->addEmptyDir($place($dir));
 }
 $zip->close();
 

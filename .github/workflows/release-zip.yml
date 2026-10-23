@@ -45,13 +45,15 @@ jobs:
           fi
 
       - name: Pack the zip
-        run: php scripts/make-release.php
+        run: |
+          php scripts/make-release.php
+          php scripts/make-release.php --public-html
 
       - name: Publish on the Releases page
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           TAG="release-$(date -u +%Y%m%d-%H%M)"
-          gh release create "$TAG" drinkwell-release.zip \
+          gh release create "$TAG" drinkwell-release.zip drinkwell-release-public_html.zip \
             --title "Upload zip $(date -u '+%Y-%m-%d %H:%M') UTC" \
-            --notes "Upload this zip to cPanel and follow docs/DEPLOY-CPANEL.md. Built from ${GITHUB_SHA::7}."
+            --notes "drinkwell-release-public_html.zip: for a domain that must use public_html (extract in your home folder). drinkwell-release.zip: for a domain whose document root you can set to drinkwell/public. See docs/DEPLOY-CPANEL.md. Built from ${GITHUB_SHA::7}."

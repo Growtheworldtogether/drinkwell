@@ -12,7 +12,7 @@ use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
 use Illuminate\Session\Middleware\AuthenticateSession;
 
-return Application::configure(basePath: dirname(__DIR__))
+$app = Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
         web: __DIR__.'/../routes/web.php',
         commands: __DIR__.'/../routes/console.php',
@@ -43,3 +43,12 @@ return Application::configure(basePath: dirname(__DIR__))
             fn (Request $request) => $request->is('api/*') || $request->expectsJson(),
         );
     })->create();
+
+// Shared hosting where the domain must use public_html: the public files live in ~/public_html and the rest of
+// the app in ~/drinkwell beside it (never inside it, so the code is not reachable from the web).
+$publicHtml = dirname(__DIR__, 2).'/public_html';
+if (! is_file(dirname(__DIR__).'/public/index.php') && is_file($publicHtml.'/index.php')) {
+    $app->usePublicPath($publicHtml);
+}
+
+return $app;

@@ -9,7 +9,7 @@
                 <h2>Finding a partner ({{ $waiting->count() }})</h2>
                 @forelse ($waiting as $req)
                     <details @if (old('_pid') == $req->id || $loop->first) open @endif>
-                        <summary><strong>{{ $req->user->name }}</strong>&nbsp;· {{ \App\Enums\Tier::from($req->tier)->label() }} · asked {{ $req->created_at->diffForHumans() }}</summary>
+                        <summary><strong>{{ $req->user->name }}</strong><br><span class="cc-hint">{{ \App\Enums\Tier::from($req->tier)->label() }}, asked {{ $req->created_at->diffForHumans() }}</span></summary>
                         @include('admin._pairing-form', ['req' => $req, 'action' => route('admin.pairings.assign', $req), 'method' => 'POST', 'submit' => 'Pair and email the member'])
                     </details>
                 @empty
@@ -23,7 +23,7 @@
                     @php $own = $ownerships[$req->user_id] ?? null; $pending = $own && $own->settlement_status === \App\Enums\SettlementStatus::PendingSettlement; @endphp
                     <details @if (old('_pid') == $req->id) open @endif>
                         <summary>
-                            <strong>{{ $req->user->name }}</strong>&nbsp;paired with&nbsp;<strong>{{ $req->partner_name }}</strong>&nbsp;·
+                            <strong>{{ $req->user->name }}</strong> paired with <strong>{{ $req->partner_name }}</strong><br>
                             @if (! $pending) <span class="cc-tone ok">Deposit confirmed</span>
                             @elseif ($req->proof_path) <span class="cc-tone">Proof of payment received</span>
                             @elseif ($req->deposit_reported_at) <span class="cc-tone">Member says it was sent</span>

@@ -45,7 +45,7 @@
             </div>
             <div class="cc-two">
                 <x-cc.field name="sent_on" label="Date you sent it" type="date" :value="old('sent_on', ($req->proof_sent_on ?? now())->toDateString())" :max="now()->toDateString()" />
-                <x-cc.field name="note" label="Note (optional)" :value="old('note', $req->proof_note)" placeholder="For example, sent by bank transfer" maxlength="255" />
+                <x-cc.field name="note" label="Note (optional)" :value="old('note', $req->proof_note)" placeholder="Bank transfer" maxlength="255" />
             </div>
             <button type="submit" class="af-btn af-btn-black">{{ $sent ? 'Update my proof' : 'I sent my deposit' }}</button>
         </form>

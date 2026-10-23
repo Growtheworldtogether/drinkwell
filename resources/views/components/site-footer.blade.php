@@ -10,7 +10,7 @@
             </div>
             <div>
                 <h4>Need help?</h4>
-                <a href="mailto:{{ $brand->supportEmail }}" class="break-anywhere">{{ $brand->supportEmail }}</a>
+                <a href="mailto:{{ $brand->supportEmail }}" class="cc-email">{!! str_replace('@', '@<wbr>', e($brand->supportEmail)) !!}</a>
                 <a href="{{ route('questions') }}">Questions</a>
                 <a href="{{ route('program') }}#deposit">How your deposit works</a>
                 <a href="{{ route('contact') }}">Contact us</a>
@@ -19,6 +19,7 @@
                 <h4>Useful links</h4>
                 <a href="{{ route('terms') }}">Terms</a>
                 <a href="{{ route('privacy') }}">Privacy</a>
+                <button type="button" data-text-size aria-pressed="false"><span data-text-size-label>Bigger text</span></button>
                 @guest
                     <a href="{{ route('login') }}">Sign in</a>
                 @endguest

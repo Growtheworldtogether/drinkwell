@@ -144,9 +144,12 @@
         transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease;
     }
 
-    .cc-page .af-btn-black:hover {
-        background: #6c6c6c;
-        transform: translateY(-2px);
+    /* Hover only with a real mouse: on a phone a tap would leave the next button under the finger stuck in this colour. */
+    @media (hover: hover) {
+        .cc-page .af-btn-black:hover {
+            background: #6c6c6c;
+            transform: translateY(-2px);
+        }
     }
 
     .cc-page .af-btn-black:active {
@@ -160,9 +163,11 @@
         border: 2px solid #000;
     }
 
-    .cc-btn-outline:hover {
-        background: #000;
-        color: #fff;
+    @media (hover: hover) {
+        .cc-btn-outline:hover {
+            background: #000;
+            color: #fff;
+        }
     }
 
     /* Hero: one full screen, headline in four staggered lines. */
@@ -1588,6 +1593,14 @@
     .cc-story-dot.is-on, .cc-hero-photo .cc-story-dot.is-on { background: #fff; border-color: #fff; }
     .cc-story-dot.is-on > img { opacity: 1; filter: none; }
     .cc-story-dot:hover > img { opacity: 1; }
+
+    /* Phones: no floating Bigger text button over fields and values; it lives in the menu and the footer instead. */
+    @media (max-width: 767px) { .cc-access, .cc-tip { display: none !important; } }
+    .cc-side-size { width: 100%; margin-top: 12px; border: 2px solid #000; background: transparent; font-family: inherit; cursor: pointer; text-align: left; }
+    .cc-side-size b { font-size: 20px; }
+    .cc-email { overflow-wrap: normal; word-break: normal; }
+    .cc-edit-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+    .cc-edit-head .cc-edit { float: none; flex: none; }
 }
 
 /* Lets the story dot ring fill smoothly. Registered outside the layer, as @property must be. */

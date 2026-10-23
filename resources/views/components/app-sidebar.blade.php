@@ -50,6 +50,7 @@
             <p class="cc-side-label">Site</p>
             <a href="{{ route('home') }}" class="cc-side-link"><span>View the public site</span></a>
         @endif
+        <button type="button" class="cc-side-link cc-side-size" data-text-size aria-pressed="false"><span data-text-size-label>Bigger text</span><b aria-hidden="true">Aa</b></button>
     </nav>
 
     <div class="cc-side-user">

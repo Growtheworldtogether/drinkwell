@@ -99,26 +99,30 @@ export function initPublicFx() {
         get: (k) => { try { return localStorage.getItem(k); } catch (e) { return null; } },
         set: (k, v) => { try { localStorage.setItem(k, v); } catch (e) { /* private mode: just not remembered */ } },
     };
-    const size = document.querySelector('[data-text-size]');
+    // One floating button (laptops), plus one in the menu and the footer (phones, where a floating button would cover fields).
+    const sizes = [...document.querySelectorAll('[data-text-size]')];
+    const size = document.querySelector('.cc-access[data-text-size]') || sizes[0];
     const tip = document.querySelector('[data-size-tip]');
     const closeTip = () => { if (tip && ! tip.hidden) { tip.hidden = true; store.set('dw-size-tip', '1'); } };
-    if (size) {
-        const label = size.querySelector('[data-text-size-label]');
+    if (sizes.length) {
         const apply = (on) => {
             root.classList.toggle('big-text', on);
-            size.setAttribute('aria-pressed', String(on));
-            if (label) label.textContent = on ? 'Normal text' : 'Bigger text';
+            sizes.forEach((b) => {
+                b.setAttribute('aria-pressed', String(on));
+                const label = b.querySelector('[data-text-size-label]');
+                if (label) label.textContent = on ? 'Normal text' : 'Bigger text';
+            });
         };
         if (store.get('dw-big-text') === '1') apply(true);
-        size.addEventListener('click', () => {
+        sizes.forEach((b) => b.addEventListener('click', () => {
             const on = ! root.classList.contains('big-text');
             apply(on);
             store.set('dw-big-text', on ? '1' : '0');
             closeTip();
-        });
+        }));
     }
     // First visit only: a small tip next to the Aa button, a moment after the page has settled.
-    if (tip && size && store.get('dw-size-tip') !== '1') {
+    if (tip && size && size.offsetParent !== null && store.get('dw-size-tip') !== '1') {
         tip.querySelector('[data-size-tip-close]')?.addEventListener('click', closeTip);
         setTimeout(() => { if (store.get('dw-size-tip') !== '1') tip.hidden = false; }, 2500);
     }

@@ -70,7 +70,7 @@
                     <h2>Check your answers</h2>
                     <p>Please read this once, then press the black button. Nothing is sent until you do.</p>
                     <div class="cc-panel is-flat">
-                        <h2 style="font-size:22px">About you <button type="button" class="cc-edit" wire:click="goTo(1)">Change</button></h2>
+                        <h2 class="cc-edit-head" style="font-size:22px"><span>About you</span> <button type="button" class="cc-edit" wire:click="goTo(1)">Change</button></h2>
                         <dl class="cc-dl">
                             <div class="cc-kv"><dt>Name</dt><dd>{{ $name }}</dd></div>
                             <div class="cc-kv"><dt>Date of birth</dt><dd>{{ $dob ? \Illuminate\Support\Carbon::parse($dob)->format('F j, Y') : '' }}</dd></div>
@@ -79,14 +79,14 @@
                         </dl>
                     </div>
                     <div class="cc-panel is-flat">
-                        <h2 style="font-size:22px">Your machine <button type="button" class="cc-edit" wire:click="goTo(2)">Change</button></h2>
+                        <h2 class="cc-edit-head" style="font-size:22px"><span>Your machine</span> <button type="button" class="cc-edit" wire:click="goTo(2)">Change</button></h2>
                         <dl class="cc-dl">
                             <div class="cc-kv"><dt>Option</dt><dd>{{ $t['label'] ?? '' }}</dd></div>
                             <div class="cc-kv"><dt>Your deposit</dt><dd>{{ $t ? \App\Support\Money::format($t['stake']) : '' }}</dd></div>
                         </dl>
                     </div>
                     <div class="cc-panel is-flat">
-                        <h2 style="font-size:22px">Where payouts go <button type="button" class="cc-edit" wire:click="goTo(3)">Change</button></h2>
+                        <h2 class="cc-edit-head" style="font-size:22px"><span>Where payouts go</span> <button type="button" class="cc-edit" wire:click="goTo(3)">Change</button></h2>
                         <dl class="cc-dl">
                             <div class="cc-kv"><dt>Bank</dt><dd>{{ $bankName }} ({{ $bankCountry === 'CA' ? 'Canada' : 'United States' }})</dd></div>
                             <div class="cc-kv"><dt>Account holder</dt><dd>{{ $holderName }}</dd></div>

@@ -9,7 +9,7 @@
             <div class="cc-two">
                 <x-cc.field name="how_many" label="How many codes" type="number" :value="old('how_many', 1)" min="1" max="20" required />
                 <x-cc.field name="max_uses" label="Sign-ups per code" type="number" :value="old('max_uses', 1)" min="1" help="Leave empty for no limit." />
-                <x-cc.field name="note" label="Note (optional)" :value="old('note')" placeholder="For example, church group" maxlength="120" />
+                <x-cc.field name="note" label="Note (optional)" :value="old('note')" placeholder="Church group" maxlength="120" />
                 <x-cc.field name="expires_on" label="Last day it works (optional)" type="date" :value="old('expires_on')" :min="now()->toDateString()" />
             </div>
             <button type="submit" class="af-btn af-btn-black" style="width:auto">Make codes</button>

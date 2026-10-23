@@ -390,8 +390,10 @@
         color: theme('colors.af.black');
     }
 
-    .af-btn-light:hover {
-        background: theme('colors.af.200');
+    @media (hover: hover) {
+        .af-btn-light:hover {
+            background: theme('colors.af.200');
+        }
     }
 
     .af-btn-black {
@@ -399,8 +401,10 @@
         color: theme('colors.af.white');
     }
 
-    .af-btn-black:hover {
-        background: theme('colors.af.700');
+    @media (hover: hover) {
+        .af-btn-black:hover {
+            background: theme('colors.af.700');
+        }
     }
 
     .af-btn-black:active {
@@ -412,8 +416,10 @@
         color: theme('colors.af.black');
     }
 
-    .af-btn-soft:hover {
-        background: theme('colors.af.200');
+    @media (hover: hover) {
+        .af-btn-soft:hover {
+            background: theme('colors.af.200');
+        }
     }
 
     /* Headings and lead copy of the public bands. */

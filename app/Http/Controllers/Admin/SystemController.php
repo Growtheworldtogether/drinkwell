@@ -89,6 +89,35 @@ class SystemController extends Controller
                 'note' => 'New files were uploaded. Press Install updates below.'],
             ['label' => 'The installer is removed', 'ok' => is_file(public_path('install.php')) ? null : true,
                 'note' => 'Delete install.php in File Manager (in public_html, or drinkwell/public). It is locked, but it is safer gone.'],
+            $this->autoPairCheck(),
         ];
+    }
+
+    /** @return array{label: string, ok: bool|null, note: string} Why new members are or are not paired automatically. */
+    private function autoPairCheck(): array
+    {
+        $label = 'Automatic pairing';
+        if (! is_file(resource_path('views/onboard/_searching.blade.php')) || ! \Illuminate\Support\Facades\Route::has('onboard.match')) {
+            return ['label' => $label, 'ok' => false, 'note' => 'Its files are not all in place. Upload the update again into your home folder, then press Install updates.'];
+        }
+        if (! app(\App\Services\SettingsRepository::class)->bool(SignupSettingsController::AUTO_PAIR_KEY, true)) {
+            return ['label' => $label.' is off', 'ok' => null, 'note' => 'Members wait for you to pair them. Turn it on in Settings, Deposit details.'];
+        }
+        $missing = SignupSettingsController::missingForAuto();
+        if ($missing !== []) {
+            return ['label' => $label, 'ok' => false, 'note' => 'Waiting for these default details: '.implode(', ', $missing).'. Fill them in under Settings, Deposit details.'];
+        }
+        $full = [];
+        foreach (\App\Enums\Tier::cases() as $tier) {
+            $open = \App\Models\VendingMachine::query()->where('tier', $tier)->where('assignment_status', \App\Enums\AssignmentStatus::Open)->count();
+            if ($open === 0) {
+                $full[] = $tier->label();
+            }
+        }
+        if ($full !== []) {
+            return ['label' => $label, 'ok' => null, 'note' => 'No free machine for: '.implode(', ', $full).'. Members who choose it wait for you.'];
+        }
+
+        return ['label' => $label.' is on', 'ok' => true, 'note' => ''];
     }
 }

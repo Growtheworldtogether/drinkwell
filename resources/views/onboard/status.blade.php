@@ -26,14 +26,14 @@
                     </dl>
                 </div>
             @else
-                @if (session('just_paired'))
+                @if (($justPaired ?? false))
                     @include('onboard._found-style')
                 @endif
-                <x-cc.head :title="session('just_paired') ? 'We found your co-partner' : ($pending ? 'You are paired' : 'You are all set')" eyebrow="Your co-partner" :lead="$partner->name.($partner->profile?->city ? ' in '.$partner->profile->city : '').' is your co-partner.'">
+                <x-cc.head :title="($justPaired ?? false) ? 'We found your co-partner' : ($pending ? 'You are paired' : 'You are all set')" eyebrow="Your co-partner" :lead="$partner->name.($partner->profile?->city ? ' in '.$partner->profile->city : '').' is your co-partner.'">
                     @unless ($pending)<a class="af-btn af-btn-black" href="{{ route('hub.dashboard') }}">Open the dashboard</a>@endunless
                 </x-cc.head>
                 @include('onboard._progress', ['stage' => $stage])
-                @if (session('just_paired'))
+                @if (($justPaired ?? false))
                     <div class="cc-panel dw-found-card dw-in" style="--d:0">
                         <div class="dw-found-who">
                             <span class="cc-avatar" aria-hidden="true">{{ \Illuminate\Support\Str::of($partner->name)->explode(' ')->map(fn ($p) => mb_substr($p, 0, 1))->take(2)->implode('') }}</span>
@@ -46,7 +46,7 @@
                         <p style="margin:0">You each own half of the machine below and split what it earns every day. Your deposit details are further down, and we have emailed them to you too.</p>
                     </div>
                 @endif
-                <div class="cc-panel {{ session('just_paired') ? 'dw-in dw-rows' : '' }}" style="--d:1">
+                <div class="cc-panel {{ ($justPaired ?? false) ? 'dw-in dw-rows' : '' }}" style="--d:1">
                     <h2>Your machine</h2>
                     <dl class="cc-dl">
                         <div class="cc-kv"><dt>Serial number</dt><dd>{{ $machine->serial_no }}</dd></div>

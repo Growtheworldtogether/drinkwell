@@ -32,14 +32,19 @@ class OnboardController extends Controller
         }
 
         if (! $mine) {
-            // Automatic pairing: show the search, which then asks match() to pair. If a try found no free machine
-            // this session, show the normal waiting page instead of searching again.
-            $searching = $req->status === PairingRequest::FINDING
-                && SignupSettingsController::autoPairReady()
-                && ! $request->session()->get('auto_pair_failed');
+            // Automatic pairing happens here, on the server, as soon as the waiting member opens this page. The page
+            // then plays the short search and reloads to reveal the co-partner. If it cannot pair (switch off,
+            // details missing, no free machine), the member sees the normal waiting page and an admin pairs them.
+            if ($req->status === PairingRequest::FINDING && SignupSettingsController::autoPairReady() && $this->autoPair($req)) {
+                $request->session()->put('reveal_pending', true);
 
-            return view('onboard.status', ['req' => $req, 'mine' => null, 'searching' => $searching]);
+                return view('onboard.status', ['req' => $req->fresh(), 'mine' => null, 'searching' => true]);
+            }
+
+            return view('onboard.status', ['req' => $req, 'mine' => null, 'searching' => false]);
         }
+
+        $justPaired = (bool) $request->session()->pull('reveal_pending') || (bool) $request->session()->get('just_paired');
 
         return view('onboard.status', [
             'req' => $req,
@@ -47,18 +52,24 @@ class OnboardController extends Controller
             'machine' => $mine->machine,
             'partner' => $this->pairing->partnerOf($mine),
             'reference' => $req?->reference ?: PairingService::reference($mine),
+            'justPaired' => $justPaired,
         ]);
     }
 
-    /** The end of the on-screen search: pairs the member with the default details, when automatic pairing is on. */
+    /** Older search pages post here at the end; pairing already happened in status(), so this only moves on. */
     public function match(Request $request): RedirectResponse
     {
         $req = $request->user()->pairingRequest;
-
-        if (! $req || $req->status !== PairingRequest::FINDING || ! SignupSettingsController::autoPairReady()) {
-            return redirect()->route('onboard.status');
+        if ($req && $req->status === PairingRequest::FINDING && SignupSettingsController::autoPairReady() && $this->autoPair($req)) {
+            $request->session()->put('reveal_pending', true);
         }
 
+        return redirect()->route('onboard.status');
+    }
+
+    /** Pairs a waiting member with the default deposit details. False when it could not (for example no free machine). */
+    private function autoPair(PairingRequest $req): bool
+    {
         $d = SignupSettingsController::depositDefaults();
         try {
             $this->pairing->assign($req, [
@@ -72,12 +83,14 @@ class OnboardController extends Controller
                 'note' => $d['note'] ?: null,
             ]);
         } catch (NoMachineAvailable) {
-            $request->session()->put('auto_pair_failed', true);
+            return false;
+        } catch (\Throwable $e) {
+            report($e);
 
-            return redirect()->route('onboard.status');
+            return false;
         }
 
-        return redirect()->route('onboard.status')->with('just_paired', true);
+        return true;
     }
 
     /**

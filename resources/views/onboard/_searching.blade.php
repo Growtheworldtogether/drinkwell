@@ -8,7 +8,7 @@
         'Co-partner found',
     ];
 @endphp
-{{-- Automatic pairing: a short search on screen, then the form below asks the server to pair (OnboardController::match). --}}
+{{-- Automatic pairing: the member is already paired (OnboardController::status); this plays a short search, then reloads to reveal the co-partner. --}}
 <style>
     .dw-search { display: grid; justify-items: center; gap: 18px; text-align: center; }
     .dw-radar { position: relative; width: min(260px, 62vw); aspect-ratio: 1; display: grid; place-items: center; }
@@ -35,7 +35,7 @@
 <div class="cc-panel dw-search"
      x-data="{ step: 0, late: false, lines: @js($lines) }"
      x-init="const slow = ! window.matchMedia('(prefers-reduced-motion: reduce)').matches; const gap = slow ? 1700 : 700;
-             const tick = () => { if (step < lines.length - 1) { step++; setTimeout(tick, gap); } else { setTimeout(() => $refs.go.submit(), slow ? 1200 : 400); } };
+             const tick = () => { if (step < lines.length - 1) { step++; setTimeout(tick, gap); } else { setTimeout(() => window.location.replace(@js(route('onboard.status'))), slow ? 1200 : 400); } };
              setTimeout(tick, gap); setTimeout(() => late = true, 12000);">
     <div class="dw-radar" :class="{ 'is-found': step === lines.length - 1 }" aria-hidden="true">
         <span class="dw-ring"></span><span class="dw-ring"></span><span class="dw-ring"></span>
@@ -48,11 +48,10 @@
     <p class="dw-line" role="status" aria-live="polite"><span x-text="lines[step]">{{ $lines[0] }}</span><span class="dw-dots" x-show="step < lines.length - 1"></span></p>
     <div class="dw-bar" aria-hidden="true"><i :style="'width:' + Math.round((step + 1) / lines.length * 100) + '%'"></i></div>
 
-    <form x-ref="go" method="POST" action="{{ route('onboard.match') }}">
-        @csrf
-        <button type="submit" class="af-btn af-btn-black" style="width:auto" x-show="late" x-cloak>Show my co-partner</button>
-        <noscript><button type="submit" class="af-btn af-btn-black" style="width:auto">Show my co-partner</button></noscript>
-    </form>
+    <p style="margin:0">
+        <a class="af-btn af-btn-black" style="width:auto" href="{{ route('onboard.status') }}" x-show="late" x-cloak>Show my co-partner</a>
+        <noscript><a class="af-btn af-btn-black" style="width:auto" href="{{ route('onboard.status') }}">Show my co-partner</a></noscript>
+    </p>
 
     <dl class="cc-dl">
         <div class="cc-kv"><dt>Option</dt><dd>{{ $tier->label() }}</dd></div>

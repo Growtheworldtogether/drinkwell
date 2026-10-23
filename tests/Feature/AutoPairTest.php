@@ -22,25 +22,24 @@ $waiting = function () {
     return $user;
 };
 
-it('shows the search, then pairs with the default details and reveals the co-partner', function () use ($defaults, $waiting) {
+it('pairs on the server when the member opens the page, plays the search, then reveals the co-partner', function () use ($defaults, $waiting) {
     Mail::fake();
     machine();
     $defaults();
     $user = $waiting();
 
-    $this->get(route('onboard.status'))->assertOk()->assertSee('Looking for your co-partner')->assertSee(route('onboard.match'), false);
-
-    $this->post(route('onboard.match'))->assertRedirect(route('onboard.status'))->assertSessionHas('just_paired');
+    $this->get(route('onboard.status'))->assertOk()->assertSee('Looking for your co-partner')->assertSessionHas('reveal_pending');
 
     $req = PairingRequest::where('user_id', $user->id)->first();
     expect($req->status)->toBe(PairingRequest::PAIRED)->and($req->bank_name)->toBe('Maple Trust')->and($req->account_last4)->toBe('4321')
         ->and(MachineOwnership::where('user_id', $user->id)->exists())->toBeTrue();
     Mail::assertSent(PairingDossier::class);
 
-    $this->withSession(['just_paired' => true])->get(route('onboard.status'))->assertOk()
-        ->assertSee('We found your co-partner')->assertSee('Margaret Whitfield')->assertSee('Maple Trust');
+    // The reload at the end of the search reveals the co-partner once.
+    $this->get(route('onboard.status'))->assertOk()->assertSee('We found your co-partner')->assertSee('Margaret Whitfield')->assertSee('Maple Trust');
+    $this->get(route('onboard.status'))->assertOk()->assertDontSee('We found your co-partner')->assertSee('You are paired');
 
-    // A second request changes nothing.
+    // The old end-of-search address changes nothing now.
     $this->post(route('onboard.match'))->assertRedirect(route('onboard.status'));
     expect(MachineOwnership::where('user_id', $user->id)->count())->toBe(1);
 });
@@ -63,8 +62,7 @@ it('falls back to waiting when no machine is free', function () use ($defaults, 
     $defaults();
     $user = $waiting();
 
-    $this->post(route('onboard.match'))->assertRedirect(route('onboard.status'))->assertSessionHas('auto_pair_failed');
-    $this->get(route('onboard.status'))->assertSee('Finding a partner')->assertDontSee('Looking for your co-partner');
+    $this->get(route('onboard.status'))->assertOk()->assertSee('Finding a partner')->assertDontSee('Looking for your co-partner');
     expect(PairingRequest::where('user_id', $user->id)->value('status'))->toBe(PairingRequest::FINDING);
 });
 
@@ -78,4 +76,17 @@ it('lets the administrator switch automatic pairing on and off', function () {
     expect(SignupSettingsController::autoPairReady())->toBeTrue();
     $this->put(route('admin.settings.deposit.save'), ['partner_name' => 'M W', 'account_holder' => 'M W', 'bank_name' => 'B', 'account_number' => '123456']);
     expect(SignupSettingsController::autoPairReady())->toBeFalse();
+});
+
+it('explains on the System page why automatic pairing is or is not working', function () use ($defaults) {
+    signedIn(Role::Admin);
+    session(['auth.password_confirmed_at' => time()]);
+    $this->get(route('admin.settings.system'))->assertSee('Waiting for these default details');
+    machine();
+    $defaults();
+    $this->get(route('admin.settings.system'))->assertSee('No free machine for: Enterprise Hub Unit');
+    machine(Tier::Enterprise);
+    $this->get(route('admin.settings.system'))->assertSee('Automatic pairing is on');
+    $defaults(false);
+    $this->get(route('admin.settings.system'))->assertSee('Automatic pairing is off');
 });

@@ -4,9 +4,9 @@
 Hello {{ $userName }},
 
 @if ($updated)
-We corrected the payment details for your deposit. Please use the details below. **Demo: the people and amounts are fictional, and no real money moves.**
+We corrected the payment details for your deposit. Please use the details below.
 @else
-You are paired with a co-partner on one machine. **Demo: the people and amounts are fictional, and no real money moves.**
+You are paired with a co-partner on one machine.
 @endif
 
 <x-mail::panel>

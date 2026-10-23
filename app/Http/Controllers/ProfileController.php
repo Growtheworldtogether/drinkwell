@@ -50,7 +50,7 @@ class ProfileController extends Controller
         $user = $request->user();
 
         if ($user->ownerships()->exists()) {
-            return Redirect::route('profile.edit')->withErrors(['password' => 'An account that owns a machine share cannot be deleted in this simulation.'], 'userDeletion');
+            return Redirect::route('profile.edit')->withErrors(['password' => 'An account that owns a machine share cannot be deleted. Contact us and we will help you.'], 'userDeletion');
         }
 
         Auth::logout();

@@ -11,7 +11,7 @@
 <td class="header">
 <a href="{{ $url }}" style="display: inline-block;">
 @if ($logo)
-<img src="{{ $logo }}" class="logo" height="32" alt="{{ $brand->name }}">
+<img src="{{ $logo }}" class="logo" height="48" alt="{{ $brand->name }}">
 @else
 {!! $slot !!}
 @endif

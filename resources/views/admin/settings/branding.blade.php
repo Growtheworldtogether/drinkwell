@@ -17,7 +17,7 @@
 
             <div class="cc-panel">
                 <h2>Logos</h2>
-                <p class="cc-hint">PNG, WebP or JPG, up to 1 MB, at least 240 px wide. A transparent background is best. SVG is not accepted.</p>
+                <p class="cc-hint">Best: a wide PNG with a transparent background, about 600 × 150 px, cropped close to the logo. PNG, WebP or JPG, up to 1 MB, at least 240 px wide. SVG is not accepted.</p>
                 <x-cc.field name="logo_light" id="br-logo-light" label="Logo for light backgrounds" type="file" accept="image/png,image/webp,image/jpeg" x-on:change="pick($event, 'logoLight', 'removeLight')" />
                 <label class="cc-check"><input type="checkbox" name="remove_logo_light" value="1" x-model="removeLight" x-on:change="if (removeLight) logoLight = null"><span>Remove this logo</span></label>
                 <x-cc.field name="logo_dark" id="br-logo-dark" label="Logo for dark backgrounds" type="file" accept="image/png,image/webp,image/jpeg" x-on:change="pick($event, 'logoDark', 'removeDark')" />

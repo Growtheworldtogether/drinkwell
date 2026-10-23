@@ -25,12 +25,12 @@ class DoctorCommand extends Command
     private function rules(): array
     {
         return [
-            ['partner_profiles', 'age_at_signup >= '.(int) config('drinkwell.min_age')],
-            ['vending_machines', 'capacity IN (160, 347)'],
-            ['vending_machines', 'stock <= capacity'],
-            ['vending_machines', 'day_minute BETWEEN 0 AND 1439'],
-            ['machine_ownerships', 'slot_no IN (1, 2)'],
-            ['machine_days', 'pool_cents = gross_cents - fee_cents AND pool_cents % 2 = 0'],
+            ['partner_profiles', '`age_at_signup` >= '.(int) config('drinkwell.min_age')],
+            ['vending_machines', '`capacity` IN (160, 347)'],
+            ['vending_machines', '`stock` <= `capacity`'],
+            ['vending_machines', '`day_minute` BETWEEN 0 AND 1439'],
+            ['machine_ownerships', '`slot_no` IN (1, 2)'],
+            ['machine_days', '`pool_cents` = `gross_cents` - `fee_cents` AND `pool_cents` % 2 = 0'],
         ];
     }
 

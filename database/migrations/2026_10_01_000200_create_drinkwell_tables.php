@@ -27,7 +27,7 @@ return new class extends Migration
             $table->boolean('is_simulated')->default(false);
             $table->timestamps();
         });
-        DbCheck::add('partner_profiles', 'chk_partner_age', 'age_at_signup >= 51');
+        DbCheck::add('partner_profiles', 'chk_partner_age', '`age_at_signup` >= 51');
 
         Schema::create('vending_machines', function (Blueprint $table) {
             $table->id();
@@ -52,9 +52,9 @@ return new class extends Migration
             $table->index(['assignment_status', 'tier']);
             $table->index('hardware_state');
         });
-        DbCheck::add('vending_machines', 'chk_machine_capacity', 'capacity IN (160, 347)');
-        DbCheck::add('vending_machines', 'chk_machine_stock', 'stock <= capacity');
-        DbCheck::add('vending_machines', 'chk_machine_minute', 'day_minute BETWEEN 0 AND 1439');
+        DbCheck::add('vending_machines', 'chk_machine_capacity', '`capacity` IN (160, 347)');
+        DbCheck::add('vending_machines', 'chk_machine_stock', '`stock` <= `capacity`');
+        DbCheck::add('vending_machines', 'chk_machine_minute', '`day_minute` BETWEEN 0 AND 1439');
 
         Schema::create('machine_ownerships', function (Blueprint $table) {
             $table->id();
@@ -72,7 +72,7 @@ return new class extends Migration
             $table->unique(['machine_id', 'user_id']);
             $table->index(['user_id', 'settlement_status']);
         });
-        DbCheck::add('machine_ownerships', 'chk_slot_no', 'slot_no IN (1, 2)');
+        DbCheck::add('machine_ownerships', 'chk_slot_no', '`slot_no` IN (1, 2)');
 
         // One row per machine per business day: the settled day.
         Schema::create('machine_days', function (Blueprint $table) {
@@ -87,7 +87,7 @@ return new class extends Migration
 
             $table->unique(['machine_id', 'operating_date']);
         });
-        DbCheck::add('machine_days', 'chk_day_pool', 'pool_cents = gross_cents - fee_cents AND pool_cents % 2 = 0');
+        DbCheck::add('machine_days', 'chk_day_pool', '`pool_cents` = `gross_cents` - `fee_cents` AND `pool_cents` % 2 = 0');
 
         // One payout per owner per machine per day. The unique key is the duplicate-payout guard.
         Schema::create('daily_distributions', function (Blueprint $table) {

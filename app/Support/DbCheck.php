@@ -9,8 +9,12 @@ final class DbCheck
 {
     public static function add(string $table, string $name, string $expression): void
     {
-        if (in_array(DB::getDriverName(), ['mysql', 'mariadb', 'pgsql'], true)) {
-            DB::statement("ALTER TABLE {$table} ADD CONSTRAINT {$name} CHECK ({$expression})");
+        // Column names are written in `backticks`: some (day_minute) are reserved words in MySQL and MariaDB.
+        $driver = DB::getDriverName();
+        if (in_array($driver, ['mysql', 'mariadb'], true)) {
+            DB::statement("ALTER TABLE `{$table}` ADD CONSTRAINT `{$name}` CHECK ({$expression})");
+        } elseif ($driver === 'pgsql') {
+            DB::statement('ALTER TABLE "'.$table.'" ADD CONSTRAINT "'.$name.'" CHECK ('.str_replace('`', '"', $expression).')');
         }
     }
 }

@@ -1,0 +1,71 @@
+# Runs every migration and the seeders on the databases cPanel hosts use (MariaDB and MySQL),
+# so a database-specific problem shows up here instead of in the setup wizard.
+name: Database check
+
+on:
+  push:
+    paths: ['database/**', 'app/Support/DbCheck.php', 'app/Console/Commands/DoctorCommand.php', '.github/workflows/database-check.yml']
+  workflow_dispatch:
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        db: ['mariadb:10.6', 'mariadb:10.11', 'mariadb:11.4', 'mysql:8.0', 'mysql:8.4']
+    services:
+      db:
+        image: ${{ matrix.db }}
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MARIADB_ROOT_PASSWORD: root
+          MYSQL_DATABASE: drinkwell
+          MARIADB_DATABASE: drinkwell
+        ports: ['3306:3306']
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -proot || mariadb-admin ping -h 127.0.0.1 -proot"
+          --health-interval=5s --health-timeout=5s --health-retries=30
+    env:
+      APP_ENV: local
+      APP_DEBUG: 'false'
+      DB_CONNECTION: mysql
+      DB_HOST: 127.0.0.1
+      DB_PORT: 3306
+      DB_DATABASE: drinkwell
+      DB_USERNAME: root
+      DB_PASSWORD: root
+      CACHE_STORE: file
+      SESSION_DRIVER: file
+      MAIL_MAILER: log
+      DEMO_PASSWORD: Demo-Check-2026x
+    steps:
+      - uses: actions/checkout@v5
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: pdo_mysql, mbstring, gd, intl
+          tools: composer
+      - run: composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
+      - name: Settings file
+        run: |
+          cp .env.example .env
+          php artisan key:generate --force
+      - name: Create the tables
+        run: php artisan migrate --force
+      - name: Add settings, machines and the demo member
+        run: |
+          php artisan db:seed --class='Database\Seeders\SettingsSeeder' --force
+          php artisan db:seed --class='Database\Seeders\MachineSeeder' --force
+          php artisan db:seed --class='Database\Seeders\DemoSeeder' --force
+      - name: Start over and create again (what the wizard does on a retry)
+        run: |
+          php artisan db:wipe --force
+          php artisan migrate --force
+      - name: Doctor (database CHECK rules in place)
+        run: |
+          php artisan db:seed --class='Database\Seeders\SettingsSeeder' --force
+          php artisan db:seed --class='Database\Seeders\MachineSeeder' --force
+          php artisan drinkwell:doctor | tee doctor.txt || true
+          grep -E "CHECK rules exist in the database|Every row passes" doctor.txt
+          ! grep -E "FAIL +(Connected|Migrations ran|Machines seeded|Every row passes|Server is new enough)" doctor.txt

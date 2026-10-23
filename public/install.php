@@ -411,6 +411,12 @@ if ($step === 'install') {
             }
         };
 
+        // Not installed yet (no lock), so any of our tables here are left over from a try that stopped part way.
+        // Start them over, so the retry does not trip over half-made tables.
+        if (Illuminate\Support\Facades\Schema::hasTable('migrations')) {
+            $run('db:wipe', ['--force' => true]);
+            $log[] = 'Cleared the tables left by an earlier try.';
+        }
         $run('migrate', ['--force' => true]);
         $log[] = 'Tables created.';
         $run('db:seed', ['--class' => 'Database\\Seeders\\SettingsSeeder', '--force' => true]);

@@ -12,7 +12,7 @@ jobs:
   zip:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - uses: shivammathur/setup-php@v2
         with:
@@ -20,7 +20,7 @@ jobs:
           extensions: zip, mbstring, gd, intl
           tools: composer
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: '22'
           cache: npm
@@ -29,9 +29,20 @@ jobs:
         run: composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
 
       - name: Build styles and scripts
+        shell: bash
         run: |
-          npm ci --no-audit --no-fund
-          npm run build
+          set -o pipefail
+          node -v
+          build() { npm run build 2>&1 | tee build.log; }
+          if ! (npm ci --no-audit --no-fund 2>&1 | tee install.log && build); then
+            echo "First try failed; reinstalling packages for Linux and trying again."
+            rm -rf node_modules
+            npm install --no-audit --no-fund 2>&1 | tee install.log
+            if ! build; then
+              tail -n 25 install.log build.log | sed 's/^/::error::/'
+              exit 1
+            fi
+          fi
 
       - name: Pack the zip
         run: php scripts/make-release.php

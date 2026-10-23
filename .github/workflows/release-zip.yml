@@ -1,0 +1,46 @@
+# Builds drinkwell-release.zip (the file you upload to cPanel) on GitHub's servers.
+# Run it from the Actions tab, "Build release zip", "Run workflow". The zip appears on the Releases page.
+name: Build release zip
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  zip:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: zip, mbstring, gd, intl
+          tools: composer
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: PHP packages for the live site (no testing tools)
+        run: composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
+
+      - name: Build styles and scripts
+        run: |
+          npm ci --no-audit --no-fund
+          npm run build
+
+      - name: Pack the zip
+        run: php scripts/make-release.php
+
+      - name: Publish on the Releases page
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="release-$(date -u +%Y%m%d-%H%M)"
+          gh release create "$TAG" drinkwell-release.zip \
+            --title "Upload zip $(date -u '+%Y-%m-%d %H:%M') UTC" \
+            --notes "Upload this zip to cPanel and follow docs/DEPLOY-CPANEL.md. Built from ${GITHUB_SHA::7}."

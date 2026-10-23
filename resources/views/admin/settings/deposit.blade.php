@@ -16,6 +16,8 @@
                 <x-cc.field name="account_number" label="Account number" :value="old('account_number', $d['account_number'])" maxlength="40" />
                 <x-cc.field name="note" label="Note to the member" :value="old('note', $d['note'])" maxlength="255" placeholder="For example, please send within 2 days" />
             </div>
+            <x-cc.check name="auto_pair" label="Pair new members automatically with these details" :checked="$auto" />
+            <p class="cc-hint" style="margin:0">When this is on, a new member sees a short search for a co-partner after the sign-up questions, then these details as their pairing, with a free machine for their option. Turn it off to pair each member yourself on the Pairings page.@if ($auto && $missing !== []) <strong>Waiting for: {{ implode(', ', $missing) }}.</strong>@endif</p>
             <p class="cc-hint" style="margin:0">Enter fictional or test account details only.</p>
             <button type="submit" class="af-btn af-btn-black" style="width:auto">Save default details</button>
         </form>

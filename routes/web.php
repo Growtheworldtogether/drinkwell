@@ -51,6 +51,7 @@ Route::get('/dashboard', fn () => redirect(auth()->user()->homeUrl() ?? '/'))
 Route::middleware(['auth', 'active', 'verified.otp', 'role:applicant,partner'])->prefix('onboard')->group(function () {
     Route::livewire('/', OnboardingWizard::class)->name('onboard');
     Route::get('/status', [OnboardController::class, 'status'])->name('onboard.status');
+    Route::post('/match', [OnboardController::class, 'match'])->middleware('throttle:10,1')->name('onboard.match');
     Route::post('/report', [OnboardController::class, 'report'])->name('onboard.report');
     Route::get('/proof', [OnboardController::class, 'proof'])->name('onboard.proof');
 });

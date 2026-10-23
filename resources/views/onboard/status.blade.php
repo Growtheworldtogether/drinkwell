@@ -11,7 +11,9 @@
                 <x-cc.notice>{{ session('status') }}</x-cc.notice>
             @endif
 
-            @if (! $mine)
+            @if (! $mine && ($searching ?? false))
+                @include('onboard._searching', ['tier' => $tier])
+            @elseif (! $mine)
                 <x-cc.head title="Finding a partner" eyebrow="Your request" :lead="'We are looking for a co-partner for your '.$tier->label().'. This usually takes 1 business day. We will email you as soon as you are paired.'" />
                 @include('onboard._progress', ['stage' => 1])
                 <div class="cc-panel">
@@ -24,11 +26,27 @@
                     </dl>
                 </div>
             @else
-                <x-cc.head :title="$pending ? 'You are paired' : 'You are all set'" eyebrow="Your co-partner" :lead="$partner->name.($partner->profile?->city ? ' in '.$partner->profile->city : '').' is your co-partner.'">
+                @if (session('just_paired'))
+                    @include('onboard._found-style')
+                @endif
+                <x-cc.head :title="session('just_paired') ? 'We found your co-partner' : ($pending ? 'You are paired' : 'You are all set')" eyebrow="Your co-partner" :lead="$partner->name.($partner->profile?->city ? ' in '.$partner->profile->city : '').' is your co-partner.'">
                     @unless ($pending)<a class="af-btn af-btn-black" href="{{ route('hub.dashboard') }}">Open the dashboard</a>@endunless
                 </x-cc.head>
                 @include('onboard._progress', ['stage' => $stage])
-                <div class="cc-panel">
+                @if (session('just_paired'))
+                    <div class="cc-panel dw-found-card dw-in" style="--d:0">
+                        <div class="dw-found-who">
+                            <span class="cc-avatar" aria-hidden="true">{{ \Illuminate\Support\Str::of($partner->name)->explode(' ')->map(fn ($p) => mb_substr($p, 0, 1))->take(2)->implode('') }}</span>
+                            <div>
+                                <p class="cc-eyebrow" style="margin:0">Your co-partner</p>
+                                <p class="dw-found-name">{{ $partner->name }}</p>
+                                @if ($partner->profile?->city)<p class="cc-hint" style="margin:0">{{ $partner->profile->city }}</p>@endif
+                            </div>
+                        </div>
+                        <p style="margin:0">You each own half of the machine below and split what it earns every day. Your deposit details are further down, and we have emailed them to you too.</p>
+                    </div>
+                @endif
+                <div class="cc-panel {{ session('just_paired') ? 'dw-in dw-rows' : '' }}" style="--d:1">
                     <h2>Your machine</h2>
                     <dl class="cc-dl">
                         <div class="cc-kv"><dt>Serial number</dt><dd>{{ $machine->serial_no }}</dd></div>

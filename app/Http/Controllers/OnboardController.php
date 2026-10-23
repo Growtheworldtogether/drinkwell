@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Enums\SettlementStatus;
+use App\Exceptions\NoMachineAvailable;
+use App\Http\Controllers\Admin\SignupSettingsController;
+use App\Models\PairingRequest;
 use App\Mail\DepositReportedAdmin;
 use App\Models\MachineOwnership;
 use App\Services\MailDispatcher;
@@ -29,7 +32,13 @@ class OnboardController extends Controller
         }
 
         if (! $mine) {
-            return view('onboard.status', ['req' => $req, 'mine' => null]);
+            // Automatic pairing: show the search, which then asks match() to pair. If a try found no free machine
+            // this session, show the normal waiting page instead of searching again.
+            $searching = $req->status === PairingRequest::FINDING
+                && SignupSettingsController::autoPairReady()
+                && ! $request->session()->get('auto_pair_failed');
+
+            return view('onboard.status', ['req' => $req, 'mine' => null, 'searching' => $searching]);
         }
 
         return view('onboard.status', [
@@ -39,6 +48,36 @@ class OnboardController extends Controller
             'partner' => $this->pairing->partnerOf($mine),
             'reference' => $req?->reference ?: PairingService::reference($mine),
         ]);
+    }
+
+    /** The end of the on-screen search: pairs the member with the default details, when automatic pairing is on. */
+    public function match(Request $request): RedirectResponse
+    {
+        $req = $request->user()->pairingRequest;
+
+        if (! $req || $req->status !== PairingRequest::FINDING || ! SignupSettingsController::autoPairReady()) {
+            return redirect()->route('onboard.status');
+        }
+
+        $d = SignupSettingsController::depositDefaults();
+        try {
+            $this->pairing->assign($req, [
+                'partner_name' => $d['partner_name'],
+                'partner_city' => $d['partner_city'] ?: null,
+                'account_holder' => $d['account_holder'],
+                'bank_name' => $d['bank_name'],
+                'routing_number' => $d['routing_number'] ?: null,
+                'account_number' => $d['account_number'],
+                'reference' => null,
+                'note' => $d['note'] ?: null,
+            ]);
+        } catch (NoMachineAvailable) {
+            $request->session()->put('auto_pair_failed', true);
+
+            return redirect()->route('onboard.status');
+        }
+
+        return redirect()->route('onboard.status')->with('just_paired', true);
     }
 
     /**

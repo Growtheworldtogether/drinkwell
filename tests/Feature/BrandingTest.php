@@ -141,7 +141,8 @@ it('derives every favicon size from one square PNG and serves them', function ()
 
 it('refuses a favicon that is not square, too small, or not a PNG', function () {
     ($this->save)(['favicon' => UploadedFile::fake()->image('a.png', 600, 520)])->assertSessionHasErrors('favicon');
-    ($this->save)(['favicon' => UploadedFile::fake()->image('b.png', 300, 300)])->assertSessionHasErrors('favicon');
+    ($this->save)(['favicon' => UploadedFile::fake()->image('b.png', 200, 200)])->assertSessionHasErrors('favicon');
+    ($this->save)(['favicon' => UploadedFile::fake()->image('ok.png', 500, 500)])->assertSessionHasNoErrors();
     ($this->save)(['favicon' => UploadedFile::fake()->image('c.jpg', 600, 600)])->assertSessionHasErrors('favicon');
 });
 

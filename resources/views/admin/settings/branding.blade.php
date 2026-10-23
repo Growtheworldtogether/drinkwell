@@ -27,7 +27,7 @@
 
             <div class="cc-panel">
                 <h2>Favicon</h2>
-                <p class="cc-hint">A square PNG, at least 512 px, up to 512 KB. Every icon size is made for you.</p>
+                <p class="cc-hint">A square PNG, 512 × 512 px is best (at least 256 px), up to 512 KB. Every icon size is made for you.</p>
                 <x-cc.field name="favicon" id="br-favicon" label="Favicon" type="file" accept="image/png" x-on:change="pick($event, 'favicon', 'removeFavicon')" />
                 <label class="cc-check"><input type="checkbox" name="remove_favicon" value="1" x-model="removeFavicon" x-on:change="if (removeFavicon) favicon = null"><span>Remove this favicon</span></label>
             </div>

@@ -19,7 +19,8 @@ class BrandAssets
 
     public const MAX_EDGE = 2000;
 
-    public const FAVICON_MIN = 512;
+    /** Smallest favicon accepted. Each icon size up to 512 px is made from it; a little enlarging is not visible. */
+    public const FAVICON_MIN = 256;
 
     public const FAVICON_MAX_KB = 512;
 

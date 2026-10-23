@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Exceptions\MailSendFailed;
 use App\Http\Controllers\Controller;
 use App\Mail\MailConnectionTest;
+use App\Services\AuditLogger;
 use App\Services\MailDispatcher;
 use App\Services\MailSettings;
 use Illuminate\Http\RedirectResponse;
@@ -16,16 +17,47 @@ class EmailSettingsController extends Controller
 {
     public function __construct(private readonly MailSettings $mail) {}
 
-    public function show(): View
+    /** How long the developer code keeps the page open, in seconds. */
+    private const UNLOCK_FOR = 1800;
+
+    private const SESSION_KEY = 'email_settings_opened_at';
+
+    public function show(Request $request): View
     {
+        if (! $this->isOpen($request)) {
+            return view('admin.settings.email-code');
+        }
+
         return view('admin.settings.email', [
             'm' => $this->mail->stored(),
             'current' => in_array(config('mail.default'), ['log', 'array'], true) ? null : ['host' => (string) config('mail.mailers.smtp.host'), 'from' => (string) config('mail.from.address')],
         ]);
     }
 
+    public function enterCode(Request $request): RedirectResponse
+    {
+        $request->validate(['developer_code' => ['required', 'string', 'max:40']]);
+        $typed = strtoupper(preg_replace('/\s+/', '', $request->string('developer_code')->toString()) ?? '');
+        $code = strtoupper((string) config('drinkwell.email_developer_code'));
+
+        if ($code === '' || ! hash_equals($code, $typed)) {
+            AuditLogger::log($request->user(), 'email_settings_code_failed');
+
+            return back()->withErrors(['developer_code' => 'That developer code is not right.']);
+        }
+
+        $request->session()->put(self::SESSION_KEY, now()->timestamp);
+        AuditLogger::log($request->user(), 'email_settings_opened');
+
+        return redirect()->route('admin.settings.email');
+    }
+
     public function save(Request $request): RedirectResponse
     {
+        if (! $this->isOpen($request)) {
+            return redirect()->route('admin.settings.email');
+        }
+
         $on = $request->boolean('enabled');
         $data = $request->validate([
             'host' => [$on ? 'required' : 'nullable', 'string', 'max:190', 'regex:/^[A-Za-z0-9.-]+$/'],
@@ -56,6 +88,10 @@ class EmailSettingsController extends Controller
 
     public function test(Request $request, MailDispatcher $dispatcher): RedirectResponse
     {
+        if (! $this->isOpen($request)) {
+            return redirect()->route('admin.settings.email');
+        }
+
         $data = $request->validate(['to' => ['required', 'email', 'max:190']]);
 
         if (in_array(config('mail.default'), ['log', 'array'], true)) {
@@ -69,5 +105,12 @@ class EmailSettingsController extends Controller
         }
 
         return back()->withInput()->with('status', "Test email sent to {$data['to']}. Check the inbox, and the spam folder too.");
+    }
+
+    private function isOpen(Request $request): bool
+    {
+        $at = (int) $request->session()->get(self::SESSION_KEY, 0);
+
+        return $at > 0 && now()->timestamp - $at <= self::UNLOCK_FOR;
     }
 }

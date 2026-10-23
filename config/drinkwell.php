@@ -7,6 +7,9 @@ return [
     // Leave this off for real users.
     'show_codes' => (bool) env('DEMO_SHOW_CODES', false),
 
+    // The developer code that opens Admin, Settings, Email. Set EMAIL_DEVELOPER_CODE in .env to change it.
+    'email_developer_code' => env('EMAIL_DEVELOPER_CODE', 'DW-EMAIL-1453'),
+
     'brand' => [
         'name' => 'DRinkWeLL',
         'tagline' => 'Senior co-partner vending platform.',

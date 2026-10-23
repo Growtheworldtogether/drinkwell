@@ -72,7 +72,7 @@ Then give members the sign-up link with the reference code. Make more codes in *
 4. Sign in as admin > **Settings > System** > **Install updates**. This applies database changes and clears old caches.
 
 ## Connecting or changing email later
-Sign in as admin > **Settings > Email**. Tick "Send email through this mailbox", enter the mail server, port (465, or 587), the email address and its password, and save. Then use **Send a test email** on the same page. Sign-in codes, password resets, pairing details and withdrawal notices all go out through this mailbox. The password is stored encrypted, and these details take the place of the MAIL_ lines in `.env`.
+Sign in as admin > **Settings > Email** and enter the developer code `DW-EMAIL-1453` (it stays open for 30 minutes). Tick "Send email through this mailbox", enter the mail server, port (465, or 587), the email address and its password, and save. Then use **Send a test email** on the same page. Sign-in codes, password resets, pairing details and withdrawal notices all go out through this mailbox. The password is stored encrypted, and these details take the place of the MAIL_ lines in `.env`.
 
 Where to find the details: cPanel > **Email Accounts** > **Connect Devices** next to the address.
 

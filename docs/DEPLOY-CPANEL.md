@@ -1,129 +1,90 @@
-# Putting DRinkWeLL on cPanel shared hosting
+# Putting DRinkWeLL on cPanel (no Terminal needed)
 
-Plain steps, in order. Replace `USER` with your cPanel username and `yourdomain.com` with your domain.
+You build one zip on your PC, upload it, and a setup page in the browser does the rest: settings file, database tables, machines, your admin account and the first reference code. About 20 minutes.
 
-## 0. What you need
-- A cPanel host with PHP 8.3 or newer, MySQL 8.0.16+ or MariaDB 10.3+, cron jobs, and free SSL (AutoSSL).
-- SSH access is easiest. Without it, there is a no-SSH route in step 8.
-- On your PC: PHP, Composer, Node (to build the site files).
+## What you need
+- cPanel hosting with PHP 8.3 or newer and MySQL 8.0.16+ (or MariaDB 10.3+).
+- A domain (or subdomain) for the site.
+- On your PC: the project folder, PHP, Composer and Node (the same ones you use to run it locally).
 
-## 1. Choose PHP 8.3 and turn on extensions
-cPanel > MultiPHP Manager > pick your domain > PHP 8.3 (or 8.4) > Apply.
-cPanel > Select PHP Version > Extensions: tick pdo_mysql, mysqlnd, mbstring, openssl, curl, fileinfo, gd, tokenizer, xml, ctype, zip.
+## 1. Make the release zip (on your PC)
+In the project folder, double-click `scripts\make-release.bat` (or run it in a command window).
+It builds the styles, packs only what the live site needs, and makes `drinkwell-release.zip` in the project folder. Your own `.env` and local database are never included.
 
-## 2. Create the database
-cPanel > MySQL Databases.
-1. Create a database named `drinkwell`. It becomes `USER_drinkwell`.
-2. Create a user `afuser` with a strong password. It becomes `USER_afuser`.
-3. Add the user to the database with ALL PRIVILEGES.
-Write all three down.
+## 2. Pick the PHP version
+cPanel > **MultiPHP Manager**: tick your domain, choose **PHP 8.4** (or 8.3), Apply.
+cPanel > **Select PHP Version** > Extensions (only if your host shows this page): make sure these are ticked: pdo_mysql, mbstring, openssl, fileinfo, tokenizer, dom, ctype, curl, gd, zip.
 
-## 3. Build the site on your PC
-In the project folder:
+## 3. Create the database
+cPanel > **MySQL Database Wizard**:
+1. Database name, e.g. `drinkwell` (cPanel adds a prefix, so it becomes `youruser_drinkwell`).
+2. A user with a strong password (use the generator, and copy the password somewhere safe).
+3. Tick **ALL PRIVILEGES**, then finish.
+
+Keep the full database name, user name and password for step 7.
+
+## 4. Upload and extract
+cPanel > **File Manager**, open your home folder (the one that holds `public_html`, not inside it).
+1. Create a folder `drinkwell`.
+2. Open it, **Upload** `drinkwell-release.zip`.
+3. Right-click the zip > **Extract** into `/home/youruser/drinkwell`. Then delete the zip.
+
+You should now see `app`, `public`, `vendor`, `artisan` and so on inside `drinkwell`.
+
+## 5. Point the domain at the public folder
+- Subdomain or addon domain: cPanel > **Domains** > Manage > set the **Document Root** to `drinkwell/public`.
+- Main domain: if cPanel does not let you change its document root, ask your host's support: "Please set the document root of yourdomain.com to /home/youruser/drinkwell/public". It is a routine request.
+
+## 6. Turn on HTTPS
+cPanel > **SSL/TLS Status** > select the domain > **Run AutoSSL**. Wait until it shows a green lock. Sign-in only works over https.
+
+## 7. Run the setup wizard
+1. Open `https://yourdomain.com/install.php`.
+2. The first page checks your server. Fix anything red (usually the PHP version or an extension from step 2), then reload.
+3. It asks for a setup key. In File Manager open `drinkwell/storage/app/install-key.txt` and copy the code into the page. This makes sure only you can run the setup.
+4. Fill in the pages:
+   - **Site**: name, `https://yourdomain.com`, support email, time zone.
+   - **Database**: host `localhost`, and the name, user and password from step 3. It tests the connection before moving on.
+   - **Email**: the mailbox that sends sign-in codes. Create it first in cPanel > Email Accounts (for example `no-reply@yourdomain.com`), then enter the server, port **465** and its password. Choosing "Set up email later" skips this, but then nobody can sign up until email works.
+   - **Admin**: your name, email and password (12+ characters with upper and lower case and a number). Leave "Add the demo member" ticked if you want Arthur Pendelton's sample dashboard to show people. Leave "Testing only: show one-time codes on the screen" off for real members.
+5. Press **Install now**. When it says **Your site is ready**, copy the cron command and the first reference code from that page.
+
+The installer then locks itself and tries to delete itself. If `public/install.php` is still there, delete it in File Manager.
+
+## 8. Add the cron job (the clock)
+cPanel > **Cron Jobs** > Common settings: **Once Per Minute** (`* * * * *`). Command: paste the line from the success page, which looks like:
+
 ```
-git fetch origin
-git merge origin/claude/public-pages
-composer install --no-dev --optimize-autoloader
-npm install
-npm run build
+/usr/local/bin/ea-php84 /home/youruser/drinkwell/artisan schedule:run >> /dev/null 2>&1
 ```
-Do not upload `.env`, `node_modules`, `.git`, or `database/database.sqlite`.
 
-## 4. Upload
-Make a zip of the project (without the folders above). On Windows 10/11 in the project folder:
-```
-tar -a -cf release.zip --exclude=node_modules --exclude=.git --exclude=.env --exclude=*.sqlite .
-```
-(Avoid PowerShell Compress-Archive: it breaks folder paths on Linux.)
-cPanel > File Manager > go to `/home/USER/` (above public_html) > create folder `drinkwell` > Upload `release.zip` there > Extract.
-Result: `/home/USER/drinkwell/artisan`, `/home/USER/drinkwell/public`, and so on.
+If you picked PHP 8.3, use `ea-php83`. This runs the daily sales and payouts.
 
-## 5. Point the domain at the `public` folder
-Best way: cPanel > Domains > Manage (your domain) > Document Root = `drinkwell/public`. For a subdomain, create it with that document root.
+## 9. Check it
+Sign in as admin, open **Settings > System**. Every line should say **Good**. Anything marked **Check** or **Fix now** tells you what to do. The cron line turns Good a few minutes after step 8.
 
-If your host does not let you change it (alternative):
-1. Copy everything inside `drinkwell/public` into `public_html`.
-2. Edit `public_html/index.php`: change `__DIR__.'/../vendor/autoload.php'` to `__DIR__.'/../drinkwell/vendor/autoload.php'`, and the same for `bootstrap/app.php` and the maintenance file path.
+Then give members the sign-up link with the reference code. Make more codes in **Settings > Reference codes**.
 
-## 6. Make the .env file
-In File Manager open `drinkwell`, copy `.env.production.example` to `.env`, and edit:
-- APP_URL = `https://yourdomain.com`
-- APP_KEY: on your PC run `php artisan key:generate --show` and paste the result (looks like `base64:...`). Keep it forever, it signs codes and sessions.
-- DB_DATABASE = `USER_drinkwell`, DB_USERNAME = `USER_afuser`, DB_PASSWORD = yours, DB_HOST = `localhost`. Keep `DB_CONNECTION=mysql`.
-- ADMIN_EMAIL and ADMIN_PASSWORD (your admin login; used once).
-- Mail: see step 9.
-Keep APP_ENV=production and APP_DEBUG=false.
+## Updating the site later
+1. On your PC, run `scripts\make-release.bat` again.
+2. Upload the new zip into `drinkwell` and extract it, choosing to overwrite. Your `.env`, database and uploaded files are not touched (they are not in the zip).
+3. Delete `public/install.php` if it came back. It is locked anyway after the first install.
+4. Sign in as admin > **Settings > System** > **Install updates**. This applies database changes and clears old caches.
 
-## 7. Create the tables (SSH)
-cPanel > Terminal (or ssh in). Then:
-```
-cd ~/drinkwell
-/usr/local/bin/ea-php83 artisan migrate --force
-/usr/local/bin/ea-php83 artisan db:seed --force
-/usr/local/bin/ea-php83 artisan storage:link
-```
-If `ea-php83` is not found, run `php -v` first; if it is lower than 8.3, use the path your host lists in MultiPHP.
-Now open `.env` and delete the ADMIN_PASSWORD line.
-To add another admin later: `php artisan drinkwell:make-admin "Name" email@example.com`.
+## Email that reaches the inbox
+cPanel > **Email Deliverability**: if SPF or DKIM shows a problem, press **Repair**. Without these, sign-in codes often land in spam.
 
-If `storage:link` fails (public is `public_html`): `ln -s /home/USER/drinkwell/storage/app/public /home/USER/public_html/storage`.
-
-## 8. No SSH? Build the database from your PC
-1. cPanel > Remote MySQL > add your PC's public IP (search "what is my ip").
-2. On your PC, temporarily set `.env` DB_HOST to your host's server name (shown in Remote MySQL / MySQL Databases) and the DB_* values from step 2.
-3. Run `php artisan migrate --force` then `php artisan db:seed --force` (with ADMIN_EMAIL and ADMIN_PASSWORD set).
-4. Restore your `.env` and remove the IP from Remote MySQL. Create the storage link by uploading nothing: use File Manager > Symlink option if present, or ask the host.
-Some hosts block remote MySQL; then ask support to run the three commands, or import a phpMyAdmin dump.
-
-## 9. Email (needed for sign-up codes)
-Easiest: cPanel > Email Accounts > create `no-reply@yourdomain.com`. Then in `.env`:
-```
-MAIL_MAILER=smtp
-MAIL_HOST=mail.yourdomain.com
-MAIL_PORT=465
-MAIL_SCHEME=smtps
-MAIL_USERNAME=no-reply@yourdomain.com
-MAIL_PASSWORD=that account's password
-MAIL_FROM_ADDRESS=no-reply@yourdomain.com
-```
-Then cPanel > Email Deliverability > fix SPF and DKIM for the domain, or mail lands in spam.
-Alternative, Resend over SMTP: MAIL_HOST=smtp.resend.com, MAIL_PORT=465, MAIL_SCHEME=smtps, MAIL_USERNAME=resend, MAIL_PASSWORD=your Resend API key, and use a verified domain as the From address.
-
-## 10. The clock (cron)
-The simulation moves only when the scheduler runs. cPanel > Cron Jobs > every minute (`* * * * *`):
-```
-/usr/local/bin/ea-php83 /home/USER/drinkwell/artisan schedule:run >> /dev/null 2>&1
-```
-Some hosts limit cron to every 5 minutes; the clock still works, just in bigger steps.
-
-## 11. HTTPS
-cPanel > SSL/TLS Status > Run AutoSSL for the domain. Make sure APP_URL starts with https. If the site sits behind a proxy or CDN, set TRUSTED_PROXIES=* in `.env`.
-
-## 12. Check everything
-```
-cd ~/drinkwell
-/usr/local/bin/ea-php83 artisan config:cache
-/usr/local/bin/ea-php83 artisan route:cache
-/usr/local/bin/ea-php83 artisan view:cache
-/usr/local/bin/ea-php83 artisan drinkwell:doctor
-```
-Fix anything that says FAIL or WARN. Optional: `artisan drinkwell:warm-tiles` fills the map tiles (needs outbound internet).
-After any `.env` change run `artisan config:clear` then `config:cache` again.
-
-## 13. Log in
-Visit your domain, sign in with ADMIN_EMAIL and the password, open Admin and check Clock and Content. Keep CSP_ENFORCE=false until the browser console shows no blocked items.
-
-## Updating later
-Build on your PC (`npm run build`), upload the changed files (keep `.env` and `storage`), then run `artisan migrate --force`, `config:cache`, `route:cache`, `view:cache`.
+## Changing a setting later
+Settings live in `drinkwell/.env` (File Manager > show hidden files). After you edit it, open **Settings > System** and press **Install updates** so the site reads the new values.
 
 ## Backups
-cPanel > Backup > download a full backup or a MySQL backup, or phpMyAdmin > Export. `artisan drinkwell:backup` needs mysqldump and may be blocked on shared hosts. ID uploads live in `storage/app/private`, back that up too.
+cPanel > **Backup** > download a MySQL database backup, or phpMyAdmin > Export. Also download `drinkwell/storage/app/private` (members' uploads) and your `.env`.
 
 ## Troubleshooting
-- White page or error 500: look at `storage/logs/laravel.log`; check `storage` and `bootstrap/cache` are writable (permissions 755, or 775).
-- "No application encryption key": APP_KEY is empty.
-- Styles missing: `public/build` was not uploaded.
-- Page not found on every link except home: the document root is not `public`, or `.htaccess` was not copied (it is a hidden file).
-- Codes never arrive: wrong MAIL_PORT/MAIL_SCHEME pair, or no SPF/DKIM.
-- Clock does not move: cron job missing; `drinkwell:doctor` shows the last scheduler run.
-- Database errors about CHECK: MySQL older than 8.0.16 or MariaDB older than 10.3.
+- **Error 500 or a blank page**: open `drinkwell/storage/logs/laravel.log` in File Manager and look at the last lines. Check the `storage` and `bootstrap/cache` folders have permission 755.
+- **Only the home page works**: the document root is not `drinkwell/public`, or the hidden `.htaccess` file in `public` is missing.
+- **Page has no styles**: the zip was made without `npm run build` working. Run `make-release.bat` again and look for errors.
+- **Cannot sign in, page just reloads**: the site is not on https yet (step 6), or `APP_URL` in `.env` does not start with `https://`.
+- **Sign-in codes never arrive**: wrong email password or port; try port 587 instead of 465. Then check Email Deliverability.
+- **Machines never earn**: the cron job is missing or uses the wrong PHP path; Settings > System shows when it last ran.
+- **"Already installed" on install.php**: setup finished before. To start over, delete `storage/app/installed.lock` and `.env`, and empty the database in phpMyAdmin.

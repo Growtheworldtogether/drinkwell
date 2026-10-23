@@ -98,6 +98,10 @@ Route::middleware(['admin.ip', 'auth', 'active', 'role:admin', 'admin.idle', 'th
     Route::post('/settings/reference-codes/{code}/off', [$su, 'revoke'])->name('settings.codes.revoke');
     Route::get('/settings/deposit-details', [$su, 'deposit'])->name('settings.deposit');
     Route::put('/settings/deposit-details', [$su, 'saveDeposit'])->name('settings.deposit.save');
+    $em = \App\Http\Controllers\Admin\EmailSettingsController::class;
+    Route::get('/settings/email', [$em, 'show'])->middleware('password.confirm')->name('settings.email');
+    Route::put('/settings/email', [$em, 'save'])->middleware('password.confirm')->name('settings.email.save');
+    Route::post('/settings/email/test', [$em, 'test'])->middleware('throttle:6,1')->name('settings.email.test');
     Route::get('/settings/system', [\App\Http\Controllers\Admin\SystemController::class, 'show'])->middleware('password.confirm')->name('settings.system');
     Route::post('/settings/system/update', [\App\Http\Controllers\Admin\SystemController::class, 'update'])->middleware('password.confirm')->name('settings.system.update');
     $brd = BrandingController::class;

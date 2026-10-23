@@ -80,7 +80,7 @@ class SystemController extends Controller
             ['label' => 'Error details are hidden', 'ok' => config('app.debug') ? false : true,
                 'note' => 'Set APP_DEBUG=false in .env. Error pages would otherwise show secrets.'],
             ['label' => 'Emails are really sent', 'ok' => config('mail.default') === 'log' ? ($prod ? false : null) : true,
-                'note' => 'Emails are only written to the log. Add your mailbox details to the MAIL_ lines in .env.'],
+                'note' => 'Emails are only written to the log. Connect your mailbox in Settings, Email.'],
             ['label' => 'Sign-in codes stay private', 'ok' => config('drinkwell.show_codes') ? null : true,
                 'note' => 'DEMO_SHOW_CODES is on, so codes show on screen. Fine for testing; set it to false before real members join.'],
             ['label' => 'The cron job is running', 'ok' => $tick !== null && now()->timestamp - (int) $tick <= 600 ? true : null,

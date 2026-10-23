@@ -44,6 +44,9 @@ class AppServiceProvider extends ServiceProvider
             // Keep the APP_NAME from .env.
         }
 
+        // SMTP details saved in Admin, Settings, Email take the place of the MAIL_ lines in .env.
+        app(\App\Services\MailSettings::class)->apply();
+
         // One composer: layouts, mail layout, and the components that print the brand.
         View::composer(
             ['layouts.*', 'layouts::*', 'marketing.*', 'mail.layout', 'components.brand.*', 'components.site-header', 'components.site-footer', 'components.shell'],

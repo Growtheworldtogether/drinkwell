@@ -71,6 +71,11 @@ Then give members the sign-up link with the reference code. Make more codes in *
 3. Delete `public/install.php` if it came back. It is locked anyway after the first install.
 4. Sign in as admin > **Settings > System** > **Install updates**. This applies database changes and clears old caches.
 
+## Connecting or changing email later
+Sign in as admin > **Settings > Email**. Tick "Send email through this mailbox", enter the mail server, port (465, or 587), the email address and its password, and save. Then use **Send a test email** on the same page. Sign-in codes, password resets, pairing details and withdrawal notices all go out through this mailbox. The password is stored encrypted, and these details take the place of the MAIL_ lines in `.env`.
+
+Where to find the details: cPanel > **Email Accounts** > **Connect Devices** next to the address.
+
 ## Email that reaches the inbox
 cPanel > **Email Deliverability**: if SPF or DKIM shows a problem, press **Repair**. Without these, sign-in codes often land in spam.
 
@@ -85,6 +90,6 @@ cPanel > **Backup** > download a MySQL database backup, or phpMyAdmin > Export. 
 - **Only the home page works**: the document root is not `drinkwell/public`, or the hidden `.htaccess` file in `public` is missing.
 - **Page has no styles**: the zip was made without `npm run build` working. Run `make-release.bat` again and look for errors.
 - **Cannot sign in, page just reloads**: the site is not on https yet (step 6), or `APP_URL` in `.env` does not start with `https://`.
-- **Sign-in codes never arrive**: wrong email password or port; try port 587 instead of 465. Then check Email Deliverability.
+- **Sign-in codes never arrive**: open Settings > Email and press Send a test email; the message shows what the mail server said. Try port 587 instead of 465, re-enter the password, then check Email Deliverability.
 - **Machines never earn**: the cron job is missing or uses the wrong PHP path; Settings > System shows when it last ran.
 - **"Already installed" on install.php**: setup finished before. To start over, delete `storage/app/installed.lock` and `.env`, and empty the database in phpMyAdmin.

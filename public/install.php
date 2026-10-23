@@ -260,8 +260,10 @@ if ($step === 'mail') {
             back('admin');
         }
         $m = ['mode' => 'smtp', 'host' => $in('mhost'), 'port' => $in('mport') ?: '465', 'scheme' => $in('mport') === '587' ? 'smtp' : 'smtps', 'user' => $in('muser'), 'pass' => (string) ($_POST['mpass'] ?? ''), 'from' => $in('mfrom') ?: $in('muser')];
-        if ($m['host'] === '' || $m['user'] === '' || ! filter_var($m['from'], FILTER_VALIDATE_EMAIL)) {
-            $error = 'Fill in the mail server, the user name and a valid From address, or choose Set up email later.';
+        if ($m['host'] === '' || $m['user'] === '') {
+            $error = 'Fill in the mail server and the user name, or choose Set up email later.';
+        } elseif (! filter_var($m['from'], FILTER_VALIDATE_EMAIL)) {
+            $error = 'Your user name is not an email address, so fill in "Send from" with the email address the messages come from.';
         } else {
             $errno = 0;
             $errstr = '';
@@ -281,8 +283,8 @@ if ($step === 'mail') {
         '<p>The site emails sign-up codes and pairing details. In <strong>cPanel, then Email Accounts</strong>, create an address like <code>no-reply@'.e($host).'</code>, then enter it here.</p>'
         .'<label class="check"><input type="radio" name="mode" value="smtp" '.(($m['mode'] ?? 'smtp') === 'smtp' ? 'checked' : '').'><span>Send real email (recommended)</span></label>'
         .'<div class="two">'.field('mhost', 'Mail server', $m['host'] ?? 'mail.'.$host).field('mport', 'Port', $m['port'] ?? '465', 'number', '465 (most cPanel hosts) or 587.').'</div>'
-        .'<div class="two">'.field('muser', 'Email address (user name)', $m['user'] ?? 'no-reply@'.$host, 'email').field('mpass', 'Email password', '', 'password', '', ['autocomplete' => 'new-password']).'</div>'
-        .field('mfrom', 'Send from', $m['from'] ?? '', 'email', 'Leave empty to use the same address.')
+        .'<div class="two">'.field('muser', 'User name', $m['user'] ?? 'no-reply@'.$host, 'text', 'On cPanel this is usually the full email address. A plain user name works too.', ['autocomplete' => 'off', 'autocapitalize' => 'off', 'spellcheck' => 'false']).field('mpass', 'Email password', '', 'password', '', ['autocomplete' => 'new-password']).'</div>'
+        .field('mfrom', 'Send from (email address)', $m['from'] ?? '', 'email', 'The address members see. Leave empty if the user name above is that email address.')
         .'<label class="check"><input type="radio" name="mode" value="later" '.(($m['mode'] ?? '') === 'later' ? 'checked' : '').'><span>Set up email later. Codes are then written to the log only, so nobody can sign up until email works.</span></label>',
         'Continue', 'db'), 5);
 }

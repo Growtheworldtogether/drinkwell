@@ -24,9 +24,9 @@
             <div class="cc-two">
                 <x-cc.field name="host" label="Mail server" :value="old('host', $m['host'])" maxlength="190" placeholder="mail.yourdomain.com" />
                 <x-cc.field name="port" label="Port" type="number" :value="old('port', $m['port'])" help="465 on most cPanel hosts. Use 587 if 465 does not work." />
-                <x-cc.field name="username" label="Email address (user name)" :value="old('username', $m['username'])" maxlength="190" placeholder="no-reply@yourdomain.com" />
+                <x-cc.field name="username" label="User name" :value="old('username', $m['username'])" maxlength="190" placeholder="no-reply@yourdomain.com" autocapitalize="off" spellcheck="false" help="On cPanel this is usually the full email address. A plain user name works too." />
                 <x-cc.field name="password" label="Email password" type="password" autocomplete="new-password" :help="$m['has_password'] ? 'Saved. Leave empty to keep it.' : 'The password of that email account.'" />
-                <x-cc.field name="from_address" label="Send from" type="email" :value="old('from_address', $m['from_address'])" maxlength="190" help="Leave empty to use the same address." />
+                <x-cc.field name="from_address" label="Send from (email address)" type="email" :value="old('from_address', $m['from_address'])" maxlength="190" help="The address members see. Leave empty if the user name is that email address." />
                 <x-cc.field name="from_name" label="Sender name" :value="old('from_name', $m['from_name'])" maxlength="120" :placeholder="config('app.name')" />
             </div>
             <p class="cc-hint" style="margin:0">The password is stored encrypted. These details replace the MAIL_ lines in the .env file while the box above is ticked.</p>

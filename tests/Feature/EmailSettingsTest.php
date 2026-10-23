@@ -68,3 +68,9 @@ it('asks for the developer code before showing or changing anything', function (
     $this->travel(31)->minutes();
     $this->get(route('admin.settings.email'))->assertSee('Developer code needed');
 });
+
+it('accepts a plain user name, and then asks for the From address', function () use ($form) {
+    $this->put(route('admin.settings.email.save'), $form(['username' => 'dwmailer', 'from_address' => '']))->assertSessionHasErrors('from_address');
+    $this->put(route('admin.settings.email.save'), $form(['username' => 'dwmailer', 'from_address' => 'no-reply@drinkwell.example']))->assertSessionHasNoErrors();
+    expect(config('mail.mailers.smtp.username'))->toBe('dwmailer')->and(config('mail.from.address'))->toBe('no-reply@drinkwell.example');
+});

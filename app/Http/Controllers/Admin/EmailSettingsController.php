@@ -64,10 +64,11 @@ class EmailSettingsController extends Controller
             'port' => [$on ? 'required' : 'nullable', 'integer', 'in:25,465,587,2525'],
             'username' => ['nullable', 'string', 'max:190'],
             'password' => ['nullable', 'string', 'max:255'],
-            'from_address' => [$on && ! $request->filled('username') ? 'required' : 'nullable', 'email', 'max:190'],
+            'from_address' => [$on && ! filter_var((string) $request->input('username'), FILTER_VALIDATE_EMAIL) ? 'required' : 'nullable', 'email', 'max:190'],
             'from_name' => ['nullable', 'string', 'max:120'],
         ], [
             'host.regex' => 'Enter only the server name, for example mail.yourdomain.com.',
+            'from_address.required' => 'Your user name is not an email address, so enter the email address the messages come from.',
             'port.in' => 'Use 465 or 587 (your host lists the right one under Email Accounts, Connect Devices).',
         ]);
 

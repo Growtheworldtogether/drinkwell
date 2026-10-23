@@ -1582,6 +1582,12 @@
     /* Sign-up: United States or Canada, as two large choices. */
     .cc-country { display: flex; flex-wrap: wrap; gap: 10px 24px; margin: 4px 0 18px; padding: 0; border: 0; }
     .cc-country legend { width: 100%; margin-bottom: 8px; padding: 0; font-weight: 700; }
+    /* Story dots are small round photos of each story. The active one is bright with a white border and the filling ring. */
+    .cc-story-dot, .cc-hero-photo .cc-story-dot { overflow: visible; padding: 0; background: rgba(255, 255, 255, 0.25); border: 3px solid rgba(255, 255, 255, 0.6); }
+    .cc-story-dot > img { display: block; width: 100%; height: 100%; border-radius: 9999px; object-fit: cover; opacity: 0.72; filter: saturate(0.8); transition: opacity 0.25s ease, filter 0.25s ease; }
+    .cc-story-dot.is-on, .cc-hero-photo .cc-story-dot.is-on { background: #fff; border-color: #fff; }
+    .cc-story-dot.is-on > img { opacity: 1; filter: none; }
+    .cc-story-dot:hover > img { opacity: 1; }
 }
 
 /* Lets the story dot ring fill smoothly. Registered outside the layer, as @property must be. */

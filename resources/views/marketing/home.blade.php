@@ -15,9 +15,9 @@
         <div class="cc-story-card">
             <div class="cc-photo cc-story-photos" aria-hidden="true"><img src="{{ asset('images/home/story-1.jpg') }}" alt="" loading="lazy" decoding="async" x-bind:class="{ 'is-on': i === 0 }" class="is-on"><img src="{{ asset('images/home/story-2.jpg') }}" alt="" loading="lazy" decoding="async" x-bind:class="{ 'is-on': i === 1 }"><img src="{{ asset('images/home/story-3.jpg') }}" alt="" loading="lazy" decoding="async" x-bind:class="{ 'is-on': i === 2 }"></div>
             <div class="cc-story-dots" x-bind:class="{ 'is-held': stop }" role="group" aria-label="Choose a story">
-                <button type="button" class="cc-story-dot" x-bind:class="{ 'is-on': i === 0 }" x-bind:aria-pressed="(i === 0).toString()" aria-label="Pairing" x-on:click="i = 0; stop = true">1</button>
-                <button type="button" class="cc-story-dot" x-bind:class="{ 'is-on': i === 1 }" x-bind:aria-pressed="(i === 1).toString()" aria-label="Deposit" x-on:click="i = 1; stop = true">2</button>
-                <button type="button" class="cc-story-dot" x-bind:class="{ 'is-on': i === 2 }" x-bind:aria-pressed="(i === 2).toString()" aria-label="Payouts" x-on:click="i = 2; stop = true">3</button>
+                <button type="button" class="cc-story-dot" x-bind:class="{ 'is-on': i === 0 }" x-bind:aria-pressed="(i === 0).toString()" aria-label="Pairing" x-on:click="i = 0; stop = true"><img src="{{ asset('images/home/story-1-thumb.jpg') }}" alt="" width="56" height="56"></button>
+                <button type="button" class="cc-story-dot" x-bind:class="{ 'is-on': i === 1 }" x-bind:aria-pressed="(i === 1).toString()" aria-label="Deposit" x-on:click="i = 1; stop = true"><img src="{{ asset('images/home/story-2-thumb.jpg') }}" alt="" width="56" height="56"></button>
+                <button type="button" class="cc-story-dot" x-bind:class="{ 'is-on': i === 2 }" x-bind:aria-pressed="(i === 2).toString()" aria-label="Payouts" x-on:click="i = 2; stop = true"><img src="{{ asset('images/home/story-3-thumb.jpg') }}" alt="" width="56" height="56"></button>
             </div>
             <div class="cc-story-body">
                 <span class="cc-story-tag" x-text="slides[i].tag">Ages {{ config('drinkwell.min_age') }} and over</span>
@@ -44,9 +44,9 @@
                 <div class="cc-story-card">
                     <div class="cc-photo cc-story-photos" aria-hidden="true"><img src="{{ asset('images/home/story-1.jpg') }}" alt="" loading="lazy" decoding="async" x-bind:class="{ 'is-on': i === 0 }" class="is-on"><img src="{{ asset('images/home/story-2.jpg') }}" alt="" loading="lazy" decoding="async" x-bind:class="{ 'is-on': i === 1 }"><img src="{{ asset('images/home/story-3.jpg') }}" alt="" loading="lazy" decoding="async" x-bind:class="{ 'is-on': i === 2 }"></div>
                     <div class="cc-story-dots" x-bind:class="{ 'is-held': stop }" role="group" aria-label="Choose a story">
-                        <button type="button" class="cc-story-dot" x-bind:class="{ 'is-on': i === 0 }" x-bind:aria-pressed="(i === 0).toString()" aria-label="Pairing" x-on:click="i = 0; stop = true">1</button>
-                        <button type="button" class="cc-story-dot" x-bind:class="{ 'is-on': i === 1 }" x-bind:aria-pressed="(i === 1).toString()" aria-label="Deposit" x-on:click="i = 1; stop = true">2</button>
-                        <button type="button" class="cc-story-dot" x-bind:class="{ 'is-on': i === 2 }" x-bind:aria-pressed="(i === 2).toString()" aria-label="Payouts" x-on:click="i = 2; stop = true">3</button>
+                        <button type="button" class="cc-story-dot" x-bind:class="{ 'is-on': i === 0 }" x-bind:aria-pressed="(i === 0).toString()" aria-label="Pairing" x-on:click="i = 0; stop = true"><img src="{{ asset('images/home/story-1-thumb.jpg') }}" alt="" width="56" height="56"></button>
+                        <button type="button" class="cc-story-dot" x-bind:class="{ 'is-on': i === 1 }" x-bind:aria-pressed="(i === 1).toString()" aria-label="Deposit" x-on:click="i = 1; stop = true"><img src="{{ asset('images/home/story-2-thumb.jpg') }}" alt="" width="56" height="56"></button>
+                        <button type="button" class="cc-story-dot" x-bind:class="{ 'is-on': i === 2 }" x-bind:aria-pressed="(i === 2).toString()" aria-label="Payouts" x-on:click="i = 2; stop = true"><img src="{{ asset('images/home/story-3-thumb.jpg') }}" alt="" width="56" height="56"></button>
                     </div>
                     <div class="cc-story-body">
                         <span class="cc-story-tag" x-text="slides[i].tag">Ages {{ config('drinkwell.min_age') }} and over</span>

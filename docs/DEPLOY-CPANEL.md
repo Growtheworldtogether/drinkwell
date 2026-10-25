@@ -71,10 +71,14 @@ Sign in as admin, open **Settings > System**. Every line should say **Good**. An
 Then give members the sign-up link with the reference code. Make more codes in **Settings > Reference codes**.
 
 ## Updating the site later
-1. Get a new zip: on GitHub open **Actions** > **Build release zip** > **Run workflow**; after about 3 minutes both zips are on the **Releases** page. (Or run `scripts\make-release.bat`, or `php scripts/make-release.php --public-html`, on your PC.)
-2. Upload the same kind of zip as the first time to the same place and extract it, choosing to overwrite. Your `.env`, database and uploaded files are not touched (they are not in the zip).
-3. Delete `install.php` if it came back. It is locked anyway after the first install.
-4. Sign in as admin > **Settings > System** > **Install updates**. This applies database changes and clears old caches.
+No File Manager needed:
+1. On GitHub, open **Actions** > **Build release zip** > **Run workflow**. After about 3 minutes the new version is on the **Releases** page.
+2. On your site, sign in as admin > **Settings > System** > **Check for updates**.
+3. When it says a new version is ready, enter the developer code and press **Install update**. It takes a minute or two; members see a "Back in a minute" page meanwhile.
+
+The site downloads the right zip for your setup, checks its fingerprint, backs up every file it replaces, keeps your settings (`.env`), uploads and database, applies database changes and clears caches. If something goes wrong it puts the old files back. **Restore the previous version** on the same page undoes the last update.
+
+If your host blocks the site from reaching GitHub, upload and extract the release zip by hand as in step 4, then press **Install updates** under "Database and caches".
 
 ## Connecting or changing email later
 Sign in as admin > **Settings > Email** and enter the developer code `DW-EMAIL-1453` (it stays open for 30 minutes). Tick "Send email through this mailbox", enter the mail server, port (465, or 587), the email address and its password, and save. Then use **Send a test email** on the same page. Sign-in codes, password resets, pairing details and withdrawal notices all go out through this mailbox. The password is stored encrypted, and these details take the place of the MAIL_ lines in `.env`.

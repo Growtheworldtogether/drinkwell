@@ -27,7 +27,15 @@
             <p class="cc-hint" style="margin:0">This site was set up before automatic updates. The first update records its version.</p>
         @endunless
 
-        @if ($u['newer'])
+        @if ($u['job'] && ($u['job']['phase'] ?? '') !== 'finish' && time() - (int) ($u['job']['saved_at'] ?? 0) > 60)
+            <div class="dw-update-box" style="background:rgb(253, 241, 217)">
+                <p style="margin:0"><strong>An update was interrupted</strong> before it finished. You can carry on where it stopped, or stop it and keep the site as it was before.</p>
+                <div style="display:flex;flex-wrap:wrap;gap:12px">
+                    <a class="af-btn af-btn-black" style="flex:1 1 220px" href="{{ route('admin.settings.system.progress') }}">Continue the update</a>
+                    <form method="POST" action="{{ route('admin.settings.system.cancel') }}" style="flex:1 1 220px;display:flex">@csrf<button type="submit" class="af-btn cc-btn-outline" style="width:100%">Stop it and undo</button></form>
+                </div>
+            </div>
+        @elseif ($u['newer'])
             <div class="dw-update-box">
                 <p style="margin:0"><strong>A new version is ready.</strong> Installing takes a minute or two. Members see a short "back in a minute" page meanwhile. Your settings, uploaded files and database are kept, and the files it replaces are backed up first.</p>
                 <form method="POST" action="{{ route('admin.settings.system.install') }}" class="cc-form" x-data="{ busy: false }" x-on:submit="busy = true">

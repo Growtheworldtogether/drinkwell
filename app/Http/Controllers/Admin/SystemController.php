@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
@@ -27,8 +28,6 @@ class SystemController extends Controller
     private const PATCHED = ['8.2' => '8.2.35', '8.3' => '8.3.36', '8.4' => '8.4.27', '8.5' => '8.5.12'];
 
     private const LATEST_KEY = 'updates.latest';
-
-    private const FINISH_KEY = 'updates.finish';
 
     private const LAST_KEY = 'update_last';
 
@@ -47,6 +46,7 @@ class SystemController extends Controller
                 'backup' => $updater->lastBackup(),
                 'last' => $settings->array(self::LAST_KEY),
                 'repo' => (string) config('drinkwell.updates.repo'),
+                'job' => $updater->job(),
             ],
         ]);
     }
@@ -66,40 +66,67 @@ class SystemController extends Controller
             : 'You have the latest version.');
     }
 
-    /**
-     * "Install update": download and check the package, show members the "back in a minute" page, write the new
-     * files (with a backup), then continue in a fresh request (finish) that runs on the new code.
-     */
+    /** "Install update": starts the update job; the progress page runs it in short steps. */
     public function install(Request $request, Updater $updater): RedirectResponse
     {
         if (! $this->codeOk($request)) {
             return back()->withErrors(['developer_code' => 'That developer code is not right.'], 'update');
         }
-        $latest = Cache::get(self::LATEST_KEY);
         try {
-            $latest = is_array($latest) ? $latest : $updater->latest();
-            $zip = $updater->download($latest);
+            $latest = Cache::get(self::LATEST_KEY);
+            $updater->start(is_array($latest) ? $latest : $updater->latest());
         } catch (Throwable $e) {
-            return back()->with('error', 'The update was not installed: '.$e->getMessage());
+            return back()->with('error', 'The update did not start: '.$e->getMessage());
         }
 
-        $secret = Str::random(40);
-        Artisan::call('down', ['--secret' => $secret, '--retry' => 30, '--refresh' => 20]);
+        return redirect()->route('admin.settings.system.progress');
+    }
+
+    /**
+     * Runs the next short step of the update and shows how far it is, then reloads itself. Download and compare
+     * leave the site up; only the write step shows members "Back in a minute" (the admin passes through). The last
+     * step runs on the new code: database changes, fresh caches, site back up.
+     */
+    public function progress(Request $request, Updater $updater, SettingsRepository $settings): Response|RedirectResponse
+    {
+        $job = $updater->job();
+        if (! $job) {
+            return redirect()->route('admin.settings.system');
+        }
+        if ($job['phase'] === 'finish') {
+            return $this->finishJob($request, $updater, $settings, $job);
+        }
+
+        $cookie = null;
         try {
-            $result = $updater->install($zip);
+            if ($job['phase'] === 'write' && ! app()->isDownForMaintenance()) {
+                $secret = Str::random(40);
+                Artisan::call('down', ['--secret' => $secret, '--retry' => 30, '--refresh' => 20]);
+                $cookie = MaintenanceModeBypassCookie::create($secret);
+            }
+            $job = $updater->advance($job);
         } catch (Throwable $e) {
             report($e);
-            Artisan::call('up');
+            $updater->clearJob();
+            if (app()->isDownForMaintenance()) {
+                Artisan::call('up');
+            }
 
-            return back()->with('error', 'The update was not installed, and nothing was changed: '.$e->getMessage());
+            return redirect()->route('admin.settings.system')->with('error', 'The update was not installed, and the site is as it was: '.$e->getMessage());
         }
-        @unlink($zip);
 
-        return $this->toFinish($request, $secret, ['action' => 'update', 'result' => $result]);
+        $labels = ['download' => 'Downloading the new version', 'compare' => 'Checking which files changed', 'write' => 'Installing the new files', 'finish' => 'Finishing up'];
+        $response = response()->view('admin.settings.update-progress', [
+            'percent' => $updater->percent($job),
+            'label' => $labels[$job['phase']] ?? 'Updating',
+            'next' => route('admin.settings.system.progress'),
+        ]);
+
+        return $cookie ? $response->withCookie($cookie) : $response;
     }
 
     /** "Restore previous version": puts back the files the last update changed. */
-    public function restore(Request $request, Updater $updater): RedirectResponse
+    public function restore(Request $request, Updater $updater): RedirectResponse|Response
     {
         if (! $this->codeOk($request)) {
             return back()->withErrors(['developer_code' => 'That developer code is not right.'], 'restore');
@@ -119,20 +146,34 @@ class SystemController extends Controller
 
             return back()->with('error', 'Could not restore: '.$e->getMessage());
         }
+        $updater->saveJob(['phase' => 'finish', 'action' => 'restore', 'from' => $backup['to'], 'to' => $backup['from']]);
 
-        return $this->toFinish($request, $secret, ['action' => 'restore', 'result' => ['to' => $backup['from'], 'from' => $backup['to']]]);
+        return redirect()->route('admin.settings.system.progress')->withCookie(MaintenanceModeBypassCookie::create($secret));
     }
 
-    /** Second half of an update or restore, on the new code: database changes, fresh caches, site back up. */
-    public function finish(Request $request, SettingsRepository $settings): RedirectResponse
+    /** An update that was interrupted and not continued: undo what it wrote and bring the site back. */
+    public function cancel(Request $request, Updater $updater): RedirectResponse
     {
-        $job = Cache::pull(self::FINISH_KEY);
-        if (! is_array($job) || ! hash_equals((string) $job['token'], (string) $request->query('token'))) {
-            Artisan::call('up');
-
-            return redirect()->route('admin.settings.system');
+        $job = $updater->job();
+        if ($job && in_array($job['phase'], ['write', 'finish'], true) && ! empty($job['backup']) && ($job['action'] ?? 'update') === 'update') {
+            $updater->restore($job['backup']);
         }
+        $updater->clearJob();
+        foreach (['config:clear', 'route:clear', 'view:clear'] as $command) {
+            try {
+                Artisan::call($command);
+            } catch (Throwable) {
+            }
+        }
+        Artisan::call('up');
+        AuditLogger::log($request->user(), 'system.update_cancelled', null, null, ['phase' => $job['phase'] ?? null]);
 
+        return redirect()->route('admin.settings.system')->with('status', 'The update was stopped and the site is as it was before.');
+    }
+
+    /** Last step, on the new code: database changes, fresh caches, site back up. */
+    private function finishJob(Request $request, Updater $updater, SettingsRepository $settings, array $job): RedirectResponse
+    {
         $problem = null;
         try {
             Artisan::call('migrate', ['--force' => true]);
@@ -148,18 +189,26 @@ class SystemController extends Controller
             }
         }
         Artisan::call('up');
+        $updater->clearJob();
 
-        $result = $job['result'];
-        $settings->set(self::LAST_KEY, ['action' => $job['action'], 'to' => $result['to'] ?? '', 'at' => now()->toIso8601String(), 'problem' => $problem], $request->user());
-        AuditLogger::log($request->user(), 'system.'.$job['action'], null, null, $result + ['problem' => $problem]);
+        $action = $job['action'] ?? 'update';
+        $changed = 0;
+        $added = 0;
+        if ($action === 'update' && ! empty($job['backup']) && is_file($job['backup'].'/manifest.json')) {
+            $m = json_decode((string) file_get_contents($job['backup'].'/manifest.json'), true);
+            $changed = count($m['changed'] ?? []);
+            $added = count($m['added'] ?? []);
+        }
+        $settings->set(self::LAST_KEY, ['action' => $action, 'to' => $job['to'] ?? '', 'at' => now()->toIso8601String(), 'problem' => $problem], $request->user());
+        AuditLogger::log($request->user(), 'system.'.$action, null, ['version' => $job['from'] ?? null], ['version' => $job['to'] ?? null, 'changed' => $changed, 'added' => $added, 'problem' => $problem]);
 
         if ($problem !== null) {
             return redirect()->route('admin.settings.system')->with('error', 'The new files are in place, but the database changes stopped: '.$problem.' You can press Restore previous version.');
         }
 
-        return redirect()->route('admin.settings.system')->with('status', $job['action'] === 'restore'
-            ? 'The previous version, '.self::versionName($result['to']).', is back.'
-            : 'Updated to the version of '.self::versionName($result['to']).'. '.$result['changed'].' file(s) replaced and '.$result['added'].' added. Your settings, uploads and database were kept.');
+        return redirect()->route('admin.settings.system')->with('status', $action === 'restore'
+            ? 'The previous version, '.self::versionName((string) $job['to']).', is back.'
+            : 'Updated to the version of '.self::versionName((string) $job['to']).'. '.$changed.' file(s) replaced and '.$added.' added. Your settings, uploads and database were kept.');
     }
 
     /** "release-20261025-1935" as "Oct 25, 2026 3:35 pm" in the site's time zone; other names are shown as they are. */
@@ -173,14 +222,6 @@ class SystemController extends Controller
             ->timezone(config('app.timezone'))->format('M j, Y g:i a');
     }
 
-    private function toFinish(Request $request, string $secret, array $job): RedirectResponse
-    {
-        $token = Str::random(40);
-        Cache::put(self::FINISH_KEY, $job + ['token' => $token], now()->addMinutes(30));
-
-        return redirect()->route('admin.settings.system.finish', ['token' => $token])
-            ->withCookie(MaintenanceModeBypassCookie::create($secret));
-    }
 
     private function codeOk(Request $request): bool
     {

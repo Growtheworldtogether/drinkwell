@@ -5,6 +5,27 @@ use App\Services\Updater;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;
 
+/** Follows the progress page until it sends the admin back to Settings, System. @return array{0: \Illuminate\Testing\TestResponse, 1: bool} */
+function runProgress($test, $start = null): array
+{
+    $first = $start ? collect($start->headers->getCookies())->first(fn ($c) => $c->getName() === 'laravel_maintenance') : null;
+    $cookie = $first?->getValue();
+    $sawDown = false;
+    for ($n = 0; $n < 40; $n++) {
+        $res = ($cookie ? $test->withUnencryptedCookie('laravel_maintenance', $cookie) : $test)->get(route('admin.settings.system.progress'));
+        $set = collect($res->headers->getCookies())->first(fn ($c) => $c->getName() === 'laravel_maintenance');
+        if ($set) {
+            $cookie = $set->getValue();
+        }
+        $sawDown = $sawDown || app()->isDownForMaintenance();
+        if ($res->isRedirect()) {
+            return [$res, $sawDown];
+        }
+        $res->assertOk()->assertSee('Updating your site');
+    }
+    throw new RuntimeException('The progress page never finished.');
+}
+
 /** A fake installed site in the shared-hosting layout: ~/drinkwell (app) beside ~/public_html (public files). */
 function fakeSite(): array
 {
@@ -128,7 +149,7 @@ it('checks GitHub, downloads with the fingerprint check, installs, and finishes 
     Http::fake([
         'api.github.com/repos/*/releases/latest' => Http::response(['tag_name' => 'release-20261025-1200', 'name' => 'Upload zip', 'published_at' => now()->toIso8601String(), 'body' => 'notes',
             'assets' => [['id' => 7, 'name' => 'drinkwell-release-public_html.zip', 'size' => strlen($bytes), 'digest' => 'sha256:'.hash('sha256', $bytes)]]]),
-        'api.github.com/repos/*/releases/assets/7' => Http::response($bytes),
+        'api.github.com/repos/*/releases/assets/7' => fn () => Http::response($bytes),
     ]);
 
     signedIn(Role::Admin);
@@ -140,16 +161,22 @@ it('checks GitHub, downloads with the fingerprint check, installs, and finishes 
     $this->post(route('admin.settings.system.install'), ['developer_code' => 'nope'])->assertSessionHasErrors('developer_code', null, 'update');
     expect(file_get_contents($base.'/app/Thing.php'))->toBe('old thing');
 
-    $go = $this->post(route('admin.settings.system.install'), ['developer_code' => 'DW-EMAIL-1453']);
-    $go->assertRedirect()->assertCookie('laravel_maintenance');
-    expect(file_get_contents($base.'/app/Thing.php'))->toBe('new thing')->and(app()->isDownForMaintenance())->toBeTrue();
+    $this->post(route('admin.settings.system.install'), ['developer_code' => 'DW-EMAIL-1453'])->assertRedirect(route('admin.settings.system.progress'));
+    expect(file_get_contents($base.'/app/Thing.php'))->toBe('old thing'); // nothing written yet
 
-    // The browser carries the "let the admin through" cookie from the install answer to the finish step.
-    $bypass = collect($go->headers->getCookies())->first(fn ($c) => $c->getName() === 'laravel_maintenance');
-    $this->withUnencryptedCookie('laravel_maintenance', $bypass->getValue())->get($go->headers->get('Location'))->assertRedirect(route('admin.settings.system'))
-        ->assertSessionHas('status', fn ($s) => str_contains($s, 'Updated to the version of Oct 25, 2026'));
+    [$last, $sawDown] = runProgress($this);
+    $last->assertRedirect(route('admin.settings.system'))->assertSessionHas('status', fn ($s) => str_contains($s, 'Updated to the version of Oct 25, 2026'));
+    expect($sawDown)->toBeTrue()->and(file_get_contents($base.'/app/Thing.php'))->toBe('new thing')->and(app()->isDownForMaintenance())->toBeFalse();
+
+    // Restore goes through the same last step.
+    $back = $this->post(route('admin.settings.system.restore'), ['developer_code' => 'DW-EMAIL-1453'])->assertRedirect(route('admin.settings.system.progress'));
+    expect(file_get_contents($base.'/app/Thing.php'))->toBe('old thing');
+    [$last] = runProgress($this, $back);
+    $last->assertSessionHas('status', fn ($s) => str_contains($s, 'is back'));
     expect(app()->isDownForMaintenance())->toBeFalse();
 
+    $go = $this->post(route('admin.settings.system.install'), ['developer_code' => 'DW-EMAIL-1453']);
+    runProgress($this);
     $this->get(route('admin.settings.system'))->assertSee('Restore the previous version');
 
     // The file itself was asked for, not the release information (GitHub answers with whichever is asked).
@@ -168,8 +195,34 @@ it('does not install a download that fails the fingerprint check', function () {
     signedIn(Role::Admin);
     session(['auth.password_confirmed_at' => time()]);
 
-    $this->post(route('admin.settings.system.install'), ['developer_code' => 'DW-EMAIL-1453'])
+    $this->post(route('admin.settings.system.install'), ['developer_code' => 'DW-EMAIL-1453'])->assertRedirect(route('admin.settings.system.progress'));
+    $this->get(route('admin.settings.system.progress'))->assertRedirect(route('admin.settings.system'))
         ->assertSessionHas('error', fn ($s) => str_contains($s, 'fingerprint'));
     expect(file_get_contents($base.'/app/Thing.php'))->toBe('old thing')->and(app()->isDownForMaintenance())->toBeFalse();
+    File::deleteDirectory($home);
+});
+
+it('carries on after an interrupted step, and can be stopped and undone', function () {
+    [$home, $base, $public] = fakeSite();
+    $u = new Updater($base, $public);
+
+    // Write a few files, then "lose" the request part way: the job file still says where it was.
+    $job = $u->startFromZip(fakePackage());
+    while ($job['phase'] !== 'write') {
+        $job = $u->advance($job);
+    }
+    $job = $u->advance($job, 0.0); // a step that was cut off before writing anything
+    expect($u->job()['phase'])->toBe('write');
+    while ($job['phase'] !== 'finish') {
+        $job = $u->advance($u->job());
+    }
+    expect(file_get_contents($base.'/app/Thing.php'))->toBe('new thing');
+
+    // Stop and undo from the admin page.
+    $this->app->instance(Updater::class, $u);
+    signedIn(Role::Admin);
+    $this->post(route('admin.settings.system.cancel'))->assertRedirect(route('admin.settings.system'))->assertSessionHas('status');
+    expect(file_get_contents($base.'/app/Thing.php'))->toBe('old thing')->and($u->job())->toBeNull()->and(app()->isDownForMaintenance())->toBeFalse();
+
     File::deleteDirectory($home);
 });

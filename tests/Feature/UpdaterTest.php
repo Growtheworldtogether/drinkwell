@@ -151,6 +151,9 @@ it('checks GitHub, downloads with the fingerprint check, installs, and finishes 
     expect(app()->isDownForMaintenance())->toBeFalse();
 
     $this->get(route('admin.settings.system'))->assertSee('Restore the previous version');
+
+    // The file itself was asked for, not the release information (GitHub answers with whichever is asked).
+    Http::assertSent(fn ($r) => str_contains($r->url(), '/releases/assets/7') && $r->header('Accept') === ['application/octet-stream']);
     File::deleteDirectory($home);
 });
 

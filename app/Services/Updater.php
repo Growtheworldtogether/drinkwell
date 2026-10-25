@@ -107,7 +107,7 @@ class Updater
         $path = $dir.'/'.preg_replace('/[^A-Za-z0-9._-]/', '', $latest['tag']).'.zip';
         $repo = (string) config('drinkwell.updates.repo');
 
-        $response = $this->github()->withHeaders(['Accept' => 'application/octet-stream'])->timeout(600)->sink($path)
+        $response = $this->github('application/octet-stream')->timeout(600)->sink($path)
             ->get("https://api.github.com/repos/{$repo}/releases/assets/{$latest['asset_id']}");
         if (! $response->successful() || ! is_file($path)) {
             @unlink($path);
@@ -336,10 +336,11 @@ class Updater
         clearstatcache();
     }
 
-    private function github()
+    /** A request to the GitHub API. $accept picks the answer: release information (JSON), or the file itself. */
+    private function github(string $accept = 'application/vnd.github+json')
     {
-        $request = Http::withHeaders(['User-Agent' => 'DRinkWeLL-updater', 'X-GitHub-Api-Version' => '2022-11-28'])
-            ->accept('application/vnd.github+json')->timeout(30)->retry(2, 1500, throw: false);
+        $request = Http::withHeaders(['User-Agent' => 'DRinkWeLL-updater', 'X-GitHub-Api-Version' => '2022-11-28', 'Accept' => $accept])
+            ->timeout(30)->retry(2, 1500, throw: false);
         $token = (string) config('drinkwell.updates.token');
 
         return $token !== '' ? $request->withToken($token) : $request;

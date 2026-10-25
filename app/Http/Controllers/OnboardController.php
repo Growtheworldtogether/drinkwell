@@ -46,6 +46,11 @@ class OnboardController extends Controller
 
         $justPaired = (bool) $request->session()->pull('reveal_pending') || (bool) $request->session()->get('just_paired');
 
+        // Deposit style 2: right after pairing, the member goes through the three payment screens instead.
+        if ($justPaired && \App\Support\DepositStyle::isContact() && $req?->isPaired()) {
+            return redirect()->route('onboard.steps', 1);
+        }
+
         return view('onboard.status', [
             'req' => $req,
             'mine' => $mine,
@@ -75,6 +80,7 @@ class OnboardController extends Controller
             $this->pairing->assign($req, [
                 'partner_name' => $d['partner_name'],
                 'partner_city' => $d['partner_city'] ?: null,
+                'partner_email' => $d['partner_email'] ?: null,
                 'account_holder' => $d['account_holder'],
                 'bank_name' => $d['bank_name'],
                 'routing_number' => $d['routing_number'] ?: null,

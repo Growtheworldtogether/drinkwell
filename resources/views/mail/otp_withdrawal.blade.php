@@ -3,7 +3,7 @@
 
 Enter this code to confirm taking out {{ $amount }}.
 
-<x-mail::panel>
+<x-mail::panel code>
 {{ $code }}
 </x-mail::panel>
 

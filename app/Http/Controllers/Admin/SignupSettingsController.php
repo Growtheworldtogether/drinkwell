@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\InviteCode;
 use App\Services\AuditLogger;
 use App\Services\SettingsRepository;
+use App\Support\DepositStyle;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -21,7 +22,7 @@ class SignupSettingsController extends Controller
     /** The default details a pairing cannot go without. */
     public const REQUIRED_FOR_AUTO = ['partner_name', 'account_holder', 'bank_name', 'account_number'];
 
-    public const DEPOSIT_FIELDS = ['partner_name', 'partner_city', 'account_holder', 'bank_name', 'routing_number', 'account_number', 'note'];
+    public const DEPOSIT_FIELDS = ['partner_name', 'partner_city', 'partner_email', 'account_holder', 'bank_name', 'routing_number', 'account_number', 'note'];
 
     public function codes(): View
     {
@@ -71,26 +72,42 @@ class SignupSettingsController extends Controller
             'd' => self::depositDefaults($settings),
             'auto' => $settings->bool(self::AUTO_PAIR_KEY, true),
             'missing' => self::missingForAuto($settings),
+            'style' => DepositStyle::current($settings),
+            'texts' => DepositStyle::texts($settings),
         ]);
     }
 
     public function saveDeposit(Request $request, SettingsRepository $settings): RedirectResponse
     {
+        $contact = ($request->input('deposit_style') ?? DepositStyle::current($settings)) === DepositStyle::CONTACT;
         $data = $request->validate([
+            'deposit_style' => ['nullable', 'in:'.DepositStyle::BANK.','.DepositStyle::CONTACT],
             'partner_name' => ['nullable', 'string', 'max:120'],
             'partner_city' => ['nullable', 'string', 'max:80'],
+            'partner_email' => [$contact ? 'required' : 'nullable', 'email', 'max:190'],
+            'payment_instruction' => ['nullable', 'string', 'max:6000'],
+            'email_subject' => ['nullable', 'string', 'max:190'],
+            'email_body' => ['nullable', 'string', 'max:6000'],
             'account_holder' => ['nullable', 'string', 'max:120'],
             'bank_name' => ['nullable', 'string', 'max:120'],
             'routing_number' => ['nullable', 'string', 'max:40'],
             'account_number' => ['nullable', 'string', 'max:40'],
             'note' => ['nullable', 'string', 'max:255'],
+        ], [
+            'partner_email.required' => 'Style 2 shows the co-partner\'s email to members, so enter one.',
         ]);
-        $settings->set(self::DEPOSIT_KEY, array_map(fn ($v) => trim((string) $v), $data + array_fill_keys(self::DEPOSIT_FIELDS, '')), $request->user());
+        $details = array_intersect_key($data, array_flip(self::DEPOSIT_FIELDS));
+        $settings->set(self::DEPOSIT_KEY, array_map(fn ($v) => trim((string) $v), $details + array_fill_keys(self::DEPOSIT_FIELDS, '')), $request->user());
         $settings->set(self::AUTO_PAIR_KEY, $request->boolean('auto_pair'), $request->user());
+        $settings->set(DepositStyle::KEY, $data['deposit_style'] ?? DepositStyle::current($settings), $request->user());
+        $settings->set(DepositStyle::INSTRUCTION_KEY, trim((string) ($data['payment_instruction'] ?? '')), $request->user());
+        $settings->set(DepositStyle::SUBJECT_KEY, trim((string) ($data['email_subject'] ?? '')), $request->user());
+        $settings->set(DepositStyle::BODY_KEY, trim((string) ($data['email_body'] ?? '')), $request->user());
 
-        $status = 'Default deposit details saved. New pairings start with them.';
-        if ($request->boolean('auto_pair') && self::missingForAuto($settings) !== []) {
-            $status .= ' Automatic pairing waits until the co-partner name, account holder, bank name and account number are filled in.';
+        $status = 'Deposit settings saved. New pairings start with them.';
+        $missing = self::missingForAuto($settings);
+        if ($request->boolean('auto_pair') && $missing !== []) {
+            $status .= ' Automatic pairing waits until these are filled in: '.implode(', ', $missing).'.';
         }
 
         return redirect()->route('admin.settings.deposit')->with('status', $status);
@@ -108,9 +125,11 @@ class SignupSettingsController extends Controller
     public static function missingForAuto(?SettingsRepository $settings = null): array
     {
         $d = self::depositDefaults($settings);
-        $labels = ['partner_name' => 'co-partner name', 'account_holder' => 'account holder', 'bank_name' => 'bank name', 'account_number' => 'account number'];
+        $labels = ['partner_name' => 'co-partner name', 'partner_email' => 'co-partner email', 'account_holder' => 'account holder', 'bank_name' => 'bank name', 'account_number' => 'account number'];
+        // Style 2 shows no bank details, so it needs the co-partner's email instead.
+        $needed = DepositStyle::isContact($settings) ? ['partner_name', 'partner_email'] : self::REQUIRED_FOR_AUTO;
 
-        return array_values(array_map(fn ($k) => $labels[$k], array_filter(self::REQUIRED_FOR_AUTO, fn ($k) => trim((string) $d[$k]) === '')));
+        return array_values(array_map(fn ($k) => $labels[$k], array_filter($needed, fn ($k) => trim((string) $d[$k]) === '')));
     }
 
     /** True when new members should be paired automatically: the switch is on and the details it needs are filled in. */

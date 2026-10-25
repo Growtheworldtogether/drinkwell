@@ -3,7 +3,7 @@
 
 Enter this code on the reset page, together with your new password.
 
-<x-mail::panel>
+<x-mail::panel code>
 {{ $code }}
 </x-mail::panel>
 

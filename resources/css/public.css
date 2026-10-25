@@ -1598,6 +1598,8 @@
     @media (max-width: 767px) { .cc-access, .cc-tip { display: none !important; } }
     .cc-side-size { width: 100%; margin-top: 12px; border: 2px solid #000; background: transparent; font-family: inherit; cursor: pointer; text-align: left; }
     .cc-side-size b { font-size: 20px; }
+    /* Wider screens keep the floating button, so the menu one is only for phones. */
+    @media (min-width: 768px) { .cc-side-size { display: none; } }
     .cc-email { overflow-wrap: normal; word-break: normal; }
     .cc-edit-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
     .cc-edit-head .cc-edit { float: none; flex: none; }

@@ -224,7 +224,7 @@ img {
     border-top: 8px solid rgb(17, 17, 17);
 }
 
-/* The code panel: the one-time code stands alone in large mono type. */
+/* Grey boxes: details in the normal type. Only the one-time code panel (panel-code) uses large mono type. */
 .panel {
     border: 1px solid rgb(201, 201, 201);
     border-radius: 4px;
@@ -239,6 +239,17 @@ img {
 
 .panel-content p {
     color: rgb(17, 17, 17);
+    font-size: 16px;
+    line-height: 1.6;
+    margin: 0 0 8px;
+    text-align: left;
+}
+
+.panel-content p:last-child {
+    margin-bottom: 0;
+}
+
+.panel-code .panel-content p {
     font-family: 'Geist Mono', ui-monospace, Menlo, Consolas, monospace;
     font-size: 28px;
     font-weight: 500;

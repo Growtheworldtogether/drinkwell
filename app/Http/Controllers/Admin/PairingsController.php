@@ -43,7 +43,9 @@ class PairingsController extends Controller
 
         AuditLogger::log($request->user(), 'pairing.assign', $pairing, ['status' => 'finding'], ['status' => 'paired', 'machine_id' => $mine->machine_id, 'partner_name' => $data['partner_name']]);
 
-        return redirect()->route('admin.pairings')->with('status', "Paired {$pairing->user->name}. The email with the payment details is on its way.");
+        return redirect()->route('admin.pairings')->with('status', \App\Support\DepositStyle::isContact()
+            ? "Paired {$pairing->user->name}. They see their co-partner and payment steps the next time they open their page."
+            : "Paired {$pairing->user->name}. The email with the payment details is on its way.");
     }
 
     public function update(Request $request, PairingRequest $pairing, PairingService $svc): RedirectResponse
@@ -54,19 +56,25 @@ class PairingsController extends Controller
         $svc->updateDetails($pairing, $data);
         AuditLogger::log($request->user(), 'pairing.update_details', $pairing, $before, ['partner_name' => $data['partner_name'], 'bank_name' => $data['bank_name'], 'account_last4' => substr($data['account_number'], -4)]);
 
-        return redirect()->route('admin.pairings')->with('status', "Details updated. {$pairing->user->name} has been emailed the corrected version.");
+        return redirect()->route('admin.pairings')->with('status', \App\Support\DepositStyle::isContact()
+            ? "Details updated. {$pairing->user->name} sees them on their page."
+            : "Details updated. {$pairing->user->name} has been emailed the corrected version.");
     }
 
     /** @return array<string, mixed> */
     private function validated(Request $request, PairingRequest $pairing): array
     {
+        $contact = \App\Support\DepositStyle::isContact();
+        $bank = $contact ? 'nullable' : 'required';
+
         return $request->validateWithBag('p'.$pairing->id, [
             'partner_name' => ['required', 'string', 'max:120'],
             'partner_city' => ['nullable', 'string', 'max:80'],
-            'account_holder' => ['required', 'string', 'max:120'],
-            'bank_name' => ['required', 'string', 'max:120'],
+            'partner_email' => [$contact ? 'required' : 'nullable', 'email', 'max:190'],
+            'account_holder' => [$bank, 'string', 'max:120'],
+            'bank_name' => [$bank, 'string', 'max:120'],
             'routing_number' => ['nullable', 'string', 'max:20'],
-            'account_number' => ['required', 'string', 'max:34'],
+            'account_number' => [$bank, 'string', 'max:34'],
             'reference' => ['nullable', 'string', 'max:40'],
             'note' => ['nullable', 'string', 'max:255'],
         ]);

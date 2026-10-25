@@ -94,8 +94,13 @@
                     </div>
                     <h2 style="margin-top:28px;font-size:24px">What happens next</h2>
                     <ol class="cc-next">
-                        <li>We find a co-partner for your machine. This usually takes 1 business day.</li>
-                        <li>We email you your partner and their payment details.</li>
+                        @if (\App\Support\DepositStyle::isContact())
+                            <li>We find a co-partner for your machine.</li>
+                            <li>We show you your co-partner and how to pay them, with a message ready to send.</li>
+                        @else
+                            <li>We find a co-partner for your machine. This usually takes 1 business day.</li>
+                            <li>We email you your partner and their payment details.</li>
+                        @endif
                         <li>You send your deposit to your partner, then upload your proof of payment.</li>
                     </ol>
                     <x-cc.check name="agreeTerms" label="I accept the terms of use and the privacy notice." wire:model="agreeTerms" />

@@ -10,7 +10,7 @@
                 @forelse ($waiting as $req)
                     <details @if (old('_pid') == $req->id || $loop->first) open @endif>
                         <summary><strong>{{ $req->user->name }}</strong><br><span class="cc-hint">{{ \App\Enums\Tier::from($req->tier)->label() }}, asked {{ $req->created_at->diffForHumans() }}</span></summary>
-                        @include('admin._pairing-form', ['req' => $req, 'action' => route('admin.pairings.assign', $req), 'method' => 'POST', 'submit' => 'Pair and email the member'])
+                        @include('admin._pairing-form', ['req' => $req, 'action' => route('admin.pairings.assign', $req), 'method' => 'POST', 'submit' => \App\Support\DepositStyle::isContact() ? 'Pair the member' : 'Pair and email the member'])
                     </details>
                 @empty
                     <p>Nobody is waiting. New members appear here when they ask for a partner.</p>
@@ -28,6 +28,9 @@
                             @elseif ($req->proof_path) <span class="cc-tone">Proof of payment received</span>
                             @elseif ($req->deposit_reported_at) <span class="cc-tone">Member says it was sent</span>
                             @else <span class="cc-tone">Waiting for the deposit</span> @endif
+                            @if (\App\Support\DepositStyle::isContact())
+                                <br><span class="cc-hint">{{ $req->instructions_read_at ? 'Read the instructions on '.$req->instructions_read_at->format('M j, g:i a') : 'Has not read the instructions yet' }}</span>
+                            @endif
                         </summary>
                         @if ($req->deposit_reported_at)
                             <div class="cc-panel is-flat">
@@ -46,7 +49,7 @@
                         @if ($pending)
                             <div class="cc-step-nav cc-btns is-fit" style="margin-bottom:12px"><form method="POST" action="{{ route('admin.ownerships.confirm', $own) }}">@csrf<button type="submit" class="af-btn af-btn-black" style="width:auto">Confirm deposit</button></form></div>
                         @endif
-                        @include('admin._pairing-form', ['req' => $req, 'action' => route('admin.pairings.update', $req), 'method' => 'PUT', 'submit' => 'Save changes and email the member'])
+                        @include('admin._pairing-form', ['req' => $req, 'action' => route('admin.pairings.update', $req), 'method' => 'PUT', 'submit' => \App\Support\DepositStyle::isContact() ? 'Save changes' : 'Save changes and email the member'])
                     </details>
                 @empty
                     <p>No pairings yet. Paired members appear here.</p>

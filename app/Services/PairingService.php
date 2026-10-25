@@ -111,8 +111,11 @@ class PairingService
 
         $req->update(['status' => PairingRequest::PAIRED, 'paired_at' => now()] + $this->details($d, $mine));
 
-        $mine->loadMissing('machine');
-        $this->mail->sendQuietly(new PairingDossier($user, $partner->fresh('profile'), $mine, $req->fresh()), $user);
+        // Style 2 sends nothing by email: the member sees everything in the three payment screens.
+        if (! \App\Support\DepositStyle::isContact()) {
+            $mine->loadMissing('machine');
+            $this->mail->sendQuietly(new PairingDossier($user, $partner->fresh('profile'), $mine, $req->fresh()), $user);
+        }
 
         return $mine;
     }
@@ -128,22 +131,25 @@ class PairingService
         }
 
         $req->update($this->details($d, $mine));
-        $this->mail->sendQuietly(new PairingDossier($req->user, $partner->fresh('profile'), $mine, $req->fresh(), updated: true), $req->user);
+        if (! \App\Support\DepositStyle::isContact()) {
+            $this->mail->sendQuietly(new PairingDossier($req->user, $partner->fresh('profile'), $mine, $req->fresh(), updated: true), $req->user);
+        }
     }
 
     /** @return array<string, mixed> */
     private function details(array $d, MachineOwnership $mine): array
     {
-        $number = trim((string) $d['account_number']);
+        $number = trim((string) ($d['account_number'] ?? ''));
 
         return [
             'partner_name' => trim($d['partner_name']),
             'partner_city' => ($d['partner_city'] ?? null) ?: null,
-            'account_holder' => trim($d['account_holder']),
-            'bank_name' => trim($d['bank_name']),
+            'partner_email' => ($d['partner_email'] ?? null) ?: null,
+            'account_holder' => trim((string) ($d['account_holder'] ?? '')) ?: null,
+            'bank_name' => trim((string) ($d['bank_name'] ?? '')) ?: null,
             'routing_number' => ($d['routing_number'] ?? null) ?: null,
-            'account_number' => $number,
-            'account_last4' => substr($number, -4),
+            'account_number' => $number !== '' ? $number : null,
+            'account_last4' => $number !== '' ? substr($number, -4) : null,
             'reference' => ($d['reference'] ?? null) ?: self::reference($mine),
             'note' => ($d['note'] ?? null) ?: null,
         ];

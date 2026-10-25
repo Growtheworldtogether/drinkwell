@@ -3,7 +3,7 @@
 
 Enter this code on the verification page to confirm your email address.
 
-<x-mail::panel>
+<x-mail::panel code>
 {{ $code }}
 </x-mail::panel>
 

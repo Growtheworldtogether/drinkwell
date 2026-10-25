@@ -40,6 +40,7 @@
             <p style="margin:0"><span class="cc-tone ok">You have the latest version</span></p>
         @endif
 
+        <p class="cc-hint" style="margin:0">Updates come from the Releases page of github.com/{{ $u['repo'] }}. To make a new one, open Actions there, choose Build release zip, then Run workflow.</p>
         <form method="POST" action="{{ route('admin.settings.system.check') }}">
             @csrf
             <button type="submit" class="af-btn cc-btn-outline" style="width:auto">Check for updates</button>

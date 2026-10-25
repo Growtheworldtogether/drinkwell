@@ -60,8 +60,19 @@ it('pairs without any email, then takes the member through the three screens', f
     $this->get(route('onboard.steps', 1))->assertOk();
     $this->get(route('onboard.steps', 3))->assertRedirect(route('onboard.steps', 2));
 
-    // The progress page: no bank details, a way back to the screens, and the receipt upload.
-    $this->get(route('onboard.status'))->assertOk()->assertSee('See the payment steps again')->assertSee('Proof of payment')->assertDontSee('Account holder');
+    // The progress page: a checklist with the next step, no bank details, and the receipt upload.
+    $this->get(route('onboard.status'))->assertOk()->assertSee('What to do now')->assertSee('Next: email Margaret Whitfield')
+        ->assertSee('Read it again')->assertSee('Open the message')->assertSee('Proof of payment')->assertDontSee('Account holder')->assertDontSee('Finding a partner');
+
+    // "I have emailed" saves the time and moves the checklist on.
+    $this->post(route('onboard.emailed'))->assertRedirect(route('onboard.status'));
+    expect($req->fresh()->partner_emailed_at)->not->toBeNull();
+    $this->get(route('onboard.status'))->assertSee('Next: send your deposit')->assertSee('Upload my receipt');
+
+    // After the receipt is reported, the page waits for the co-partner.
+    $req->fresh()->forceFill(['deposit_reported_at' => now()])->save();
+    auth()->user()->unsetRelation('pairingRequest');
+    $this->get(route('onboard.status'))->assertSee('Waiting for Margaret Whitfield to confirm');
 });
 
 it('keeps style 1 as before: bank details on the page and in the email, no payment screens', function () {
@@ -91,6 +102,8 @@ it('lets the administrator choose the style and write the texts', function () {
     $this->get(route('admin.settings.deposit.preview', 3))->assertRedirect(route('admin.settings.deposit.preview', 2));
     $this->post(route('admin.settings.deposit.preview.read'), ['read' => '1'])->assertRedirect(route('admin.settings.deposit.preview', 3));
     $this->get(route('admin.settings.deposit.preview', 3))->assertOk()->assertSee('Message to your');
+    $this->get(route('admin.settings.deposit.preview.progress'))->assertOk()->assertSee('What to do now')->assertSee('Next: email M W');
+    $this->get(route('admin.settings.deposit.preview.progress', ['state' => 'sent']))->assertOk()->assertSee('Waiting for M W to confirm');
 });
 
 it('pairs by hand in style 2 without bank details and shows who read the instructions', function () use ($contactStyle) {

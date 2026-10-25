@@ -25,6 +25,16 @@
                         <div class="cc-kv"><dt>Next</dt><dd>We email you as soon as you are paired</dd></div>
                     </dl>
                 </div>
+            @elseif ($pending && \App\Support\DepositStyle::isContact() && $req?->isPaired())
+                {{-- Deposit style 2: a checklist of what to do now, then the co-partner, the receipt upload and the machine. --}}
+                @include('onboard._contact-progress', [
+                    'card' => ['name' => (string) ($req->partner_name ?: $partner->name), 'location' => (string) $req->partner_city, 'email' => (string) $req->partner_email],
+                    'initials' => \Illuminate\Support\Str::of($req->partner_name ?: $partner->name)->explode(' ')->filter()->map(fn ($p) => mb_substr($p, 0, 1))->take(2)->implode(''),
+                    'amount' => \App\Support\Money::format($mine->capital_cents),
+                    'read' => $req->instructions_read_at,
+                    'emailed' => (bool) $req->partner_emailed_at,
+                    'urls' => ['steps' => route('onboard.steps', 1), 'message' => route('onboard.steps', 1), 'emailed' => route('onboard.emailed')],
+                ])
             @else
                 @if (($justPaired ?? false))
                     @include('onboard._found-style')

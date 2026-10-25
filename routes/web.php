@@ -54,6 +54,7 @@ Route::middleware(['auth', 'active', 'verified.otp', 'role:applicant,partner'])-
     Route::post('/match', [OnboardController::class, 'match'])->middleware('throttle:10,1')->name('onboard.match');
     Route::get('/steps/{step}', [\App\Http\Controllers\PaymentStepsController::class, 'show'])->whereIn('step', ['1', '2', '3'])->name('onboard.steps');
     Route::post('/steps/read', [\App\Http\Controllers\PaymentStepsController::class, 'read'])->name('onboard.steps.read');
+    Route::post('/emailed', [\App\Http\Controllers\PaymentStepsController::class, 'emailed'])->name('onboard.emailed');
     Route::post('/report', [OnboardController::class, 'report'])->name('onboard.report');
     Route::get('/proof', [OnboardController::class, 'proof'])->name('onboard.proof');
 });
@@ -102,6 +103,7 @@ Route::middleware(['admin.ip', 'auth', 'active', 'role:admin', 'admin.idle', 'th
     Route::get('/settings/deposit-details', [$su, 'deposit'])->name('settings.deposit');
     Route::put('/settings/deposit-details', [$su, 'saveDeposit'])->name('settings.deposit.save');
     Route::get('/settings/deposit-details/preview/{step}', [\App\Http\Controllers\PaymentStepsController::class, 'preview'])->whereIn('step', ['1', '2', '3'])->name('settings.deposit.preview');
+    Route::get('/settings/deposit-details/preview-progress', [\App\Http\Controllers\PaymentStepsController::class, 'previewProgress'])->name('settings.deposit.preview.progress');
     Route::post('/settings/deposit-details/preview/read', [\App\Http\Controllers\PaymentStepsController::class, 'previewRead'])->name('settings.deposit.preview.read');
     $em = \App\Http\Controllers\Admin\EmailSettingsController::class;
     Route::get('/settings/email', [$em, 'show'])->name('settings.email');

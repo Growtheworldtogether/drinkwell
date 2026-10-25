@@ -57,6 +57,17 @@ class PaymentStepsController extends Controller
         return redirect()->route('onboard.steps', 3);
     }
 
+    /** "I have emailed my co-partner" on the style 2 progress page. */
+    public function emailed(Request $request): RedirectResponse
+    {
+        $data = $this->memberData($request);
+        if ($data !== null && ! $data['req']->partner_emailed_at) {
+            $data['req']->forceFill(['partner_emailed_at' => now()])->save();
+        }
+
+        return redirect()->route('onboard.status');
+    }
+
     /** Admin, Settings, Deposit details, "Preview as a member": the same screens with a sample member. */
     public function preview(Request $request, int $step): View|RedirectResponse
     {
@@ -84,6 +95,33 @@ class PaymentStepsController extends Controller
         $request->session()->put(self::READ_KEY.'_preview', true);
 
         return redirect()->route('admin.settings.deposit.preview', 3);
+    }
+
+    /** Preview of the style 2 progress page with a sample member. ?state=email (just read the instruction) or sent. */
+    public function previewProgress(Request $request): View
+    {
+        $d = Admin\SignupSettingsController::depositDefaults();
+        $card = ['name' => $d['partner_name'] ?: 'Margaret Whitfield', 'location' => $d['partner_city'] ?: 'Toronto, ON', 'email' => $d['partner_email'] ?: 'partner@example.com'];
+        $sent = $request->query('state') === 'sent';
+        $req = new PairingRequest([
+            'status' => PairingRequest::PAIRED, 'partner_name' => $card['name'], 'partner_city' => $card['location'], 'partner_email' => $card['email'],
+            'instructions_read_at' => now()->subMinutes(12), 'deposit_reported_at' => $sent ? now() : null, 'proof_sent_on' => $sent ? now() : null,
+            'proof_name' => $sent ? 'bank-transfer-receipt.pdf' : null,
+        ]);
+        $machine = new \App\Models\VendingMachine(['serial_no' => 'DW-C-24159', 'facility_name' => 'Northwestern Memorial Hospital', 'city' => 'Chicago, IL']);
+        $machine->tier = \App\Enums\Tier::Commercial;
+
+        return view('onboard.contact-mockup', [
+            'req' => $req,
+            'partner' => (object) ['name' => $card['name']],
+            'card' => $card,
+            'initials' => \Illuminate\Support\Str::of($card['name'])->explode(' ')->filter()->map(fn ($p) => mb_substr($p, 0, 1))->take(2)->implode(''),
+            'machine' => $machine,
+            'amount' => Money::format(\App\Enums\Tier::Commercial->stakeCents()),
+            'read' => $req->instructions_read_at,
+            'emailed' => false,
+            'urls' => ['steps' => route('admin.settings.deposit.preview', 1), 'message' => route('admin.settings.deposit.preview', 1), 'emailed' => null],
+        ]);
     }
 
     /** @return array<string, mixed>|null Null when the member is not paired, or style 2 is off. */

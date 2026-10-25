@@ -66,6 +66,7 @@
             <div class="cc-btn-row" style="display:flex;flex-wrap:wrap;gap:12px">
                 <button type="submit" class="af-btn af-btn-black" style="width:auto">Save deposit settings</button>
                 <a href="{{ route('admin.settings.deposit.preview', 1) }}" target="_blank" rel="noopener" class="af-btn cc-btn-outline" style="width:auto" x-show="style === 'contact'" x-cloak>Preview as a member</a>
+                <a href="{{ route('admin.settings.deposit.preview.progress') }}" target="_blank" rel="noopener" class="af-btn cc-btn-outline" style="width:auto" x-show="style === 'contact'" x-cloak>Preview the progress page</a>
             </div>
             <p class="cc-hint" style="margin:0" x-show="style === 'contact'" x-cloak>The preview shows what is saved, so save first.</p>
         </div>

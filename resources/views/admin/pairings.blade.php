@@ -29,7 +29,7 @@
                             @elseif ($req->deposit_reported_at) <span class="cc-tone">Member says it was sent</span>
                             @else <span class="cc-tone">Waiting for the deposit</span> @endif
                             @if (\App\Support\DepositStyle::isContact())
-                                <br><span class="cc-hint">{{ $req->instructions_read_at ? 'Read the instructions on '.$req->instructions_read_at->format('M j, g:i a') : 'Has not read the instructions yet' }}</span>
+                                <br><span class="cc-hint">{{ $req->instructions_read_at ? 'Read the instructions on '.$req->instructions_read_at->format('M j, g:i a') : 'Has not read the instructions yet' }}{{ $req->partner_emailed_at ? '. Emailed the co-partner on '.$req->partner_emailed_at->format('M j, g:i a') : '' }}</span>
                             @endif
                         </summary>
                         @if ($req->deposit_reported_at)

@@ -16,7 +16,7 @@ class PairingRequest extends Model
     protected $fillable = [
         'user_id', 'tier', 'status', 'partner_name', 'partner_city', 'partner_email', 'account_holder', 'bank_name', 'routing_number',
         'account_number', 'account_last4', 'reference', 'note', 'paired_at', 'deposit_reported_at',
-        'proof_path', 'proof_name', 'proof_sent_on', 'proof_note', 'instructions_read_at',
+        'proof_path', 'proof_name', 'proof_sent_on', 'proof_note', 'instructions_read_at', 'partner_emailed_at',
     ];
 
     protected function casts(): array
@@ -27,6 +27,7 @@ class PairingRequest extends Model
             'paired_at' => 'datetime',
             'deposit_reported_at' => 'datetime',
             'instructions_read_at' => 'datetime',
+            'partner_emailed_at' => 'datetime',
             'proof_sent_on' => 'date',
         ];
     }

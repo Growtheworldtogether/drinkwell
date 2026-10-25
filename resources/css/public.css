@@ -939,7 +939,7 @@
     .cc-auth-card .cc-sub { margin:0 0 28px; font-size:19px; color:#2b2b2b; }
     .cc-form { display:grid; gap:20px; }
     .cc-field label, .cc-field .cc-lab { display:block; margin-bottom:8px; font-size:17px; font-weight:700; }
-    .cc-field input[type=text], .cc-field input[type=email], .cc-field input[type=password], .cc-field input[type=tel], .cc-field input[type=date], .cc-field select { width:100%; min-height:60px; padding:14px 20px; border:2px solid #000; border-radius:18px; background:#fff; font:inherit; font-size:20px; color:#000; }
+    .cc-field input[type=text], .cc-field input[type=email], .cc-field input[type=password], .cc-field input[type=tel], .cc-field input[type=date], .cc-field input[type=number], .cc-field select { width:100%; min-height:62px; line-height:1.5; padding:14px 20px; border:2px solid #000; border-radius:18px; background:#fff; font:inherit; font-size:20px; color:#000; }
     .cc-field input:focus, .cc-field select:focus { outline:4px solid rgba(247,114,58,.45); outline-offset:2px; }
     .cc-field .cc-hint { margin:8px 0 0; font-size:16px; color:#4a4a4a; }
     .cc-check { display:flex; align-items:flex-start; gap:14px; font-size:18px; line-height:1.4; }
@@ -1025,6 +1025,8 @@
     .af-btn.cc-bad { background:#b3261e; color:#fff; }
     .cc-two { display:grid; gap:20px; grid-template-columns:minmax(0,1fr); }
     @media (min-width:768px) { .cc-two { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+    /* A card that is itself only half the page (two cards side by side) is too narrow for two fields side by side. */
+    .cc-grid.is-two .cc-two, .cc-grid.is-split .cc-two { grid-template-columns: minmax(0,1fr); }
     .cc-adm details { border-top:1px solid #e4e4e4; padding:6px 0; }
     .cc-adm summary { min-height:56px; display:flex; align-items:center; cursor:pointer; font-size:18px; }
     .cc-adm .cc-form { padding:12px 0 20px; }

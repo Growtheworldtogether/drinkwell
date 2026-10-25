@@ -34,15 +34,15 @@
                         </dl>
                         @if ($w->status === \App\Enums\WithdrawalStatus::Pending)
                             <div class="cc-two" style="margin-top:16px">
-                                <form method="POST" action="{{ route('admin.withdrawals.approve', $w) }}" class="cc-form">
+                                <form method="POST" action="{{ route('admin.withdrawals.approve', $w) }}" class="cc-form" style="display:flex;flex-direction:column">
                                     @csrf
                                     <x-cc.field name="paid_reference" :id="'ref-'.$w->id" label="Payment reference" help="Any reference for the transfer, for example an ACH number." :error="$bag->first('paid_reference')" required />
-                                    <button type="submit" class="af-btn af-btn-black" style="width:auto">Approve and email the member</button>
+                                    <button type="submit" class="af-btn af-btn-black" style="margin-top:auto">Approve and email</button>
                                 </form>
-                                <form method="POST" action="{{ route('admin.withdrawals.reject', $w) }}" class="cc-form">
+                                <form method="POST" action="{{ route('admin.withdrawals.reject', $w) }}" class="cc-form" style="display:flex;flex-direction:column">
                                     @csrf
                                     <x-cc.field name="reason" :id="'why-'.$w->id" label="Reason for declining" help="The member sees this." :error="$bag->first('reason')" required />
-                                    <button type="submit" class="af-btn cc-btn-outline" style="width:auto">Decline and return the money</button>
+                                    <button type="submit" class="af-btn cc-btn-outline" style="margin-top:auto">Decline and refund</button>
                                 </form>
                             </div>
                         @endif

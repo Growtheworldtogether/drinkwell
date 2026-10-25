@@ -104,7 +104,7 @@ it('lets an administrator approve with a reference and emails the member', funct
     $w = confirmedWithdrawal($u);
     $admin = signedIn(Role::Admin);
 
-    $this->get(route('admin.withdrawals'))->assertOk()->assertSee($u->name)->assertSee('Approve and email the member');
+    $this->get(route('admin.withdrawals'))->assertOk()->assertSee($u->name)->assertSee('Approve and email');
     $this->post(route('admin.withdrawals.approve', $w), ['paid_reference' => ''])->assertSessionHasErrors('paid_reference');
     $this->post(route('admin.withdrawals.approve', $w), ['paid_reference' => 'ACH-778899'])->assertRedirect(route('admin.withdrawals'));
 

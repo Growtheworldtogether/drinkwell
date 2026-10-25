@@ -31,7 +31,7 @@
             <div class="cc-two">
                 <x-cc.field name="account_holder" label="Account holder" :value="old('account_holder', $d['account_holder'])" maxlength="120" />
                 <x-cc.field name="bank_name" label="Bank name" :value="old('bank_name', $d['bank_name'])" maxlength="120" />
-                <x-cc.field name="routing_number" label="Routing number, or transit and institution number" :value="old('routing_number', $d['routing_number'])" maxlength="40" help="US: 9-digit routing number. Canada: transit and institution number, for example 12345-004." />
+                <x-cc.field name="routing_number" label="Routing or transit number" :value="old('routing_number', $d['routing_number'])" maxlength="40" help="US: 9-digit routing number. Canada: transit and institution number, for example 12345-004." />
                 <x-cc.field name="account_number" label="Account number" :value="old('account_number', $d['account_number'])" maxlength="40" />
                 <x-cc.field name="note" label="Note to the member" :value="old('note', $d['note'])" maxlength="255" placeholder="Please send within 2 days" />
             </div>
@@ -63,7 +63,7 @@
             <h2>Pairing</h2>
             <x-cc.check name="auto_pair" label="Pair new members automatically" :checked="$auto" />
             <p class="cc-hint" style="margin:0">When this is on, a new member sees a short search for a co-partner after the sign-up questions, then is paired with the co-partner above and a free machine for their option. Turn it off to pair each member yourself on the Pairings page.@if ($auto && $missing !== []) <strong>Waiting for: {{ implode(', ', $missing) }}.</strong>@endif</p>
-            <div class="cc-btn-row" style="display:flex;flex-wrap:wrap;gap:12px">
+            <div style="display:flex;flex-wrap:wrap;gap:12px">
                 <button type="submit" class="af-btn af-btn-black" style="width:auto">Save deposit settings</button>
                 <a href="{{ route('admin.settings.deposit.preview', 1) }}" target="_blank" rel="noopener" class="af-btn cc-btn-outline" style="width:auto" x-show="style === 'contact'" x-cloak>Preview as a member</a>
                 <a href="{{ route('admin.settings.deposit.preview.progress') }}" target="_blank" rel="noopener" class="af-btn cc-btn-outline" style="width:auto" x-show="style === 'contact'" x-cloak>Preview the progress page</a>

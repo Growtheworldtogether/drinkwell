@@ -5,6 +5,11 @@ namespace App\Http\Controllers\Admin;
 use App\Console\Commands\TickCommand;
 use App\Http\Controllers\Controller;
 use App\Services\AuditLogger;
+use App\Services\SettingsRepository;
+use App\Services\Updater;
+use Illuminate\Foundation\Http\MaintenanceModeBypassCookie;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
@@ -21,9 +26,157 @@ class SystemController extends Controller
     /** PHP releases that carry the fix for the PHP2Shell flaw, per branch. */
     private const PATCHED = ['8.2' => '8.2.35', '8.3' => '8.3.36', '8.4' => '8.4.27', '8.5' => '8.5.12'];
 
-    public function show(): View
+    private const LATEST_KEY = 'updates.latest';
+
+    private const FINISH_KEY = 'updates.finish';
+
+    private const LAST_KEY = 'update_last';
+
+    public function show(Updater $updater, SettingsRepository $settings): View
     {
-        return view('admin.settings.system', ['checks' => $this->checks(), 'pending' => $this->pending()]);
+        $latest = Cache::get(self::LATEST_KEY);
+        $current = $updater->current();
+
+        return view('admin.settings.system', [
+            'checks' => $this->checks(),
+            'pending' => $this->pending(),
+            'updates' => [
+                'current' => $current,
+                'latest' => $latest,
+                'newer' => is_array($latest) && $updater->isNewer($latest, $current),
+                'backup' => $updater->lastBackup(),
+                'last' => $settings->array(self::LAST_KEY),
+                'repo' => (string) config('drinkwell.updates.repo'),
+            ],
+        ]);
+    }
+
+    /** "Check for updates": asks GitHub for the newest release and remembers it for the page. */
+    public function check(Updater $updater): RedirectResponse
+    {
+        try {
+            $latest = $updater->latest();
+        } catch (Throwable $e) {
+            return back()->with('error', 'Could not check for updates: '.$e->getMessage());
+        }
+        Cache::put(self::LATEST_KEY, $latest, now()->addDay());
+
+        return back()->with('status', $updater->isNewer($latest)
+            ? 'A new version is ready to install: '.$latest['tag'].'.'
+            : 'You have the latest version ('.$latest['tag'].').');
+    }
+
+    /**
+     * "Install update": download and check the package, show members the "back in a minute" page, write the new
+     * files (with a backup), then continue in a fresh request (finish) that runs on the new code.
+     */
+    public function install(Request $request, Updater $updater): RedirectResponse
+    {
+        if (! $this->codeOk($request)) {
+            return back()->withErrors(['developer_code' => 'That developer code is not right.'], 'update');
+        }
+        $latest = Cache::get(self::LATEST_KEY);
+        try {
+            $latest = is_array($latest) ? $latest : $updater->latest();
+            $zip = $updater->download($latest);
+        } catch (Throwable $e) {
+            return back()->with('error', 'The update was not installed: '.$e->getMessage());
+        }
+
+        $secret = Str::random(40);
+        Artisan::call('down', ['--secret' => $secret, '--retry' => 30, '--refresh' => 20]);
+        try {
+            $result = $updater->install($zip);
+        } catch (Throwable $e) {
+            report($e);
+            Artisan::call('up');
+
+            return back()->with('error', 'The update was not installed, and nothing was changed: '.$e->getMessage());
+        }
+        @unlink($zip);
+
+        return $this->toFinish($request, $secret, ['action' => 'update', 'result' => $result]);
+    }
+
+    /** "Restore previous version": puts back the files the last update changed. */
+    public function restore(Request $request, Updater $updater): RedirectResponse
+    {
+        if (! $this->codeOk($request)) {
+            return back()->withErrors(['developer_code' => 'That developer code is not right.'], 'restore');
+        }
+        $backup = $updater->lastBackup();
+        if (! $backup || $backup['restored_at']) {
+            return back()->with('error', 'There is no update to undo.');
+        }
+
+        $secret = Str::random(40);
+        Artisan::call('down', ['--secret' => $secret, '--retry' => 30, '--refresh' => 20]);
+        try {
+            $updater->restore($backup['path']);
+        } catch (Throwable $e) {
+            report($e);
+            Artisan::call('up');
+
+            return back()->with('error', 'Could not restore: '.$e->getMessage());
+        }
+
+        return $this->toFinish($request, $secret, ['action' => 'restore', 'result' => ['to' => $backup['from'], 'from' => $backup['to']]]);
+    }
+
+    /** Second half of an update or restore, on the new code: database changes, fresh caches, site back up. */
+    public function finish(Request $request, SettingsRepository $settings): RedirectResponse
+    {
+        $job = Cache::pull(self::FINISH_KEY);
+        if (! is_array($job) || ! hash_equals((string) $job['token'], (string) $request->query('token'))) {
+            Artisan::call('up');
+
+            return redirect()->route('admin.settings.system');
+        }
+
+        $problem = null;
+        try {
+            Artisan::call('migrate', ['--force' => true]);
+        } catch (Throwable $e) {
+            report($e);
+            $problem = $e->getMessage();
+        }
+        foreach (['config:clear', 'route:clear', 'view:clear', 'cache:clear'] as $command) {
+            try {
+                Artisan::call($command);
+            } catch (Throwable) {
+                // A cache that cannot be cleared is not a reason to keep the site down.
+            }
+        }
+        Artisan::call('up');
+
+        $result = $job['result'];
+        $settings->set(self::LAST_KEY, ['action' => $job['action'], 'to' => $result['to'] ?? '', 'at' => now()->toIso8601String(), 'problem' => $problem], $request->user());
+        AuditLogger::log($request->user(), 'system.'.$job['action'], null, null, $result + ['problem' => $problem]);
+
+        if ($problem !== null) {
+            return redirect()->route('admin.settings.system')->with('error', 'The new files are in place, but the database changes stopped: '.$problem.' You can press Restore previous version.');
+        }
+
+        return redirect()->route('admin.settings.system')->with('status', $job['action'] === 'restore'
+            ? 'The previous version ('.$result['to'].') is back.'
+            : 'Updated to '.$result['to'].'. '.$result['changed'].' file(s) replaced and '.$result['added'].' added; your settings, uploads and database were kept.');
+    }
+
+    private function toFinish(Request $request, string $secret, array $job): RedirectResponse
+    {
+        $token = Str::random(40);
+        Cache::put(self::FINISH_KEY, $job + ['token' => $token], now()->addMinutes(30));
+
+        return redirect()->route('admin.settings.system.finish', ['token' => $token])
+            ->withCookie(MaintenanceModeBypassCookie::create($secret));
+    }
+
+    private function codeOk(Request $request): bool
+    {
+        $typed = strtoupper(preg_replace('/\s+/', '', (string) $request->input('developer_code')) ?? '');
+        $code = strtoupper((string) config('drinkwell.email_developer_code'));
+
+        return $code !== '' && hash_equals($code, $typed);
     }
 
     public function update(Request $request): RedirectResponse
@@ -36,7 +189,11 @@ class SystemController extends Controller
             foreach (['config:clear', 'route:clear', 'view:clear', 'cache:clear'] as $command) {
                 Artisan::call($command);
             }
-            Artisan::call('storage:link');
+            try {
+                Artisan::call('storage:link');
+            } catch (Throwable) {
+                // Some hosts do not allow links; uploaded logos are the only thing that needs it.
+            }
         } catch (Throwable $e) {
             report($e);
 

@@ -112,6 +112,10 @@ Route::middleware(['admin.ip', 'auth', 'active', 'role:admin', 'admin.idle', 'th
     Route::post('/settings/email/test', [$em, 'test'])->middleware('throttle:6,1')->name('settings.email.test');
     Route::get('/settings/system', [\App\Http\Controllers\Admin\SystemController::class, 'show'])->middleware('password.confirm')->name('settings.system');
     Route::post('/settings/system/update', [\App\Http\Controllers\Admin\SystemController::class, 'update'])->middleware('password.confirm')->name('settings.system.update');
+    Route::post('/settings/system/check', [\App\Http\Controllers\Admin\SystemController::class, 'check'])->middleware('throttle:10,1')->name('settings.system.check');
+    Route::post('/settings/system/install', [\App\Http\Controllers\Admin\SystemController::class, 'install'])->middleware(['password.confirm', 'throttle:5,1'])->name('settings.system.install');
+    Route::post('/settings/system/restore', [\App\Http\Controllers\Admin\SystemController::class, 'restore'])->middleware(['password.confirm', 'throttle:5,1'])->name('settings.system.restore');
+    Route::get('/settings/system/finish', [\App\Http\Controllers\Admin\SystemController::class, 'finish'])->name('settings.system.finish');
     $brd = BrandingController::class;
     Route::get('/settings/branding', [$brd, 'show'])->name('settings.branding');
     Route::put('/settings/branding', [$brd, 'update'])->name('settings.branding.update');

@@ -50,8 +50,15 @@ $skipFiles = [
     '#^\.env$#', '#^\.env\.(?!example$|production\.example$)#', '#\.sqlite(-journal)?$#', '#^drinkwell-release(-public_html)?\.zip$#',
     '#^storage/logs/.+\.log$#', '#^storage/framework/(sessions|views)/(?!\.gitignore$)#',
     '#^storage/app/(installed\.lock|install-key\.txt)$#', '#^bootstrap/cache/(?!\.gitignore$).+\.php$#',
-    '#(^|/)(Thumbs\.db|\.DS_Store)$#', '#^\.phpunit#', '#^phpunit\.xml$#',
+    '#(^|/)(Thumbs\.db|\.DS_Store)$#', '#^\.phpunit#', '#^phpunit\.xml$#', '#^version\.json$#',
 ];
+
+// The version this package is, read by Admin, Settings, System to offer and install updates.
+$version = json_encode([
+    'tag' => getenv('RELEASE_TAG') ?: 'local-'.gmdate('Ymd-Hi'),
+    'commit' => substr((string) (getenv('GITHUB_SHA') ?: trim((string) @shell_exec('git -C '.escapeshellarg($root).' rev-parse HEAD'))), 0, 7),
+    'built_at' => gmdate('c'),
+], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)."\n";
 
 @unlink($out);
 $zip = new ZipArchive;
@@ -87,6 +94,8 @@ foreach ($it as $f) {
     $zip->addFile($f->getPathname(), $place($rel));
     $files++;
 }
+$zip->addFromString($place('version.json'), $version);
+
 // Empty folders the site needs to write into.
 foreach (['storage/app/private', 'storage/app/public', 'storage/framework/cache/data', 'storage/logs', 'storage/framework/sessions', 'storage/framework/views', 'bootstrap/cache'] as $dir) {
     $zip->addEmptyDir($place($dir));

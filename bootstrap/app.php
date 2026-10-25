@@ -31,6 +31,10 @@ $app = Application::configure(basePath: dirname(__DIR__))
         // Read at request time from config (see the middleware); reading env() here runs before .env is loaded.
         $middleware->replace(\Illuminate\Http\Middleware\TrustProxies::class, \App\Http\Middleware\TrustProxiesFromConfig::class);
 
+        // The "let the admin through" cookie during an update is checked before cookies are decrypted, so it is
+        // sent as Laravel signs it, not encrypted again.
+        $middleware->encryptCookies(except: ['laravel_maintenance']);
+
         // Every response, including a 404 that matched no route, carries the security headers.
         $middleware->append(SecurityHeaders::class);
 

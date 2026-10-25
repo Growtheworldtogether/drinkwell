@@ -10,6 +10,13 @@ return [
     // The developer code that opens Admin, Settings, Email. Set EMAIL_DEVELOPER_CODE in .env to change it.
     'email_developer_code' => env('EMAIL_DEVELOPER_CODE', 'DW-EMAIL-1453'),
 
+    // Where Admin, Settings, System looks for new versions: a GitHub repository whose Releases page holds the
+    // zips made by the "Build release zip" job. A token is only needed if the repository is private.
+    'updates' => [
+        'repo' => env('DRINKWELL_UPDATE_REPO', 'Growtheworldtogether/drinkwell'),
+        'token' => env('DRINKWELL_UPDATE_TOKEN'),
+    ],
+
     'brand' => [
         'name' => 'DRinkWeLL',
         'tagline' => 'Senior co-partner vending platform.',

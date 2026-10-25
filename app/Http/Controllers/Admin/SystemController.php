@@ -214,7 +214,7 @@ class SystemController extends Controller
     /** "release-20261025-1935" as "Oct 25, 2026 3:35 pm" in the site's time zone; other names are shown as they are. */
     public static function versionName(string $tag): string
     {
-        if (! preg_match('/^release-(\d{4})(\d{2})(\d{2})-(\d{2})(\d{2})$/', $tag, $m)) {
+        if (! preg_match('/^release-(\d{4})(\d{2})(\d{2})-(\d{2})(\d{2})(\d{2})?$/', $tag, $m)) {
             return $tag;
         }
 

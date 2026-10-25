@@ -1,9 +1,7 @@
 @php
     $u = $updates;
     $when = fn (?string $iso) => $iso ? \Illuminate\Support\Carbon::parse($iso)->timezone(config('app.timezone'))->format('M j, Y g:i a') : '';
-    $nice = fn (?string $tag) => $tag && preg_match('/^release-(\d{4})(\d{2})(\d{2})-(\d{2})(\d{2})$/', $tag, $m)
-        ? \Illuminate\Support\Carbon::create((int) $m[1], (int) $m[2], (int) $m[3], (int) $m[4], (int) $m[5], 0, 'UTC')->timezone(config('app.timezone'))->format('M j, Y g:i a')
-        : ($tag ?: 'Unknown');
+    $nice = fn (?string $tag) => $tag ? \App\Http\Controllers\Admin\SystemController::versionName($tag) : 'Unknown';
 @endphp
 <x-cc.adm title="Settings" heading="System">
     @include('admin.settings._tabs')

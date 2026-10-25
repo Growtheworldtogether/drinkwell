@@ -46,7 +46,7 @@ jobs:
 
       - name: Pack the zip
         run: |
-          export RELEASE_TAG="release-$(date -u +%Y%m%d-%H%M)"
+          export RELEASE_TAG="release-$(date -u +%Y%m%d-%H%M%S)"
           echo "RELEASE_TAG=$RELEASE_TAG" >> "$GITHUB_ENV"
           php scripts/make-release.php
           php scripts/make-release.php --public-html

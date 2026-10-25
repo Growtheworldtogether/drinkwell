@@ -261,7 +261,8 @@ class Updater
                         throw new RuntimeException("The folder {$dir} cannot be written to. In File Manager, set its permissions to 755.");
                     }
                 }
-                $job['backup'] = $this->backupRoot().'/'.gmdate('Ymd-His').'-'.bin2hex(random_bytes(3));
+                // Named by time to the microsecond, so the newest backup always sorts last, even within one second.
+                $job['backup'] = $this->backupRoot().'/'.gmdate('Ymd-His').'-'.sprintf('%06d', (int) (fmod(microtime(true), 1) * 1000000));
                 File::ensureDirectoryExists($job['backup'].'/files');
                 $this->writeManifest($job['backup'], ['from' => $job['from'], 'to' => $job['to'], 'created_at' => gmdate('c'), 'layout' => $this->layout(), 'changed' => [], 'added' => []]);
                 $job['phase'] = 'write';

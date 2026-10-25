@@ -26,8 +26,10 @@
 
         @if ($step === 1)
             <div class="cc-panel dw-card">
-                <div class="dw-tick" aria-hidden="true"><svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
-                <p class="cc-eyebrow dw-eyebrow">Step 1 of 3</p>
+                <div class="dw-confirmed">
+                    <span class="dw-tick" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 12.5l4 4 8-9"/></svg></span>
+                    <p class="cc-eyebrow dw-eyebrow">Step 1 of 3 <span class="dw-matched">Matched</span></p>
+                </div>
                 <h1 class="dw-title"><span class="dw-nb">Co-partner</span> match confirmed</h1>
                 @include('onboard._steps-partner')
                 <a href="{{ ($urls['step'])(2) }}" class="af-btn af-btn-black dw-go">Continue</a>

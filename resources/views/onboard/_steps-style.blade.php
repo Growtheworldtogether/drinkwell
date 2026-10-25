@@ -12,7 +12,10 @@
     .dw-eyebrow { margin: 0; }
     .dw-title { margin: -8px 0 0; font-size: clamp(28px, 4vw + 14px, 40px); font-weight: 800; line-height: 1.1; letter-spacing: -0.02em; }
     .dw-lead { margin: -4px 0 0; font-size: 18px; line-height: 1.5; }
-    .dw-tick { display: grid; place-items: center; width: 68px; height: 68px; border-radius: 50%; background: black; color: white; animation: dw-pop 0.5s cubic-bezier(.2, 1.5, .4, 1) both; }
+    .dw-confirmed { display: flex; align-items: center; gap: 12px; }
+    .dw-tick { display: inline-flex; align-items: center; justify-content: center; flex: none; width: 44px; height: 44px; border-radius: 50%; background: rgb(233, 247, 241); border: 2px solid rgb(31, 122, 61); color: rgb(31, 122, 61); animation: dw-pop 0.5s cubic-bezier(.2, 1.5, .4, 1) both; }
+    .dw-tick svg { display: block; }
+    .dw-matched { display: inline-block; margin-left: 8px; padding: 3px 10px; border-radius: 9999px; background: rgb(233, 247, 241); color: rgb(31, 122, 61); letter-spacing: 0.04em; }
     @keyframes dw-pop { from { transform: scale(0.3); } to { transform: none; } }
 
     .dw-go { display: flex; align-items: center; justify-content: center; width: 100%; min-height: 58px; font-size: 18px; text-align: center; text-decoration: none; }

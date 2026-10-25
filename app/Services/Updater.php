@@ -224,8 +224,13 @@ class Updater
      */
     public function advance(array $job, float $seconds = 8.0): array
     {
-        @set_time_limit(120);
-        @ignore_user_abort(true);
+        // Some hosts switch these off entirely (then they do not exist). Each step is short, so they are a bonus only.
+        if (function_exists('set_time_limit')) {
+            @set_time_limit(120);
+        }
+        if (function_exists('ignore_user_abort')) {
+            @ignore_user_abort(true);
+        }
         $until = microtime(true) + $seconds;
 
         if ($job['phase'] === 'download') {

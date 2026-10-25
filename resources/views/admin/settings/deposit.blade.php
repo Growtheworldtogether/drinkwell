@@ -63,10 +63,10 @@
             <h2>Pairing</h2>
             <x-cc.check name="auto_pair" label="Pair new members automatically" :checked="$auto" />
             <p class="cc-hint" style="margin:0">When this is on, a new member sees a short search for a co-partner after the sign-up questions, then is paired with the co-partner above and a free machine for their option. Turn it off to pair each member yourself on the Pairings page.@if ($auto && $missing !== []) <strong>Waiting for: {{ implode(', ', $missing) }}.</strong>@endif</p>
-            <div style="display:flex;flex-wrap:wrap;gap:12px">
-                <button type="submit" class="af-btn af-btn-black" style="width:auto">Save deposit settings</button>
-                <a href="{{ route('admin.settings.deposit.preview', 1) }}" target="_blank" rel="noopener" class="af-btn cc-btn-outline" style="width:auto" x-show="style === 'contact'" x-cloak>Preview as a member</a>
-                <a href="{{ route('admin.settings.deposit.preview.progress') }}" target="_blank" rel="noopener" class="af-btn cc-btn-outline" style="width:auto" x-show="style === 'contact'" x-cloak>Preview the progress page</a>
+            <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:8px">
+                <button type="submit" class="af-btn af-btn-black" style="flex:1 1 260px;max-width:100%">Save settings</button>
+                <a href="{{ route('admin.settings.deposit.preview', 1) }}" target="_blank" rel="noopener" class="af-btn cc-btn-outline" style="flex:1 1 260px;max-width:100%" x-show="style === 'contact'" x-cloak>Preview the screens</a>
+                <a href="{{ route('admin.settings.deposit.preview.progress') }}" target="_blank" rel="noopener" class="af-btn cc-btn-outline" style="flex:1 1 260px;max-width:100%" x-show="style === 'contact'" x-cloak>Preview progress</a>
             </div>
             <p class="cc-hint" style="margin:0" x-show="style === 'contact'" x-cloak>The preview shows what is saved, so save first.</p>
         </div>

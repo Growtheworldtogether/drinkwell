@@ -62,8 +62,8 @@ class SystemController extends Controller
         Cache::put(self::LATEST_KEY, $latest, now()->addDay());
 
         return back()->with('status', $updater->isNewer($latest)
-            ? 'A new version is ready to install: '.$latest['tag'].'.'
-            : 'You have the latest version ('.$latest['tag'].').');
+            ? 'A new version is ready to install: the version of '.self::versionName($latest['tag']).'.'
+            : 'You have the latest version.');
     }
 
     /**
@@ -158,8 +158,19 @@ class SystemController extends Controller
         }
 
         return redirect()->route('admin.settings.system')->with('status', $job['action'] === 'restore'
-            ? 'The previous version ('.$result['to'].') is back.'
-            : 'Updated to '.$result['to'].'. '.$result['changed'].' file(s) replaced and '.$result['added'].' added; your settings, uploads and database were kept.');
+            ? 'The previous version, '.self::versionName($result['to']).', is back.'
+            : 'Updated to the version of '.self::versionName($result['to']).'. '.$result['changed'].' file(s) replaced and '.$result['added'].' added. Your settings, uploads and database were kept.');
+    }
+
+    /** "release-20261025-1935" as "Oct 25, 2026 3:35 pm" in the site's time zone; other names are shown as they are. */
+    public static function versionName(string $tag): string
+    {
+        if (! preg_match('/^release-(\d{4})(\d{2})(\d{2})-(\d{2})(\d{2})$/', $tag, $m)) {
+            return $tag;
+        }
+
+        return \Illuminate\Support\Carbon::create((int) $m[1], (int) $m[2], (int) $m[3], (int) $m[4], (int) $m[5], 0, 'UTC')
+            ->timezone(config('app.timezone'))->format('M j, Y g:i a');
     }
 
     private function toFinish(Request $request, string $secret, array $job): RedirectResponse

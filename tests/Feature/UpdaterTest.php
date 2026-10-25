@@ -147,7 +147,7 @@ it('checks GitHub, downloads with the fingerprint check, installs, and finishes 
     // The browser carries the "let the admin through" cookie from the install answer to the finish step.
     $bypass = collect($go->headers->getCookies())->first(fn ($c) => $c->getName() === 'laravel_maintenance');
     $this->withUnencryptedCookie('laravel_maintenance', $bypass->getValue())->get($go->headers->get('Location'))->assertRedirect(route('admin.settings.system'))
-        ->assertSessionHas('status', fn ($s) => str_contains($s, 'Updated to release-20261025-1200'));
+        ->assertSessionHas('status', fn ($s) => str_contains($s, 'Updated to the version of Oct 25, 2026'));
     expect(app()->isDownForMaintenance())->toBeFalse();
 
     $this->get(route('admin.settings.system'))->assertSee('Restore the previous version');

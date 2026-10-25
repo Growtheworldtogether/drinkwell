@@ -87,6 +87,8 @@
 
     <style>
         #updates { display: grid; gap: 16px; }
+        #updates > * { min-width: 0; }
+        #updates .cc-hint, #updates p { overflow-wrap: anywhere; }
         #updates .cc-dl { margin: 0; }
         .dw-update-box { display: grid; gap: 16px; padding: 20px; border: 2px solid black; border-radius: 22px; background: rgb(233, 247, 241); }
         .dw-restore summary { cursor: pointer; font-weight: 700; text-decoration: underline; text-underline-offset: 4px; }

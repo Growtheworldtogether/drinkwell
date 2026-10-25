@@ -27,7 +27,7 @@ return new class extends Migration
             $table->boolean('is_simulated')->default(false);
             $table->timestamps();
         });
-        DbCheck::add('partner_profiles', 'chk_partner_age', '`age_at_signup` >= 51');
+        DbCheck::add('partner_profiles', 'chk_partner_age', '`age_at_signup` >= 18');
 
         Schema::create('vending_machines', function (Blueprint $table) {
             $table->id();

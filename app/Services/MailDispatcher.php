@@ -58,7 +58,7 @@ class MailDispatcher
 
     /** The admin emails that Admin > Settings can switch off or send to one address. */
     public const ADMIN_TOPICS = [
-        'application' => ['label' => 'New co-partner paired', 'help' => 'A senior finished onboarding and was paired with a machine.'],
+        'application' => ['label' => 'New co-partner paired', 'help' => 'A new member finished onboarding and was paired with a machine.'],
         'funding' => ['label' => 'Partner reports a deposit', 'help' => 'A co-partner says they sent their deposit and it waits for confirmation.'],
         'contact' => ['label' => 'Contact form message', 'help' => 'Someone wrote to you from the Contact page.'],
         'withdrawal' => ['label' => 'Withdrawal requested', 'help' => 'A co-partner confirmed a withdrawal and it waits for approval.'],

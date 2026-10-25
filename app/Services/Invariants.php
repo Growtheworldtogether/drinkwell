@@ -21,7 +21,7 @@ class Invariants
         'no_double_pay' => 'No owner is paid twice for the same machine and date.',
         'stock_range' => 'Stock never exceeds capacity.',
         'slots' => 'Each machine has at most two owners and each owner holds one slot.',
-        'min_age' => 'Every co-partner profile is 51 or older at sign-up.',
+        'min_age' => 'Every co-partner profile meets the minimum age at sign-up.',
     ];
 
     /** @return array<string, list<string>> */

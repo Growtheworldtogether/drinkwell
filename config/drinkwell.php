@@ -19,7 +19,7 @@ return [
 
     'brand' => [
         'name' => 'DRinkWeLL',
-        'tagline' => 'Senior co-partner vending platform.',
+        'tagline' => 'Co-partner vending platform.',
         // A reserved .test address on purpose: it reads as a placeholder and can never receive mail.
         'support_email' => env('DRINKWELL_SUPPORT_EMAIL', 'support@drinkwell.test'),
         'logo_light_path' => null,
@@ -42,7 +42,7 @@ return [
 
     // Fixed price of one beverage, in cents.
     'unit_price_cents' => 225,
-    'min_age' => 51,
+    'min_age' => 18,
 
     // Smallest withdrawal, in cents, and how many business days the console promises to review one in.
     'withdrawal_min_cents' => 5_000,

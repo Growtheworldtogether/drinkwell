@@ -15,7 +15,7 @@ use Livewire\Attributes\Title;
 use Livewire\Component;
 
 /**
- * Four steps: details and age (51 or older), the machine option, a bank check, then a request for a partner.
+ * Four steps: details and age (an adult), the machine option, a bank check, then a request for a partner.
  * Every step is validated on the server. No real bank details are asked for: the account is generated and fictional.
  */
 #[Layout('layouts::app', ['mode' => 'focus'])]

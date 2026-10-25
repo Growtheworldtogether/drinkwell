@@ -1,4 +1,4 @@
-<x-auth-page title="Create your account" intro="It takes about a minute. You must be {{ config('drinkwell.min_age') }} or older." bg="mint">
+<x-auth-page title="Create your account" intro="It takes about a minute." bg="mint">
     <form method="POST" action="{{ route('register') }}" class="cc-form">
         @csrf
         <x-form.guard />

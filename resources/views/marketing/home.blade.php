@@ -6,7 +6,7 @@
 <x-marketing-layout title="Co-own a vending machine">
     <section class="cc-story" data-bg="coral" aria-label="{{ $brand->name }}"
         x-data="{ i: 0, stop: false, slides: [
-            { tag: 'Ages {{ config('drinkwell.min_age') }} and over', title: 'Co-own a drink vending machine with a partner we find for you', link: '{{ route('program') }}', label: 'How it works' },
+            { tag: 'Daily payouts', title: 'Co-own a drink vending machine with a partner we find for you', link: '{{ route('program') }}', label: 'How it works' },
             { tag: 'Deposit', title: 'Buy half of the machine from your co-partner', link: '{{ route('program') }}#deposit', label: 'How the deposit works' },
             { tag: 'Payouts', title: 'Share the daily payout, with every cent shown', link: '{{ route('earnings') }}', label: 'See your earnings' }
         ] }"
@@ -20,7 +20,7 @@
                 <button type="button" class="cc-story-dot" x-bind:class="{ 'is-on': i === 2 }" x-bind:aria-pressed="(i === 2).toString()" aria-label="Payouts" x-on:click="i = 2; stop = true"><img src="{{ asset('images/home/story-3-thumb.jpg') }}" alt="" width="56" height="56"></button>
             </div>
             <div class="cc-story-body">
-                <span class="cc-story-tag" x-text="slides[i].tag">Ages {{ config('drinkwell.min_age') }} and over</span>
+                <span class="cc-story-tag" x-text="slides[i].tag">Daily payouts</span>
                 <p class="cc-story-title" aria-live="polite" x-text="slides[i].title">Co-own a drink vending machine with a partner we find for you</p>
                 @auth
                     <a class="af-btn cc-story-cta" href="{{ route('dashboard') }}">Open dashboard</a>
@@ -36,7 +36,7 @@
         <div class="cc-wrap cc-hero-grid">
             <div class="cc-hero-photo"
                 x-data="{ i: 0, stop: false, slides: [
-                    { tag: 'Ages {{ config('drinkwell.min_age') }} and over', title: 'Co-own a drink vending machine with a partner we find for you', link: '{{ route('program') }}', label: 'How it works' },
+                    { tag: 'Daily payouts', title: 'Co-own a drink vending machine with a partner we find for you', link: '{{ route('program') }}', label: 'How it works' },
                     { tag: 'Deposit', title: 'Buy half of the machine from your co-partner', link: '{{ route('program') }}#deposit', label: 'How the deposit works' },
                     { tag: 'Payouts', title: 'Share the daily payout, with every cent shown', link: '{{ route('earnings') }}', label: 'See your earnings' }
                 ] }"
@@ -49,7 +49,7 @@
                         <button type="button" class="cc-story-dot" x-bind:class="{ 'is-on': i === 2 }" x-bind:aria-pressed="(i === 2).toString()" aria-label="Payouts" x-on:click="i = 2; stop = true"><img src="{{ asset('images/home/story-3-thumb.jpg') }}" alt="" width="56" height="56"></button>
                     </div>
                     <div class="cc-story-body">
-                        <span class="cc-story-tag" x-text="slides[i].tag">Ages {{ config('drinkwell.min_age') }} and over</span>
+                        <span class="cc-story-tag" x-text="slides[i].tag">Daily payouts</span>
                         <p class="cc-story-title" aria-live="polite" x-text="slides[i].title">Co-own a drink vending machine with a partner we find for you</p>
                         <a class="cc-story-link" x-bind:href="slides[i].link" x-text="slides[i].label" href="{{ route('program') }}">How it works</a>
                     </div>
@@ -57,7 +57,7 @@
             </div>
             <div class="cc-hero-text">
                 <h1 class="cc-display"><span>We Co-own</span><span>the Machine</span><span>and Share the</span><span class="cc-word" data-words="Daily Payout|Morning Rush|Lunch Peak">Daily Payout</span></h1>
-                <p class="cc-lead">You and a partner each pay half the cost of a drink vending machine, and split what it earns every day. For people aged {{ config('drinkwell.min_age') }} and over.</p>
+                <p class="cc-lead">You and a partner each pay half the cost of a drink vending machine, and split what it earns every day.</p>
                 <div class="af-ctas">
                     @auth
                         <a class="af-btn af-btn-black" href="{{ route('dashboard') }}">Open dashboard</a>
@@ -144,7 +144,7 @@
             <a class="cc-tabcard" href="{{ route('program') }}#split"><b class="cc-tab-num">3</b><p class="cc-tab-text">Every day the machine's earnings are split 50/50 and added to your balance.</p><span>Payouts</span></a>
         </div>
         <div class="cc-wrap cc-center">
-            <p class="cc-lead" style="margin-inline:auto" data-reveal>We are a team, helping seniors earn with a share in a machine and build a steady daily income together.</p>
+            <p class="cc-lead" style="margin-inline:auto" data-reveal>We are a team, helping people earn with a share in a machine and build a steady daily income together.</p>
             <div class="cc-btn-row" data-reveal><a class="af-btn af-btn-black" href="{{ route('register') }}">Find your machine here</a></div>
         </div>
     </section>

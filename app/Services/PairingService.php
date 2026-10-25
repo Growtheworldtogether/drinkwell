@@ -16,7 +16,7 @@ use App\Models\VendingMachine;
 use Illuminate\Support\Facades\DB;
 
 /**
- * Pairs a new senior with a machine and a co-partner.
+ * Pairs a new member with a machine and a co-partner.
  *
  * Nobody waits in a pool. The second slot is filled at once by a simulated co-partner made from the seeded generator,
  * and the screens say so. All of it runs in one transaction that locks the machine row, so two sign-ups can never take

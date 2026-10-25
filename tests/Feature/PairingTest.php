@@ -32,7 +32,7 @@ it('pairs a new senior with a machine and a simulated co-partner at once', funct
     expect($partner->role)->toBe(Role::Operator)
         ->and($partner->profile->is_simulated)->toBeTrue()
         ->and($partner->email)->toEndWith('@example.test')
-        ->and($partner->profile->age_at_signup)->toBeGreaterThanOrEqual(51)
+        ->and($partner->profile->age_at_signup)->toBeGreaterThanOrEqual(18)
         ->and($other->settlement_status)->toBe(SettlementStatus::Settled);
 
     Mail::assertSent(PairingDossier::class, fn ($mail) => $mail->hasTo($user->email));
@@ -98,13 +98,13 @@ it('settles an ownership once and starts earning the next day', function () {
         ->and($m->fresh()->assignment_status)->toBe(AssignmentStatus::Active);
 });
 
-it('onboarding rejects anyone under 51 and stores nothing', function () {
+it('onboarding rejects anyone under 18 and stores nothing', function () {
     machine();
     $user = signedIn();
 
     Livewire::test(OnboardingWizard::class)
         ->set('name', 'Young Person')
-        ->set('dob', now()->subYears(40)->toDateString())
+        ->set('dob', now()->subYears(16)->toDateString())
         ->set('phone', '(555) 010-1234')
         ->call('next')
         ->assertHasErrors(['dob'])
@@ -113,14 +113,14 @@ it('onboarding rejects anyone under 51 and stores nothing', function () {
     expect($user->fresh()->profile)->toBeNull();
 });
 
-it('onboarding accepts a 51 year old on the birthday and puts them in the queue for a partner', function () {
+it('onboarding accepts an 18 year old on the birthday and puts them in the queue for a partner', function () {
     Mail::fake();
     $m = machine();
     $user = signedIn();
 
     Livewire::test(OnboardingWizard::class)
         ->set('name', 'Pat Senior')
-        ->set('dob', now()->subYears(51)->toDateString())
+        ->set('dob', now()->subYears(18)->toDateString())
         ->set('phone', '(555) 010-1234')
         ->call('next')->assertHasNoErrors()->assertSet('step', 2)
         ->set('tier', 'commercial')
@@ -133,7 +133,7 @@ it('onboarding accepts a 51 year old on the birthday and puts them in the queue 
         ->assertRedirect(route('onboard.status'));
 
     $profile = $user->fresh()->profile;
-    expect($profile->age_at_signup)->toBe(51)
+    expect($profile->age_at_signup)->toBe(18)
         ->and($profile->kyc_status)->toBe('simulated_verified')
         ->and($user->payoutAccounts()->first()->last4)->toBe('6789')
         ->and(\Illuminate\Support\Facades\DB::table('payout_accounts')->value('account_number'))->not->toContain('123456789')
@@ -141,13 +141,25 @@ it('onboarding accepts a 51 year old on the birthday and puts them in the queue 
         ->and($m->fresh()->assignment_status)->toBe(AssignmentStatus::Open);
 });
 
-it('onboarding turns away someone one day short of 51', function () {
+it('onboarding accepts a 40 year old', function () {
     machine();
     signedIn();
 
     Livewire::test(OnboardingWizard::class)
-        ->set('name', 'Almost Senior')
-        ->set('dob', now()->subYears(51)->addDay()->toDateString())
+        ->set('name', 'Sam Middle')
+        ->set('dob', now()->subYears(40)->toDateString())
+        ->set('phone', '(555) 010-1234')
+        ->call('next')
+        ->assertHasNoErrors()->assertSet('step', 2);
+});
+
+it('onboarding turns away someone one day short of 18', function () {
+    machine();
+    signedIn();
+
+    Livewire::test(OnboardingWizard::class)
+        ->set('name', 'Almost Adult')
+        ->set('dob', now()->subYears(18)->addDay()->toDateString())
         ->set('phone', '(555) 010-1234')
         ->call('next')
         ->assertHasErrors(['dob']);

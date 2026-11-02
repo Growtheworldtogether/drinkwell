@@ -176,3 +176,20 @@ it('rejects a bad routing number and mismatched account numbers', function () {
         ->call('next')
         ->assertHasErrors(['routingNumber', 'accountNumberConfirmation']);
 });
+
+it('does not back-pay a member for days before the deposit was confirmed', function () {
+    Mail::fake();
+    // A machine whose clock has been idle for 10 days.
+    $m = machine(over: [
+        'operating_date' => now(config('drinkwell.timezone'))->subDays(10)->toDateString(),
+        'clock_synced_at' => now()->subDays(10),
+    ]);
+    $svc = app(PairingService::class);
+    $mine = $svc->pair(User::factory()->create(), Tier::Commercial);
+
+    $svc->settle($mine);
+    app(\App\Services\MachineEngine::class)->sync($m);
+
+    expect(\App\Models\DailyDistribution::where('user_id', $mine->user_id)->count())->toBe(0)
+        ->and($mine->fresh()->earning_from->gte(now(config('drinkwell.timezone'))->startOfDay()))->toBeTrue();
+});

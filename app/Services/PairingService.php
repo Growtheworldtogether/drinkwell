@@ -179,6 +179,12 @@ class PairingService
             }
 
             $machine = VendingMachine::query()->whereKey($row->machine_id)->lockForUpdate()->firstOrFail();
+
+            // Catch the machine's clock up to now BEFORE reading its date. A machine nobody has opened for a while
+            // still shows an old operating date; starting from that would back-pay the new member for every day the
+            // clock then catches up through.
+            $machine = app(MachineEngine::class)->sync($machine);
+
             $row->update([
                 'settlement_status' => SettlementStatus::Settled,
                 'settled_at' => now(),
